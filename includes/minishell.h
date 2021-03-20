@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/20 18:05:56 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:01:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 typedef struct      o_parse
 {
     char **sc_cmds;
-    char ***space_cmd;
+    char **space_cmd;
 }                   sc_parse;
 
 typedef struct r_split

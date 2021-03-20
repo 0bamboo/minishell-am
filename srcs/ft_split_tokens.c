@@ -181,6 +181,7 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 		sp->p[sp->i++][sp->j] = '\0';
 	}
 	sp->p[sp->i] = NULL;
+	printf("split --> |%s|\n", sp->p[0]);
 	_trim_tokens(sp);
 	return (sp->p);
 }

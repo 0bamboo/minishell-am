@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/20 23:01:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:14:04 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void start_parsing(char *line, sc_parse *prs);
 char        *my_strtok(char *s, char *check);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char				**_split_tokens(s_split *sp, char const *s, char c);
-void        _trim_tokens(s_split *sp);
+void        _trim_tokens(char **sp);
 
 
 #endif

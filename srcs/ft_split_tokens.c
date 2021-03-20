@@ -143,30 +143,33 @@ static char			**_free(char **ptr, int size)
 	return (NULL);
 }
 
-void _trim_tokens(s_split *sp)
+void _trim_tokens(char **tab)
 {
 	int i;
 
 	i = -1;
-	while (sp->p[++i])
-		sp->p[i] = ft_strtrim(sp->p[i], " ");
+	while (tab[++i])
+		tab[i] = ft_strtrim(tab[i], " ");
 }
 
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
+	char **tab;
+	int size;
+	
 	if (!s)
 		return (NULL);
-	sp->size = _count_words(s, c, sp);
-	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
+	size = _count_words(s, c, sp);
+	if (!(tab = (char **)malloc(sizeof(char*) * (size + 1))))
 		return (NULL);
-	while (sp->i < sp->size)
+	while (sp->i < size)
 	{
 		while (*s && *s == c)
 			s++;
 		// So the problem is in _len_words : when you calculate each string length you stop when you find the the fist delimeter
 		// fixed maybe....
-		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_words(sp, s, c) + 1))))
-			return (_free(sp->p, sp->size));
+		if (!(tab[sp->i] = (char *)malloc(sizeof(char) * (_len_words(sp, s, c) + 1))))
+			return (_free(tab, size));
 		sp->j = 0;
 		while (*s)
         {
@@ -174,14 +177,15 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
                 sp->check_sq += 1;
             if (*s == '"' && sp->check_sq % 2 == 0)
                 sp->check_dq += 1;
-            sp->p[sp->i][sp->j++] = *s++;
+            tab[sp->i][sp->j++] = *s++;
             if (*s == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
                 break;
         }
-		sp->p[sp->i++][sp->j] = '\0';
+		tab[sp->i++][sp->j] = '\0';
 	}
-	sp->p[sp->i] = NULL;
-	printf("split --> |%s|\n", sp->p[0]);
-	_trim_tokens(sp);
-	return (sp->p);
+	tab[sp->i] = NULL;
+	sp->i = 0;
+	printf("split --> |%d|\n", sp->i);
+	_trim_tokens(tab);
+	return (tab);
 }

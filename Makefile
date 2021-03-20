@@ -6,15 +6,19 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/03/20 13:38:39 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/03/20 14:42:31 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-LIB = libshell.a
+MINISHELLLIB = minishell.a
 
 MAIN = minishell.c
+
+LIBFT = ./libft
+
+LIBFT_LIB = $(LIBFT)/libft.a
 
 FILES = $(wildcard ./srcs/*.c)
 
@@ -26,21 +30,26 @@ FLAGS = -Wextra -Werror -Wall
 
 all: $(NAME)
 
-$(NAME): $(OBJECT) $(HEADER)
-	@mv *.o ./srcs
-	@ar -rcs $(LIB) $(OBJECT)
-	@gcc  $(FLAGS) $(MAIN) $(LIB) -o $(NAME)
-	@echo "\n\033[36m***** HAJIME !! ***** \033[0m\n"
+$(LIBFT_LIB):
+			@make -C $(LIBFT)
+
+$(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN)
+			@mv *.o ./srcs
+			@ar -rcs $(MINISHELLLIB) $(OBJECT)
+			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) -o $(NAME)
+			@echo "\n\033[36m***** HAJIME !! ***** \033[0m\n"
 
 
 %.o:%.c $(HEADER)
-	@gcc -c $< $(FLAGS)
+			@gcc -c $< $(FLAGS)
 
 clean:
-	@rm -rf srcs/*.o $(LIB)
-	@echo "\n\033[32mCleaning is Done!\033[0m\n"
+			@make clean -C $(LIBFT)
+			@rm -rf srcs/*.o $(LIB)
+			@echo "\n\033[32mCleaning is Done!\033[0m\n"
 
 fclean: clean
-	@rm -rf $(NAME) $(LIB)
+			@make fclean -C $(LIBFT)
+			@rm -rf $(NAME) $(MINISHELLLIB) 
 
 re : fclean all

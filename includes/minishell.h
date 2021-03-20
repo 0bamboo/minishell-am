@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/19 18:19:46 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:00:24 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../srcs/get_next_line.h"
+#include "../libft/libft.h"
 
 typedef struct      o_parse
 {
@@ -43,17 +44,17 @@ typedef struct f_parse
 void start_parsing(char *line, sc_parse *prs);
 char        *my_strtok(char *s, char *check);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char				**ft_split(s_split *sp, char const *s, char c);
+char				**_split_tokens(s_split *sp, char const *s, char c);
 char			*ft_itoa(int n);
-// char			**ft_split(char const *s, char c);
-char			*ft_strtrim(char const *s1, char const *set);
-char			*ft_strchr(const char *s, int c);
-char			*ft_strdup(const char *s);
-char			*ft_strjoin(char const *s1, char const *s2);
-size_t			ft_strlcpy(char *dst, const char *src, size_t size);
-int				ft_strlen(const char *s);
-int				ft_strncmp(const char *s1, const char *s2, size_t n);
-char			*ft_strnstr(const char *str, const char *to_find, size_t len);
-char			*ft_strrchr(const char *s, int c);
+// char			**_split_tokens(char const *s, char c);
+// char			*ft_strtrim(char const *s1, char const *set);
+// char			*ft_strchr(const char *s, int c);
+// char			*ft_strdup(const char *s);
+// char			*ft_strjoin(char const *s1, char const *s2);
+// size_t			ft_strlcpy(char *dst, const char *src, size_t size);
+// int				ft_strlen(const char *s);
+// int				ft_strncmp(const char *s1, const char *s2, size_t n);
+// char			*ft_strnstr(const char *str, const char *to_find, size_t len);
+// char			*ft_strrchr(const char *s, int c);
 
 #endif

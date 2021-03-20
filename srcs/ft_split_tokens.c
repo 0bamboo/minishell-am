@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                      :::      ::::::::   */
+/*   ft_split_tokens_tokens.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/24 15:40:07 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/19 16:02:22 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:53:04 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// static int			ft_count_words(char const *s, char c)
+// static int			_count_words(char const *s, char c)
 // {
 // 	int	count;
 
@@ -28,7 +28,7 @@
 // 	return (count);
 // }
 
-// static int			ft_len_words(char const *s, char c)
+// static int			_len_words(char const *s, char c)
 // {
 // 	int	k;
 
@@ -38,7 +38,7 @@
 // 	return (k);
 // }
 
-// static char			**ft_free(char **ptr, int size)
+// static char			**_free(char **ptr, int size)
 // {
 // 	int i;
 
@@ -50,7 +50,7 @@
 // 	return (NULL);
 // }
 
-// char				**ft_split(char const *s, char c)
+// char		**ft_split_tokens(char const *s, char c)
 // {
 // 	char		**p;
 // 	int			size;
@@ -59,7 +59,7 @@
 
 // 	if (!s)
 // 		return (NULL);
-// 	size = ft_count_words(s, c);
+// 	size = _count_words(s, c);
 // 	if (!(p = (char **)malloc(sizeof(char*) * (size + 1))))
 // 		return (NULL);
 // 	i = 0;
@@ -67,8 +67,8 @@
 // 	{
 // 		while (*s && *s == c)
 // 			s++;
-// 		if (!(p[i] = (char *)malloc(sizeof(char) * (ft_len_words(s, c) + 1))))
-// 			return (ft_free(p, size));
+// 		if (!(p[i] = (char *)malloc(sizeof(char) * (_len_words(s, c) + 1))))
+// 			return (_free(p, size));
 // 		j = 0;
 // 		while (*s && *s != c)
 // 			p[i][j++] = *s++;
@@ -88,7 +88,7 @@
 //     int check_sq;
 // } s_split;
 
-static int			ft_count_words(char const *s, char c, s_split *sp)
+static int			_count_words(char const *s, char c, s_split *sp)
 {
 	int	count;
 
@@ -111,7 +111,7 @@ static int			ft_count_words(char const *s, char c, s_split *sp)
 	return (count);
 }
 
-static int			ft_len_words(s_split *sp, char const *s, char c)
+static int			_len_words(s_split *sp, char const *s, char c)
 {
 	int	k;
 
@@ -131,7 +131,7 @@ static int			ft_len_words(s_split *sp, char const *s, char c)
 	return (k);
 }
 
-static char			**ft_free(char **ptr, int size)
+static char			**_free(char **ptr, int size)
 {
 	int i;
 
@@ -143,21 +143,21 @@ static char			**ft_free(char **ptr, int size)
 	return (NULL);
 }
 
-char				**ft_split(s_split *sp, char const *s, char c)
+char				**_split_tokens(s_split *sp, char const *s, char c)
 {
 	if (!s)
 		return (NULL);
-	sp->size = ft_count_words(s, c, sp);
+	sp->size = _count_words(s, c, sp);
 	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
 		return (NULL);
 	while (sp->i < sp->size)
 	{
 		while (*s && *s == c)
 			s++;
-		// So the problem is in ft_len_words : when you calculate each string length you stop when you find the the fist delimeter
+		// So the problem is in _len_words : when you calculate each string length you stop when you find the the fist delimeter
 		// fixed maybe....
-		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (ft_len_words(sp, s, c) + 1))))
-			return (ft_free(sp->p, sp->size));
+		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_words(sp, s, c) + 1))))
+			return (_free(sp->p, sp->size));
 		sp->j = 0;
 		while (*s)
         {

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:17:27 by majermou          #+#    #+#             */
-/*   Updated: 2021/03/12 16:11:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:02:29 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char					*ft_strdup(const char *src)
 	i = 0;
 	if (!(str = (char*)malloc(sizeof(char) * (ft_strlen(src) + 1))))
 		return (NULL);
-	while (i < ft_strlen(src))
+	while (i < (int)(ft_strlen(src)))
 	{
 		str[i] = src[i];
 		i++;

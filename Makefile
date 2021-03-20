@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/03/13 14:07:23 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/03/20 13:38:39 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,6 @@ clean:
 	@echo "\n\033[32mCleaning is Done!\033[0m\n"
 
 fclean: clean
-	@rm -rf $(NAME)
+	@rm -rf $(NAME) $(LIB)
 
 re : fclean all

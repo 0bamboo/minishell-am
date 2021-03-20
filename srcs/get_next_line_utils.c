@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:17:47 by majermou          #+#    #+#             */
-/*   Updated: 2021/03/13 22:19:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 14:01:43 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int						check_break_line(char *tab)
 	return (i);
 }
 
-int						ft_strlen(const char *str)
+size_t						ft_strlen(const char *str)
 {
 	int					n;
 

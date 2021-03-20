@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/19 18:22:19 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:54:43 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int count_parenthesis(char *line)
 // 	return (NULL);
 // }
 
-// char				**ft_split(s_split *sp, char const *s, char c)
+// char				**_split_tokens(s_split *sp, char const *s, char c)
 // {
 // 	if (!s)
 // 		return (NULL);
@@ -170,7 +170,7 @@ void start_parsing(char *line, sc_parse *prs)
         raise_an_exception();
     else 
     {
-        prs->sc_cmds = ft_split(&sp, line, ';');
+        prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
         while (prs->sc_cmds[i])
         {

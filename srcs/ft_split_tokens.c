@@ -143,6 +143,15 @@ static char			**_free(char **ptr, int size)
 	return (NULL);
 }
 
+void _trim_tokens(s_split *sp)
+{
+	int i;
+
+	i = -1;
+	while (sp->p[++i])
+		sp->p[i] = ft_strtrim(sp->p[i], " ");
+}
+
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
 	if (!s)
@@ -172,5 +181,6 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 		sp->p[sp->i++][sp->j] = '\0';
 	}
 	sp->p[sp->i] = NULL;
+	_trim_tokens(sp);
 	return (sp->p);
 }

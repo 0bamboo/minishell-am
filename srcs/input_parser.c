@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/20 13:54:43 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 18:06:29 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,9 @@ void        initialize_vars(s_split *ps)
 void start_parsing(char *line, sc_parse *prs)
 {
     s_split sp;
-    // int len;
+    int j;
     int i;
+    
     initialize_vars(&sp);
     if (count_parenthesis(line))
         raise_an_exception();
@@ -172,9 +173,23 @@ void start_parsing(char *line, sc_parse *prs)
     {
         prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
+        prs->space_cmd = (char ***)malloc(sizeof(char **) * 10);
         while (prs->sc_cmds[i])
         {
-            printf("|%s|\n", prs->sc_cmds[i]);
+            // Fix this one how to fill the table of commands and its options and arguments
+            prs->space_cmd[i] = _split_tokens(&sp, prs->sc_cmds[i], ' ');
+            printf("|%s| -- > |%s|\n", prs->sc_cmds[i], prs->space_cmd[i][0]);
+            i++;
+        }
+        i = 0;
+        while (prs->space_cmd[i])
+        {
+            j = 0;
+            while (prs->space_cmd[i][j])
+            {
+                printf("---%s---\n", prs->space_cmd[i][j]);
+                j++;
+            }
             i++;
         }
     }

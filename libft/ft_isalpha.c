@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:54:45 by abdait-m          #+#    #+#             */
-/*   Updated: 2019/10/23 15:33:13 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:47:19 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,5 @@
 
 int		ft_isalpha(int c)
 {
-	unsigned char	s;
-
-	s = (unsigned char)c;
 	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 13:00:38 by abdait-m          #+#    #+#             */
-/*   Updated: 2019/10/31 15:45:58 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:45:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	ft_isdigit(int c)
 {
-	unsigned char s;
-
-	s = (unsigned char)c;
 	if (c > 47 && c < 58)
 		return (1);
 	return (0);

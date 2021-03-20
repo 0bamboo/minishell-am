@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 14:43:09 by abdait-m          #+#    #+#             */
-/*   Updated: 2019/10/23 15:34:41 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/20 21:46:23 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
 	int		j;
-	int		k;
 	int		l;
 	char	*join;
 
-	k = 0;
 	if (!s1 || !s2)
 		return (0);
 	i = ft_strlen((char *)s1);

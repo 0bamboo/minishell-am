@@ -107,7 +107,7 @@ static int			_count_tokens(char const *s, char c, s_split *sp)
 	}
 	sp->check_sq = 0;
 	sp->check_dq = 0;
-    printf("how many words : %d\n", count);
+    // printf("how many words : %d\n", count);
 	return (count);
 }
 
@@ -185,7 +185,7 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 	}
 	sp->p[sp->i] = NULL;
 	sp->i = 0;
-	printf("split --> |%d|\n", sp->i);
+	// printf("split --> |%d|\n", sp->i);
 	_trim_tokens(sp->p);
 	return (sp->p);
 }

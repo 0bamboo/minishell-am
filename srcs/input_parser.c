@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/21 12:56:48 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/21 18:41:25 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ void start_parsing(char *line, sc_parse *prs)
         prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
         // printf("this the first string ---> |%s|\n", prs->sc_cmds[i]);
+        printf("--size------> %d\n", sp.size);
         prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
@@ -187,29 +188,37 @@ void start_parsing(char *line, sc_parse *prs)
             printf("|%s|--> |%s|\n", prs->sc_cmds[i], prs->space_cmd[i][0]);
             i++;
         }
-        i = 0;
+        i = -1;
         printf("--command--        --option--         -- args -->\n");
-        while (prs->space_cmd[i])
-        {
-            j = -1;
-            while (prs->space_cmd[i][++j])
-                printf("----|%s|----\t", prs->space_cmd[i][j]);
-            printf("\n");
-            i++;
-            write(1, "\n\nim here\n\n", 11);
-        }
-        while (prs->space_cmd[i])
+        printf("--size------> %d\n", sp.size);
+        while (prs->sc_cmds[++i])
         {
             j = -1;
             while (prs->space_cmd[i][++j])
             {
-                free(prs->space_cmd[i][j]);
-                prs->space_cmd[i][j] = NULL;
+                printf("----|%s|----\t", prs->space_cmd[i][j]);
+                // printf("**%d**,\n", j);
+                // j++;
             }
-            free(prs->space_cmd);
-            prs->space_cmd[i] = NULL;
+            printf("\n");
+            // printf("{%d}\n", i);
+            // i++;
         }
-        printf("size of triple pointer : |%d|\n", i);
+        // write(1, "\n\nim here\n\n", 11);
+        write(1, "free time\n", 10);
+        // while (prs->space_cmd[i] != NULL)
+        // {
+        //     j = 0;
+        //     while (prs->space_cmd[i][j] != NULL)
+        //     {
+        //         free(prs->space_cmd[i][j]);
+        //         prs->space_cmd[i][j] = NULL;
+        //         j++;
+        //     }
+        //     free(prs->space_cmd);
+        //     prs->space_cmd[i] = NULL;
+        // }
+        // printf("size of triple pointer : |%d|\n", i);
         // i = 0;
         // while (prs->space_cmd[i])
         // {

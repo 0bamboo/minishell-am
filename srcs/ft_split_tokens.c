@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-// static int			_count_words(char const *s, char c)
+// static int			_count_tokens(char const *s, char c)
 // {
 // 	int	count;
 
@@ -28,7 +28,7 @@
 // 	return (count);
 // }
 
-// static int			_len_words(char const *s, char c)
+// static int			_len_tokens(char const *s, char c)
 // {
 // 	int	k;
 
@@ -59,7 +59,7 @@
 
 // 	if (!s)
 // 		return (NULL);
-// 	size = _count_words(s, c);
+// 	size = _count_tokens(s, c);
 // 	if (!(p = (char **)malloc(sizeof(char*) * (size + 1))))
 // 		return (NULL);
 // 	i = 0;
@@ -67,7 +67,7 @@
 // 	{
 // 		while (*s && *s == c)
 // 			s++;
-// 		if (!(p[i] = (char *)malloc(sizeof(char) * (_len_words(s, c) + 1))))
+// 		if (!(p[i] = (char *)malloc(sizeof(char) * (_len_tokens(s, c) + 1))))
 // 			return (_free(p, size));
 // 		j = 0;
 // 		while (*s && *s != c)
@@ -88,7 +88,7 @@
 //     int check_sq;
 // } s_split;
 
-static int			_count_words(char const *s, char c, s_split *sp)
+static int			_count_tokens(char const *s, char c, s_split *sp)
 {
 	int	count;
 
@@ -111,7 +111,7 @@ static int			_count_words(char const *s, char c, s_split *sp)
 	return (count);
 }
 
-static int			_len_words(s_split *sp, char const *s, char c)
+static int			_len_tokens(s_split *sp, char const *s, char c)
 {
 	int	k;
 
@@ -131,15 +131,15 @@ static int			_len_words(s_split *sp, char const *s, char c)
 	return (k);
 }
 
-static char			**_free(char **ptr, int size)
+static char			**_free(s_split *sp)
 {
 	int i;
 
 	i = 0;
-	while (i++ < size)
-		free(ptr[i]);
-	free(ptr);
-	ptr = NULL;
+	while (i++ < sp->size)
+		free(sp->p[i]);
+	free(sp->p);
+	sp->p = NULL;
 	return (NULL);
 }
 
@@ -154,22 +154,22 @@ void _trim_tokens(char **tab)
 
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
-	char **tab;
-	int size;
+	// char **tab;
+	// int size;
 	
 	if (!s)
 		return (NULL);
-	size = _count_words(s, c, sp);
-	if (!(tab = (char **)malloc(sizeof(char*) * (size + 1))))
+	sp->size = _count_tokens(s, c, sp);
+	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
 		return (NULL);
-	while (sp->i < size)
+	while (sp->i < sp->size)
 	{
 		while (*s && *s == c)
 			s++;
-		// So the problem is in _len_words : when you calculate each string length you stop when you find the the fist delimeter
+		// So the problem is in _len_tokens : when you calculate each string length you stop when you find the the fist delimeter
 		// fixed maybe....
-		if (!(tab[sp->i] = (char *)malloc(sizeof(char) * (_len_words(sp, s, c) + 1))))
-			return (_free(tab, size));
+		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_tokens(sp, s, c) + 1))))
+			return (_free(sp));
 		sp->j = 0;
 		while (*s)
         {
@@ -177,15 +177,15 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
                 sp->check_sq += 1;
             if (*s == '"' && sp->check_sq % 2 == 0)
                 sp->check_dq += 1;
-            tab[sp->i][sp->j++] = *s++;
+            sp->p[sp->i][sp->j++] = *s++;
             if (*s == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
                 break;
         }
-		tab[sp->i++][sp->j] = '\0';
+		sp->p[sp->i++][sp->j] = '\0';
 	}
-	tab[sp->i] = NULL;
+	sp->p[sp->i] = NULL;
 	sp->i = 0;
 	printf("split --> |%d|\n", sp->i);
-	_trim_tokens(tab);
-	return (tab);
+	_trim_tokens(sp->p);
+	return (sp->p);
 }

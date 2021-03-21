@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/20 23:01:45 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:56:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,16 @@ void        initialize_vars(s_split *ps)
     
 }
 
+// void _free_triple_pointer(sc_parse *prs)
+// {
+//     int i; 
+// }
+
 
 void start_parsing(char *line, sc_parse *prs)
 {
     s_split sp;
-    // int j;
+    int j;
     int i;
     
     initialize_vars(&sp);
@@ -174,14 +179,37 @@ void start_parsing(char *line, sc_parse *prs)
         prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
         // printf("this the first string ---> |%s|\n", prs->sc_cmds[i]);
-        prs->space_cmd = _split_tokens(&sp, "hi there how are you", ' ');
-        printf("-- > |%s|\n", prs->space_cmd[0]);
+        prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
             // Fix this one how to fill the table of commands and its options and arguments
-            printf("|%s|\n", prs->sc_cmds[i]);
+            prs->space_cmd[i] = _split_tokens(&sp, prs->sc_cmds[i], ' ');
+            printf("|%s|--> |%s|\n", prs->sc_cmds[i], prs->space_cmd[i][0]);
             i++;
         }
+        i = 0;
+        printf("--command--        --option--         -- args -->\n");
+        while (prs->space_cmd[i])
+        {
+            j = -1;
+            while (prs->space_cmd[i][++j])
+                printf("----|%s|----\t", prs->space_cmd[i][j]);
+            printf("\n");
+            i++;
+            write(1, "\n\nim here\n\n", 11);
+        }
+        while (prs->space_cmd[i])
+        {
+            j = -1;
+            while (prs->space_cmd[i][++j])
+            {
+                free(prs->space_cmd[i][j]);
+                prs->space_cmd[i][j] = NULL;
+            }
+            free(prs->space_cmd);
+            prs->space_cmd[i] = NULL;
+        }
+        printf("size of triple pointer : |%d|\n", i);
         // i = 0;
         // while (prs->space_cmd[i])
         // {

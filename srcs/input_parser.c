@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/21 23:18:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/22 15:10:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,33 @@ void        initialize_vars(s_split *ps)
 // }
 
 
+int         _check_for_pipe(sc_parse *prs, int current)
+{
+    int     i;
+    int     q;
+    int     dq;
+
+    i = 0;
+    q = 0;
+    dq = 0;
+    printf("#-%s-#\n", prs->sc_cmds[current]);
+    while (prs->sc_cmds[current][i])
+    {
+        if (prs->sc_cmds[current][i] == '"' && dq == 0 && q == 0)
+            dq = 1;
+        else if (prs->sc_cmds[current][i] == '\'' && q == 0 && dq == 0)
+            q = 1;
+        else if (prs->sc_cmds[current][i] == '|' && dq == 0 && q == 0)
+            return i;
+        else if (prs->sc_cmds[current][i] == '"' && dq == 1)
+            dq = 0;
+        else if (prs->sc_cmds[current][i] == '\'' && q == 1)
+            q = 0;
+        i++;
+    }
+    return (0);
+}
+
 void start_parsing(char *line, sc_parse *prs)
 {
     s_split sp;
@@ -87,9 +114,16 @@ void start_parsing(char *line, sc_parse *prs)
     {
         prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
+        j = 0;
         prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
+            if (_check_for_pipe(prs, i))
+            {
+                write(1,"im in\n", 6);
+                prs->pipe[j] = i;
+                j++;
+            }
             prs->space_cmd[i] = _split_tokens(&sp, prs->sc_cmds[i], ' ');
             i++;
         }
@@ -101,6 +135,9 @@ void start_parsing(char *line, sc_parse *prs)
                 printf("----|%s|----\t", prs->space_cmd[i][j]);
             printf("\n");
         }
+        j = -1;
+        while (prs->pipe[++j])
+            printf("/%d/\n", prs->pipe[j]);
         write(1, "free time\n", 10);
         // while (prs->space_cmd[i] != NULL)
         // {

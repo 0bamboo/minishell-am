@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/22 14:31:12 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/24 16:44:35 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,25 @@
 #include "../srcs/get_next_line.h"
 #include "../libft/libft.h"
 
+
+typedef struct          o_list
+{
+    char                redir;
+    char                pipe;
+    char                beg;
+    char                end;
+    char                *token;
+    struct  o_list      *next;
+    struct  o_list      *prev;
+    
+       
+}                       p_list;
 typedef struct      o_parse
 {
     char **sc_cmds;
     char ***space_cmd;
     int pipe[100];
+    p_list      dll;
 }                   sc_parse;
 
 typedef struct r_split

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/27 15:45:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/27 17:56:52 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int         _check_for_pipe(ms_p *prs, int current)
     i = 0;
     q = 0;
     dq = 0;
-    printf("#-%s-#\n", prs->sc_cmds[current]);
     while (prs->sc_cmds[current][i])
     {
         if (prs->sc_cmds[current][i] == '"' && dq == 0 && q == 0)
@@ -126,20 +125,55 @@ void        _push_back_tokens(p_list **head, char **cmds)
     // add the data of the new node :
 }
 
+void        _free_tokens_data_(p_list **head)
+{
+    int i;
+
+    i = -1;
+    if ((*head)->args)
+    {
+        while ((*head)->args[++i])
+            free((*head)->args[i]);
+        free((*head)->args);   
+    }
+    // if ((*head)->cmd)
+    //     free((*head)->cmd);
+}
+
+
 void        _free_all_tokens(p_list **head)
 {
-    p_list *curr;
     p_list *next;
     
-    curr = *head;
-    while (curr)
+    if ((*head))
     {
-        next = curr->next;
-        free(curr);
-        curr = next;
+        while (*head)
+        {
+            next = (*head)->next;
+            _free_tokens_data_(head);
+            free((*head));
+            (*head) = next;
+        }
+        (*head) = NULL;
     }
 }
 
+
+void    _free_all_(ms_p *prs, p_list **head)
+{
+    int i;
+
+    i = -1;
+    _free_all_tokens(head);
+    if (prs->sc_cmds)
+    {
+        while (prs->sc_cmds[++i])
+                free(prs->sc_cmds[i]);
+        free(prs->sc_cmds);
+        prs->sc_cmds = NULL;
+    }
+    
+}    
 
 void _start_parsing(char *line, ms_p *prs, p_list **head)
 {
@@ -179,9 +213,9 @@ void _start_parsing(char *line, ms_p *prs, p_list **head)
         curr = *head;
         while (curr)
         {
-            printf("dll = |**-%s-**|\n", curr->args[0]);
+            printf("dll = -> |%s| <-\n", curr->args[0]);
             curr = curr->next;
         }
-        _free_all_tokens(head);
+        _free_all_(prs, head);
     }
 }

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/27 15:32:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/27 17:35:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void  minishell(ms_p *prs)
     {
         // add_to_history(line, prs);
         // head = malloc(sizeof(p_list));
-        head = NULL;
+        // head = NULL;
         _start_parsing(line, prs, &head);
         free(line);
         line = NULL;

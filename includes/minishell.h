@@ -26,7 +26,9 @@ typedef struct          o_list
     char                pipe;
     char                beg;
     char                end;
-    char                *token;
+    char                is_err;
+    char                *cmd;
+    char                **args;
     struct  o_list      *next;
     struct  o_list      *prev;
     

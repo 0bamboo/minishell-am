@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/27 17:56:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/28 15:26:50 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,19 @@ int _check_parsing_errors(char *line)
     int open_dq;
     int count_dq;
     int i;
+    char        tmp;
 
     i = -1;
     open_sq = 0;
     open_dq = 0;
     count_sq = 0;
     count_dq = 0;
+    tmp = '\0';
+    line = ft_strtrim(line, " \t");
     while (line[++i])
     {
+        if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<' || line[i] == ';') && line[i + 1] == '\0')
+            return (1);
         if (line[i] == ';' && line[i + 1] == ';' && open_dq == 0 && open_sq == 0)
             return 1;
         if (line[i] == '"' && open_dq == 0 && open_sq == 0)
@@ -50,6 +55,9 @@ int _check_parsing_errors(char *line)
             count_sq--;
             open_sq = 0;
         }
+        if (tmp == '\\' && line[i] == '"' && open_sq == 0 && open_dq ==  0)
+            return (1);
+        tmp = line[i];
     }
     return (count_sq + count_dq);
 }
@@ -193,6 +201,7 @@ void _start_parsing(char *line, ms_p *prs, p_list **head)
         // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
+            printf("--|%s|--\n", prs->sc_cmds[i]);
             // create a function that checks if there is a pipe or redirection in every token
             prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
             if (_check_for_pipe(prs, i))

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/27 14:39:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/28 22:25:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,24 @@ typedef struct          o_list
     
        
 }                       p_list;
+
+typedef struct errors
+{
+    int     dq;
+    int     sq;
+    int     countdq;
+    int     countsq;
+    int     i;
+    char    tmp;
+    int     len;
+}               err_p;
+
 typedef struct      e_parse
 {
     char **sc_cmds;
     int pipe[100];
     char **sp_cmds;
+    err_p   err;
     p_list      *plst;
 }                   ms_p;
 

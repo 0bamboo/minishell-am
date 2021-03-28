@@ -6,62 +6,69 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 16:36:20 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/28 23:31:23 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-
-int _check_parsing_errors(char *line)
+int     _check_special_chars_(char check, char check_nx, ms_p *prs)
 {
-    int open_sq;
-    int count_sq;
-    int open_dq;
-    int count_dq;
-    int i;
-    char        tmp;
+    if ((check == '|' || check == '>' || check == '\\' || check == '<') && check_nx == '\0')
+        return (1);
+    if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
+        return 1;
+    if (check == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
+        return 1;
+    return 0;
+}
 
-    i = -1;
-    open_sq = 0;
-    open_dq = 0;
-    count_sq = 0;
-    count_dq = 0;
-    tmp = '\0';
+int _check_parsing_errors(char *line, ms_p *prs)
+{
+
+    prs->err.i = -1;
+    prs->err.sq = 0;
+    prs->err.dq = 0;
+    prs->err.countsq = 0;
+    prs->err.countdq = 0;
+    prs->err.tmp = '\0';
     line = ft_strtrim(line, " \t");
-    while (line[++i])
+    prs->err.len = ft_strlen(line);
+    while (line[++prs->err.i])
     {
-        if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<') && line[i + 1] == '\0')
-            return (1);
-        if (line[0] == ';' && line[i + 1] == '\0')
+        // if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<') && line[i + 1] == '\0')
+        //     return (1);
+        // if (line[0] == ';' && line[i + 1] == '\0' && ft_strlen(line) <= 2)
+        //     return 1;
+        // if (line[i] == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
+        //     return 1;
+        if (_check_special_chars_(line[prs->err.i], line[prs->err.i + 1], prs))
             return 1;
-        if (line[i] == ';' && line[i + 1] == ';' && open_dq == 0 && open_sq == 0)
-            return 1;
-        if (line[i] == '"' && open_dq == 0 && open_sq == 0)
+        if (line[prs->err.i] == '"' && prs->err.dq == 0 && prs->err.sq == 0)
         {
-            count_dq++;
-            open_dq = 1;
+            prs->err.countdq++;
+            prs->err.dq = 1;
         }
-        else if (line[i] == '"' && open_dq == 1)
+        else if (line[prs->err.i] == '"' && prs->err.dq == 1)
         {
-            count_dq--;
-            open_dq = 0;
+            prs->err.countdq--;
+            prs->err.dq = 0;
         }
-        if (line[i] == '\'' && open_sq == 0 && open_dq == 0)
+        if (line[prs->err.i] == '\'' && prs->err.sq == 0 && prs->err.dq == 0)
         {
-            count_sq++;
-            open_sq = 1;
+            prs->err.countsq++;
+            prs->err.sq = 1;
         }
-        else if (line[i] == '\'' && open_sq == 1)
+        else if (line[prs->err.i] == '\'' && prs->err.sq == 1)
         {
-            count_sq--;
-            open_sq = 0;
+            prs->err.countsq--;
+            prs->err.sq = 0;
         }
-        if (tmp == '\\' && line[i] == '"' && open_sq == 0 && open_dq ==  0)
+        if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
             return (1);
-        tmp = line[i];
+        prs->err.tmp = line[prs->err.i];
     }
-    return (count_sq + count_dq);
+    return (prs->err.countsq + prs->err.countdq);
 }
 
 
@@ -114,25 +121,21 @@ void        _push_back_tokens(p_list **head, char **cmds)
     curr = *head;
     new = (p_list *)malloc(sizeof(p_list));
     new->args = cmds; /*put the tokens here*/
+    new->prev = NULL;
+    new->next = NULL;
     // printf("|%s|,\n", new->args[0]);
     // printf("|%s|,\n", new->args[1]);
-    if (curr == NULL)
+    if ((*head) == NULL)
     {
-        new->prev = NULL;
-        new->next = NULL;
-        // new->args = malloc(sizeof(char *) * 100);
         (*head) = new;
-        // puts("im in");
+        puts("setting the head");
         return;
     }
+    puts("setting the nodes");
     while (curr->next)
         curr = curr->next;
     curr->next = new;
-    new->next = NULL;
     new->prev = curr;
-    // puts("hi");
-    // printf("|%s|,\n", new->args[0]);
-    // add the data of the new node :
 }
 
 void        _free_tokens_data_(p_list **head)
@@ -188,45 +191,51 @@ void    _free_all_(ms_p *prs, p_list **head)
 void _start_parsing(char *line, ms_p *prs, p_list **head)
 {
     s_split sp;
-    int j;
+    // int j;
     int i;
     p_list *curr;
     
+    // curr = *head;
     _initialize_vars(&sp);
-    if (_check_parsing_errors(line))
+    if (_check_parsing_errors(line, prs))
         _raise_an_exception();
     else 
     {
         prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = 0;
-        j = 0;
+        // j = 0;
         // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
             printf("--|%s|--\n", prs->sc_cmds[i]);
             // create a function that checks if there is a pipe or redirection in every token
             prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
-            if (_check_for_pipe(prs, i))
-            {
-                // in this section well need to figure out how to parse pipe and redir ...
-                prs->pipe[j] = i;
-                j++;
-                _push_back_tokens(head, prs->sp_cmds);
-            }
-            else
-                _push_back_tokens(head, prs->sp_cmds);
+            // if (_check_for_pipe(prs, i))
+            // {
+            //     // in this section well need to figure out how to parse pipe and redir ...
+            //     prs->pipe[j] = i;
+            //     j++;
+            //     _push_back_tokens(head, prs->sp_cmds);
+            // }
+            // else
+            _push_back_tokens(head, prs->sp_cmds);
             i++;
         }
+        // printf("dll = -> |%s| <-\n", (*head)->args[0]);
+        // printf("dll = -> |%s| <-\n", (*head)->next->next->args[0]);
+        // printf("dll = -> |%s| <-\n", (*head)->next->next->next->args[0]);
         // j = -1;
         // while (prs->pipe[++j])
         //     printf("/%d/\n", prs->pipe[j]);
         // write(1, "free time\n", 10);
-        curr = *head;
+        curr = (*head);
         while (curr)
         {
-            printf("dll = -> |%s| <-\n", curr->args[0]);
+            printf("dll = -> |%s| <-\n", curr->args[0]);   
+            puts("1");
             curr = curr->next;
         }
+        // (*head) =(*head)->next;
         _free_all_(prs, head);
     }
 }

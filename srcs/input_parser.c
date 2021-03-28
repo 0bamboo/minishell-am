@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 15:26:50 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/28 16:36:20 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ int _check_parsing_errors(char *line)
     line = ft_strtrim(line, " \t");
     while (line[++i])
     {
-        if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<' || line[i] == ';') && line[i + 1] == '\0')
+        if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<') && line[i + 1] == '\0')
             return (1);
+        if (line[0] == ';' && line[i + 1] == '\0')
+            return 1;
         if (line[i] == ';' && line[i + 1] == ';' && open_dq == 0 && open_sq == 0)
             return 1;
         if (line[i] == '"' && open_dq == 0 && open_sq == 0)

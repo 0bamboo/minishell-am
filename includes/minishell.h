@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 22:25:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 15:27:22 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,19 @@
 #include "../libft/libft.h"
 
 
-typedef struct          o_list
+typedef struct			s_cmd_list
 {
-    char                redir;
-    int                pipe;
-    char                *file_id;
-    int                beg;
-    int               end;
-    char                is_err;
-    char                *cmd;
-    char                **args;
-    struct  o_list      *next;
-    struct  o_list      *prev;
-    
-       
-}                       p_list;
+	char				*command;
+	char				**args;
+	char				redir;
+	char				*file_id;
+	int					pipe;
+	int					beg;
+    int					end;
+    //char                is_err;
+	struct  o_list		*next;
+	struct  o_list		*prev;
+}						t_cmd_list;
 
 typedef struct errors
 {

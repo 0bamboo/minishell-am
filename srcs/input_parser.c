@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/29 10:45:44 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:28:54 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int     _check_special_chars_(char check, char check_nx, ms_p *prs)
 {
     if ((check == '|' || check == '>' || check == '\\' || check == '<') && check_nx == '\0')
         return (1);
-    // if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
-    //     return 1;
+    if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
+        return 1;
     if (check == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
         return 1;
     return 0;
@@ -29,6 +29,7 @@ int     _char_in_tab_(char c, char tab[3])
         return 1;
     return 0;
 }
+// fix spc space spc????????????????????????
 
 int  _check_4_repeated_spc_(char *buff)
 {
@@ -39,13 +40,36 @@ int  _check_4_repeated_spc_(char *buff)
     countpp = 0;
     while (*buff)
     {
-        if (*buff == '|' || *buff == '>' || *buff == '<')
+        if (_char_in_tab_(*buff, "|<>"))
             countredir++;
         else
             countredir = 0;
-        if (countredir == 3)
+        if (countredir == 3 || countpp == 2)
             return 1;
         buff++;
+    }
+    return 0;
+}
+
+int     _check_near_spc_(char *buff)
+{
+    int     spc;
+    
+    spc = 0;
+    while (*buff)
+    {
+        if (*buff == '>' || *buff == '<' || *buff == '|')
+            spc++;
+        else if (*buff == ' ' || *buff == '\t')
+        {
+            buff++;
+            continue;
+        }
+        else
+            spc = 0;
+        buff++;
+        if (spc == 2)
+            return 1;
     }
     return 0;
 }
@@ -66,7 +90,7 @@ int _check_parsing_errors(char *line, ms_p *prs)
     prs->err.len = ft_strlen(line);
     while (line[++prs->err.i])
     {
-        if (line[0] == '>' || line[0] == '<' || line[0] == '|' || ret)
+        if (line[0] == ';' || line[0] == '|' || ret)
             return 1;
         if (_check_special_chars_(line[prs->err.i], line[prs->err.i + 1], prs))
             return 1;
@@ -91,7 +115,7 @@ int _check_parsing_errors(char *line, ms_p *prs)
             prs->err.sq = 0;
         }
         if (_char_in_tab_(line[prs->err.i], "<>|") && !prs->err.dq && !prs->err.sq)
-            ret = _check_4_repeated_spc_(line + prs->err.i);
+            ret = _check_4_repeated_spc_(line + prs->err.i) + _check_near_spc_(line + prs->err.i);
         if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
             return (1);
         prs->err.tmp = line[prs->err.i];
@@ -151,8 +175,6 @@ void        _push_back_tokens(p_list **head, char **cmds)
     new->args = cmds; /*put the tokens here*/
     new->prev = NULL;
     new->next = NULL;
-    // printf("|%s|,\n", new->args[0]);
-    // printf("|%s|,\n", new->args[1]);
     if ((*head) == NULL)
     {
         (*head) = new;
@@ -239,24 +261,9 @@ void _start_parsing(char *line, ms_p *prs, p_list **head)
             printf("--|%s|--\n", prs->sc_cmds[i]);
             // create a function that checks if there is a pipe or redirection in every token
             prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
-            // if (_check_for_pipe(prs, i))
-            // {
-            //     // in this section well need to figure out how to parse pipe and redir ...
-            //     prs->pipe[j] = i;
-            //     j++;
-            //     _push_back_tokens(head, prs->sp_cmds);
-            // }
-            // else
             _push_back_tokens(head, prs->sp_cmds);
             i++;
         }
-        // printf("dll = -> |%s| <-\n", (*head)->args[0]);
-        // printf("dll = -> |%s| <-\n", (*head)->next->next->args[0]);
-        // printf("dll = -> |%s| <-\n", (*head)->next->next->next->args[0]);
-        // j = -1;
-        // while (prs->pipe[++j])
-        //     printf("/%d/\n", prs->pipe[j]);
-        // write(1, "free time\n", 10);
         curr = (*head);
         while (curr)
         {
@@ -264,7 +271,6 @@ void _start_parsing(char *line, ms_p *prs, p_list **head)
             puts("1");
             curr = curr->next;
         }
-        // (*head) =(*head)->next;
         _free_all_(prs, head);
     }
 }

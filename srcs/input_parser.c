@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/29 16:53:07 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 23:44:47 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,16 @@ int     _char_in_tab_(char c, char tab[3])
 
 int  _check_4_repeated_spc_(char *buff)
 {
-    int countredir;
-    int countpp;
-
-    countredir = 0;
-    countpp = 0;
+    int nbrspc;
+    
+    nbrspc = 0;
     while (*buff)
     {
         if (_char_in_tab_(*buff, "|<>"))
-            countredir++;
+            nbrspc++;
         else
-            countredir = 0;
-        if (countredir == 3 || countpp == 2)
+            nbrspc = 0;
+        if (nbrspc == 3)
             return 1;
         buff++;
     }
@@ -54,14 +52,17 @@ int  _check_4_repeated_spc_(char *buff)
 int     _check_near_spc_(char *buff)
 {
     int     spc;
+    char    tmp;
     
     spc = 0;
+    tmp = ' ';
     while (*buff)
     {
-        if (*buff == '>' || *buff == '<' || *buff == '|')
+        if ((*buff == '>' || *buff == '<' || *buff == '|') && tmp == ' ')
             spc++;
         else if (*buff == ' ' || *buff == '\t')
         {
+            tmp = *buff;
             buff++;
             continue;
         }
@@ -70,6 +71,7 @@ int     _check_near_spc_(char *buff)
         buff++;
         if (spc == 2)
             return 1;
+        tmp = *buff;
     }
     return 0;
 }
@@ -238,6 +240,26 @@ void    _free_all_(ms_p *prs, t_cmd_list **head)
     
 }
 
+int     _check_for_special_chars_(char *buff)
+{
+    while (*buff)
+    {
+        if (_char_in_tab_(*buff, "><|"))
+            return 1;
+    }
+    return 0;
+}
+
+void        _copy_tokens_data_(char *line, ms_p *prs, t_cmd_list **head)
+{
+    prs->err.i = 0;
+    *head = NULL;
+    if (!_check_for_special_chars_(line))
+        _push_back_tokens(head, &line);
+    // else
+        // Fill the data of special tokens find a way to parse this tokens that has pipes and redirs in it..
+}
+
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
 {
@@ -258,6 +280,8 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
         // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
+            // if (_check_parsing_errors(prs->sc_cmds[i], prs))
+            //     _raise_an_exception();
             printf("--|%s|--\n", prs->sc_cmds[i]);
             // create a function that checks if there is a pipe or redirection in every token
             prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');

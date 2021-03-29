@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 23:31:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 10:45:44 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,45 @@ int     _check_special_chars_(char check, char check_nx, ms_p *prs)
 {
     if ((check == '|' || check == '>' || check == '\\' || check == '<') && check_nx == '\0')
         return (1);
-    if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
-        return 1;
+    // if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
+    //     return 1;
     if (check == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
         return 1;
     return 0;
 }
 
+int     _char_in_tab_(char c, char tab[3])
+{
+    if (c == tab[0] || c == tab[1] || c == tab[2])
+        return 1;
+    return 0;
+}
+
+int  _check_4_repeated_spc_(char *buff)
+{
+    int countredir;
+    int countpp;
+
+    countredir = 0;
+    countpp = 0;
+    while (*buff)
+    {
+        if (*buff == '|' || *buff == '>' || *buff == '<')
+            countredir++;
+        else
+            countredir = 0;
+        if (countredir == 3)
+            return 1;
+        buff++;
+    }
+    return 0;
+}
+
 int _check_parsing_errors(char *line, ms_p *prs)
 {
+    int ret;
+
+    ret = 0;
 
     prs->err.i = -1;
     prs->err.sq = 0;
@@ -36,12 +66,8 @@ int _check_parsing_errors(char *line, ms_p *prs)
     prs->err.len = ft_strlen(line);
     while (line[++prs->err.i])
     {
-        // if ((line[i] == '|' || line[i] == '>' || line[i] == '\\' || line[i] == '<') && line[i + 1] == '\0')
-        //     return (1);
-        // if (line[0] == ';' && line[i + 1] == '\0' && ft_strlen(line) <= 2)
-        //     return 1;
-        // if (line[i] == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
-        //     return 1;
+        if (line[0] == '>' || line[0] == '<' || line[0] == '|' || ret)
+            return 1;
         if (_check_special_chars_(line[prs->err.i], line[prs->err.i + 1], prs))
             return 1;
         if (line[prs->err.i] == '"' && prs->err.dq == 0 && prs->err.sq == 0)
@@ -64,6 +90,8 @@ int _check_parsing_errors(char *line, ms_p *prs)
             prs->err.countsq--;
             prs->err.sq = 0;
         }
+        if (_char_in_tab_(line[prs->err.i], "<>|") && !prs->err.dq && !prs->err.sq)
+            ret = _check_4_repeated_spc_(line + prs->err.i);
         if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
             return (1);
         prs->err.tmp = line[prs->err.i];
@@ -186,7 +214,8 @@ void    _free_all_(ms_p *prs, p_list **head)
         prs->sc_cmds = NULL;
     }
     
-}    
+}
+
 
 void _start_parsing(char *line, ms_p *prs, p_list **head)
 {

@@ -23,9 +23,10 @@
 typedef struct          o_list
 {
     char                redir;
-    char                pipe;
-    char                beg;
-    char                end;
+    int                pipe;
+    char                *file_id;
+    int                beg;
+    int               end;
     char                is_err;
     char                *cmd;
     char                **args;

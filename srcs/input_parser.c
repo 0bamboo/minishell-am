@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/29 16:28:54 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:53:07 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,13 +165,13 @@ int         _check_for_pipe(ms_p *prs, int current)
     return (0);
 }
 
-void        _push_back_tokens(p_list **head, char **cmds)
+void        _push_back_tokens(t_cmd_list **head, char **cmds)
 {
-    p_list *curr;
-    p_list *new;
+    t_cmd_list *curr;
+    t_cmd_list *new;
 
     curr = *head;
-    new = (p_list *)malloc(sizeof(p_list));
+    new = (t_cmd_list *)malloc(sizeof(t_cmd_list));
     new->args = cmds; /*put the tokens here*/
     new->prev = NULL;
     new->next = NULL;
@@ -188,7 +188,7 @@ void        _push_back_tokens(p_list **head, char **cmds)
     new->prev = curr;
 }
 
-void        _free_tokens_data_(p_list **head)
+void        _free_tokens_data_(t_cmd_list **head)
 {
     int i;
 
@@ -204,9 +204,9 @@ void        _free_tokens_data_(p_list **head)
 }
 
 
-void        _free_all_tokens(p_list **head)
+void        _free_all_tokens(t_cmd_list **head)
 {
-    p_list *next;
+    t_cmd_list *next;
     
     if ((*head))
     {
@@ -222,7 +222,7 @@ void        _free_all_tokens(p_list **head)
 }
 
 
-void    _free_all_(ms_p *prs, p_list **head)
+void    _free_all_(ms_p *prs, t_cmd_list **head)
 {
     int i;
 
@@ -239,12 +239,12 @@ void    _free_all_(ms_p *prs, p_list **head)
 }
 
 
-void _start_parsing(char *line, ms_p *prs, p_list **head)
+void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
 {
     s_split sp;
     // int j;
     int i;
-    p_list *curr;
+    t_cmd_list *curr;
     
     // curr = *head;
     _initialize_vars(&sp);

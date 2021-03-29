@@ -2,13 +2,19 @@
 
 
 
-
-
-
-
-
-
-
+typedef struct			s_list
+{
+	char				*command;
+	char				**args;
+	char				redir;
+	char				*file_id;
+	int					pipe;
+	int					beg;
+	int					end;
+	//char                is_err;
+	struct	o_list		*next;
+	struct	o_list		*prev;
+}						t_list;
 
 
 int             sh_launch(char **args, char **envp)
@@ -31,8 +37,6 @@ int             sh_launch(char **args, char **envp)
     waitpid(pid, &status, WUNTRACED);
   return (1);
 }
-
-
 
 
 // int       sh_execute(char **args, char **envp)
@@ -74,9 +78,80 @@ int             sh_launch(char **args, char **envp)
 // }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void			execute_cmds(p_list *cmds)
+{
+	
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int           main(int argc, char **argv, char **envp)
 {
-  char      **envlist;
+	char      **envlist;
 
     if (!(envlist = envList_dup(envp)))
     {

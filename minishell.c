@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 23:32:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:53:37 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void  minishell(ms_p *prs)
 {
     char *line;
-    p_list *head;
+    t_cmd_list *head;
     
     
     line = NULL;

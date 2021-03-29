@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/28 22:25:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/29 16:52:59 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,19 @@
 #include "../libft/libft.h"
 
 
-typedef struct          o_list
+typedef struct			s_cmd_list
 {
-    char                redir;
-    int                pipe;
-    char                *file_id;
-    int                beg;
-    int               end;
-    char                is_err;
-    char                *cmd;
-    char                **args;
-    struct  o_list      *next;
-    struct  o_list      *prev;
-    
-       
-}                       p_list;
+	char				*command;
+	char				**args;
+	char				redir;
+	char				*file_id;
+	int					pipe;
+	int					beg;
+    int					end;
+    //char                is_err;
+	struct  s_cmd_list		*next;
+	struct  s_cmd_list		*prev;
+}						t_cmd_list;
 
 typedef struct errors
 {
@@ -53,7 +51,7 @@ typedef struct      e_parse
     int pipe[100];
     char **sp_cmds;
     err_p   err;
-    p_list      *plst;
+    t_cmd_list      *plst;
 }                   ms_p;
 
 typedef struct r_split
@@ -67,7 +65,7 @@ typedef struct r_split
 }               s_split;
 
 
-void _start_parsing(char *line, ms_p *prs, p_list **head);
+void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);
 char        *my_strtok(char *s, char *check);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char				**_split_tokens(s_split *sp, char const *s, char c);

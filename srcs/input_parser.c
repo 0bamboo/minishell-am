@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/29 23:44:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/30 11:44:06 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,12 +250,44 @@ int     _check_for_special_chars_(char *buff)
     return 0;
 }
 
+
+void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
+{
+    t_cmd_list *curr;
+    t_cmd_list *new;
+
+    new = malloc(sizeof(t_cmd_list));
+    new->prev = NULL;
+    new->next = NULL;
+    new->beg = 1;
+    new->end = 1;
+    new->args = _split_tokens(prs->sp, line, ' ');
+    new->command = new->args[0];
+    if (!(*head))
+        (*head) = new;
+    else
+    {
+        curr = (*head);
+        while (curr->next)
+            curr =  curr->next;
+        curr->next = new;
+        new->prev = curr;
+    }
+}
+
+
+
 void        _copy_tokens_data_(char *line, ms_p *prs, t_cmd_list **head)
 {
     prs->err.i = 0;
     *head = NULL;
     if (!_check_for_special_chars_(line))
-        _push_back_tokens(head, &line);
+        _push_back_normal_tokens_(line, head, prs);
+    else
+    {
+        puts("special tokens");
+    }
+    
     // else
         // Fill the data of special tokens find a way to parse this tokens that has pipes and redirs in it..
 }

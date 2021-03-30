@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/29 16:52:59 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/30 11:40:03 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,6 @@ typedef struct errors
     int     len;
 }               err_p;
 
-typedef struct      e_parse
-{
-    char **sc_cmds;
-    int pipe[100];
-    char **sp_cmds;
-    err_p   err;
-    t_cmd_list      *plst;
-}                   ms_p;
 
 typedef struct r_split
 {
@@ -63,6 +55,16 @@ typedef struct r_split
     int check_dq;
     int check_sq;
 }               s_split;
+
+typedef struct      e_parse
+{
+    char **sc_cmds;
+    int pipe[100];
+    char **sp_cmds;
+    err_p   err;
+    t_cmd_list      *plst;
+    s_split         *sp;
+}                   ms_p;
 
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);

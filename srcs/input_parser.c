@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/30 11:44:06 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/30 22:46:36 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,7 @@ int     _check_for_special_chars_(char *buff)
     {
         if (_char_in_tab_(*buff, "><|"))
             return 1;
+        buff++;
     }
     return 0;
 }
@@ -255,14 +256,18 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
 {
     t_cmd_list *curr;
     t_cmd_list *new;
-
+    s_split sp;
+    
+    //  use double pointer for declaring the struct ...
+    prs->err.i = 0;
     new = malloc(sizeof(t_cmd_list));
     new->prev = NULL;
     new->next = NULL;
     new->beg = 1;
     new->end = 1;
-    new->args = _split_tokens(prs->sp, line, ' ');
-    new->command = new->args[0];
+    _initialize_vars(&sp);
+    new->args = _split_tokens(&sp, line, ' ');
+    new->command = ft_strdup(new->args[0]);
     if (!(*head))
         (*head) = new;
     else
@@ -277,16 +282,21 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
 
 
 
-void        _copy_tokens_data_(char *line, ms_p *prs, t_cmd_list **head)
+void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
 {
-    prs->err.i = 0;
-    *head = NULL;
-    if (!_check_for_special_chars_(line))
-        _push_back_normal_tokens_(line, head, prs);
+    // prs->err.i = 0;
+    // *head = NULL;
+    // t_cmd_list *curr;
+    if (!_check_for_special_chars_(token))
+    {
+        puts("im in");
+        _push_back_normal_tokens_(token, head, prs);
+    }
     else
     {
         puts("special tokens");
     }
+
     
     // else
         // Fill the data of special tokens find a way to parse this tokens that has pipes and redirs in it..
@@ -312,21 +322,29 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
         // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[i])
         {
+            _copy_tokens_data_(prs->sc_cmds[i], prs, head);
             // if (_check_parsing_errors(prs->sc_cmds[i], prs))
             //     _raise_an_exception();
             printf("--|%s|--\n", prs->sc_cmds[i]);
             // create a function that checks if there is a pipe or redirection in every token
-            prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
-            _push_back_tokens(head, prs->sp_cmds);
+            // prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
+            // _push_back_tokens(head, prs->sp_cmds);
             i++;
         }
         curr = (*head);
+            // curr = *head;
         while (curr)
         {
-            printf("dll = -> |%s| <-\n", curr->args[0]);   
-            puts("1");
+            printf("{%s}\n", curr->args[0]);
             curr = curr->next;
         }
         _free_all_(prs, head);
+        // while (curr)
+        // {
+        //     printf("dll = -> |%s| <-\n", curr->args[0]);   
+        //     puts("1");
+        //     curr = curr->next;
+        // }
+        // _free_all_(prs, head);
     }
 }

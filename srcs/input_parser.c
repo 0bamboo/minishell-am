@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/30 22:46:36 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/31 10:48:18 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,8 @@ void        _free_tokens_data_(t_cmd_list **head)
             free((*head)->args[i]);
         free((*head)->args);   
     }
-    // if ((*head)->cmd)
-    //     free((*head)->cmd);
+    if ((*head)->command)
+        free((*head)->command);
 }
 
 
@@ -220,6 +220,7 @@ void        _free_all_tokens(t_cmd_list **head)
             (*head) = next;
         }
         (*head) = NULL;
+        puts("hello");
     }
 }
 
@@ -230,13 +231,14 @@ void    _free_all_(ms_p *prs, t_cmd_list **head)
 
     i = -1;
     _free_all_tokens(head);
-    if (prs->sc_cmds)
-    {
-        while (prs->sc_cmds[++i])
-                free(prs->sc_cmds[i]);
-        free(prs->sc_cmds);
-        prs->sc_cmds = NULL;
-    }
+    prs->err.i = 0;
+    // if (prs->sc_cmds)
+    // {
+    //     while (prs->sc_cmds[++i])
+    //             free(prs->sc_cmds[i]);
+    //     free(prs->sc_cmds);
+    //     prs->sc_cmds = NULL;
+    // }
     
 }
 
@@ -265,9 +267,13 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
     new->next = NULL;
     new->beg = 1;
     new->end = 1;
+    // puts("im here");
     _initialize_vars(&sp);
+    // puts("im here");
     new->args = _split_tokens(&sp, line, ' ');
+    // puts("im here");
     new->command = ft_strdup(new->args[0]);
+    // puts("im here");
     if (!(*head))
         (*head) = new;
     else
@@ -278,6 +284,7 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
         curr->next = new;
         new->prev = curr;
     }
+    // puts("im out");
 }
 
 
@@ -317,28 +324,36 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     else 
     {
         prs->sc_cmds = _split_tokens(&sp, line, ';');
-        i = 0;
+        i = -1;
         // j = 0;
         // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
-        while (prs->sc_cmds[i])
+        while (prs->sc_cmds[++i])
         {
+            puts("here");
             _copy_tokens_data_(prs->sc_cmds[i], prs, head);
+            puts("here");
             // if (_check_parsing_errors(prs->sc_cmds[i], prs))
             //     _raise_an_exception();
             printf("--|%s|--\n", prs->sc_cmds[i]);
-            // create a function that checks if there is a pipe or redirection in every token
-            // prs->sp_cmds = _split_tokens(&sp, prs->sc_cmds[i], ' ');
-            // _push_back_tokens(head, prs->sp_cmds);
-            i++;
+            curr = (*head);
+                // curr = *head;
+            while (curr)
+            {
+                printf("{%s}\n", curr->args[0]);
+                curr = curr->next;
+            }
+            puts("im here");
+            _free_all_(prs, head);
+            puts("im here");
         }
-        curr = (*head);
-            // curr = *head;
-        while (curr)
-        {
-            printf("{%s}\n", curr->args[0]);
-            curr = curr->next;
-        }
-        _free_all_(prs, head);
+        i = -1;
+        // if (prs->sc_cmds)
+        // {
+        //     while (prs->sc_cmds[++i])
+        //             free(prs->sc_cmds[i]);
+        //     free(prs->sc_cmds);
+        //     prs->sc_cmds = NULL;
+        // }
         // while (curr)
         // {
         //     printf("dll = -> |%s| <-\n", curr->args[0]);   

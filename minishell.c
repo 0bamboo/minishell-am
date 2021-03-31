@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/31 10:50:29 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/31 22:56:21 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void  minishell(ms_p *prs)
 {
     char *line;
     t_cmd_list *head;
-    int i;
     
     line = NULL;
     // head = malloc(sizeof(p_list));
@@ -38,7 +37,6 @@ void  minishell(ms_p *prs)
             exit(0);
         }
         _start_parsing(line, prs, &head);
-        i = -1;
         free(line);
         line = NULL;
         write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);

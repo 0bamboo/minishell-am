@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/31 10:48:18 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/01 00:15:16 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,22 @@ int     _check_near_spc_(char *buff)
     return 0;
 }
 
+int     _check_backslash_error_(char *checker, int i)
+{
+    int counter;
+
+    counter = 0;
+    printf("cc--%c--cc--%d\n", checker[i], i);
+    while (checker[i] == '\\')
+    {
+        counter++;
+        i--;
+    }
+    if (counter % 2 == 0)
+        return 0;
+    return 1;
+}
+
 int _check_parsing_errors(char *line, ms_p *prs)
 {
     int ret;
@@ -88,7 +104,7 @@ int _check_parsing_errors(char *line, ms_p *prs)
     prs->err.countsq = 0;
     prs->err.countdq = 0;
     prs->err.tmp = '\0';
-    line = ft_strtrim(line, " \t");
+    line = ft_strtrim(line, " \t\n\v");
     prs->err.len = ft_strlen(line);
     while (line[++prs->err.i])
     {
@@ -105,6 +121,8 @@ int _check_parsing_errors(char *line, ms_p *prs)
         {
             prs->err.countdq--;
             prs->err.dq = 0;
+            if (_check_backslash_error_(line, prs->err.i - 1))
+                return 1;
         }
         if (line[prs->err.i] == '\'' && prs->err.sq == 0 && prs->err.dq == 0)
         {
@@ -118,8 +136,8 @@ int _check_parsing_errors(char *line, ms_p *prs)
         }
         if (_char_in_tab_(line[prs->err.i], "<>|") && !prs->err.dq && !prs->err.sq)
             ret = _check_4_repeated_spc_(line + prs->err.i) + _check_near_spc_(line + prs->err.i);
-        if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
-            return (1);
+        // if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
+        //     return (1);
         prs->err.tmp = line[prs->err.i];
     }
     return (prs->err.countsq + prs->err.countdq);
@@ -128,7 +146,7 @@ int _check_parsing_errors(char *line, ms_p *prs)
 
 void        _raise_an_exception()
 {
-    printf("Parsing Error !!\n");
+    write(1, "mini$hell: Syntax error .\n", 26);
 }
 
 void        _initialize_vars(s_split *ps)
@@ -220,16 +238,15 @@ void        _free_all_tokens(t_cmd_list **head)
             (*head) = next;
         }
         (*head) = NULL;
-        puts("hello");
     }
 }
 
 
 void    _free_all_(ms_p *prs, t_cmd_list **head)
 {
-    int i;
+    // int i;
 
-    i = -1;
+    // i = -1;
     _free_all_tokens(head);
     prs->err.i = 0;
     // if (prs->sc_cmds)
@@ -296,7 +313,6 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
     // t_cmd_list *curr;
     if (!_check_for_special_chars_(token))
     {
-        puts("im in");
         _push_back_normal_tokens_(token, head, prs);
     }
     else
@@ -309,6 +325,82 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
         // Fill the data of special tokens find a way to parse this tokens that has pipes and redirs in it..
 }
 
+char ret_spc(char buffer)
+{
+    if (buffer == '\\')
+        return ('\\');
+    else if (buffer == '"')
+        return '"';
+    else if (buffer == '$')
+        return '$';
+    else
+        return 0;
+}
+int is_special(char c)
+{
+    if (c == '\\' || c == '"' || c == '$')
+        return 1;
+    return 0;
+}
+
+char *_handle_backslash_(char *buffer)
+{
+    int i;
+    char *tab;
+    // int open = 0;
+    int j;
+    
+    i = 0;
+    j = 0;
+    tab = (char *)malloc(sizeof(char) * (ft_strlen(buffer) + 1));
+    printf("^%lu^\n", ft_strlen(buffer));
+    while (i + 1 < (int)ft_strlen(buffer))
+    {
+        if (buffer[i] == '"')
+        {
+            tab[j] = buffer[i];
+            i++;
+            j++;
+            while (buffer[i] != '"')
+            {
+                if (buffer[i] == '\\' && is_special(buffer[i + 1]))
+                {
+                    tab[j] = ret_spc(buffer[i + 1]);
+                    j++;
+                    i+=2;
+                    continue;
+                }
+                tab[j] = buffer[i];
+                j++;
+                i++;
+                printf("*%d-%d*,\n", j, (i + 1));
+            }
+            tab[j] = buffer[i];
+            j++;
+            i++;
+        }
+        else
+        {
+            tab[j] = buffer[i];
+            i++;
+            j++;
+        }
+        // Try to figure out the algorithm behind this one and test with bash not zsh AHOOOO
+    }
+    tab[j] = '\0';
+    return (tab);
+}
+
+int     in(char *check, char c)
+{
+    while (*check)
+    {
+        if (*check == c)
+            return 1;
+        check++;
+    }
+    return 0;
+}
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
 {
@@ -319,19 +411,23 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     
     // curr = *head;
     _initialize_vars(&sp);
+    prs->sc_cmds = _split_tokens(&sp, line, ';');
     if (_check_parsing_errors(line, prs))
         _raise_an_exception();
-    else 
+    else
     {
-        prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = -1;
-        // j = 0;
-        // prs->space_cmd = (char ***)malloc(sizeof(char **) * (sp.size));
         while (prs->sc_cmds[++i])
         {
-            puts("here");
+            _initialize_vars(&sp);
+            if (_check_parsing_errors(prs->sc_cmds[i], prs))
+            {
+                _raise_an_exception();
+                break;
+            }
+            if (in(prs->sc_cmds[i], '"'))
+                prs->sc_cmds[i] = _handle_backslash_(prs->sc_cmds[i]);
             _copy_tokens_data_(prs->sc_cmds[i], prs, head);
-            puts("here");
             // if (_check_parsing_errors(prs->sc_cmds[i], prs))
             //     _raise_an_exception();
             printf("--|%s|--\n", prs->sc_cmds[i]);
@@ -342,24 +438,22 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
                 printf("{%s}\n", curr->args[0]);
                 curr = curr->next;
             }
-            puts("im here");
             _free_all_(prs, head);
-            puts("im here");
+            // i = -1;
+            // if (prs->sc_cmds)
+            // {
+            //     while (prs->sc_cmds[++i])
+            //             free(prs->sc_cmds[i]);
+            //     free(prs->sc_cmds);
+            //     prs->sc_cmds = NULL;
+            // }
+            // while (curr)
+            // {
+            //     printf("dll = -> |%s| <-\n", curr->args[0]);   
+            //     puts("1");
+            //     curr = curr->next;
+            // }
+            // _free_all_(prs, head);
         }
-        i = -1;
-        // if (prs->sc_cmds)
-        // {
-        //     while (prs->sc_cmds[++i])
-        //             free(prs->sc_cmds[i]);
-        //     free(prs->sc_cmds);
-        //     prs->sc_cmds = NULL;
-        // }
-        // while (curr)
-        // {
-        //     printf("dll = -> |%s| <-\n", curr->args[0]);   
-        //     puts("1");
-        //     curr = curr->next;
-        // }
-        // _free_all_(prs, head);
     }
 }

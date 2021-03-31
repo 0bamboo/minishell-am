@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/30 22:44:40 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/03/31 14:15:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct			s_cmd_list
 	char				*command;
 	char				**args;
 	char				redir;
-	char				*file_id;
+	char				**file_id;
 	int					pipe;
 	int					beg;
     int					end;

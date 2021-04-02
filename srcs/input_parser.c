@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/01 00:15:16 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/02 15:26:13 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ int _check_parsing_errors(char *line, ms_p *prs)
         {
             prs->err.countdq--;
             prs->err.dq = 0;
-            if (_check_backslash_error_(line, prs->err.i - 1))
-                return 1;
+            // if (_check_backslash_error_(line, prs->err.i - 1))
+            //     return 1;
         }
         if (line[prs->err.i] == '\'' && prs->err.sq == 0 && prs->err.dq == 0)
         {
@@ -284,15 +284,13 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
     new->next = NULL;
     new->beg = 1;
     new->end = 1;
-    // puts("im here");
     _initialize_vars(&sp);
-    // puts("im here");
     new->args = _split_tokens(&sp, line, ' ');
-    // puts("im here");
     new->command = ft_strdup(new->args[0]);
-    // puts("im here");
     if (!(*head))
+    {
         (*head) = new;
+    }
     else
     {
         curr = (*head);
@@ -301,7 +299,6 @@ void _push_back_normal_tokens_(char *line, t_cmd_list **head, ms_p *prs)
         curr->next = new;
         new->prev = curr;
     }
-    // puts("im out");
 }
 
 
@@ -311,15 +308,17 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
     // prs->err.i = 0;
     // *head = NULL;
     // t_cmd_list *curr;
-    if (!_check_for_special_chars_(token))
+    if (token != NULL)
     {
-        _push_back_normal_tokens_(token, head, prs);
+        if (!_check_for_special_chars_(token))
+        {
+            _push_back_normal_tokens_(token, head, prs);
+        }
+        else
+        {
+            puts("special tokens");
+        }
     }
-    else
-    {
-        puts("special tokens");
-    }
-
     
     // else
         // Fill the data of special tokens find a way to parse this tokens that has pipes and redirs in it..
@@ -411,34 +410,29 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     
     // curr = *head;
     _initialize_vars(&sp);
-    prs->sc_cmds = _split_tokens(&sp, line, ';');
     if (_check_parsing_errors(line, prs))
         _raise_an_exception();
     else
     {
+        prs->sc_cmds = _split_tokens(&sp, line, ';');
         i = -1;
         while (prs->sc_cmds[++i])
         {
-            _initialize_vars(&sp);
-            if (_check_parsing_errors(prs->sc_cmds[i], prs))
+
+            // if (in(prs->sc_cmds[i], '"'))
+            //     prs->sc_cmds[i] = _handle_backslash_(prs->sc_cmds[i]);
+            if (prs->sc_cmds[i] && prs->sc_cmds[i][0])
             {
-                _raise_an_exception();
-                break;
+                printf("--|%s|--\n", prs->sc_cmds[i]);
+                _copy_tokens_data_(prs->sc_cmds[i], prs, head);
             }
-            if (in(prs->sc_cmds[i], '"'))
-                prs->sc_cmds[i] = _handle_backslash_(prs->sc_cmds[i]);
-            _copy_tokens_data_(prs->sc_cmds[i], prs, head);
-            // if (_check_parsing_errors(prs->sc_cmds[i], prs))
-            //     _raise_an_exception();
-            printf("--|%s|--\n", prs->sc_cmds[i]);
             curr = (*head);
-                // curr = *head;
             while (curr)
             {
                 printf("{%s}\n", curr->args[0]);
                 curr = curr->next;
             }
-            _free_all_(prs, head);
+            // _free_all_(prs, head);
             // i = -1;
             // if (prs->sc_cmds)
             // {
@@ -453,7 +447,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
             //     puts("1");
             //     curr = curr->next;
             // }
-            // _free_all_(prs, head);
+            _free_all_(prs, head);
         }
     }
 }

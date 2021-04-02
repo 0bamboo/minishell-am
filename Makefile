@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/03/31 10:05:56 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/04/02 14:48:31 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ all: $(NAME)
 $(LIBFT_LIB):
 			@make -C $(LIBFT)
 
-$(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN)
+$(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 			@mv *.o ./srcs
 			@ar -rcs $(MINISHELLLIB) $(OBJECT)
 			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) -o $(NAME)

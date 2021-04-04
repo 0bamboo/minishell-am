@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/03 13:20:31 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/04 23:14:08 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ typedef struct			s_cmd_list
 {
 	char				*command;
 	char				**args;
-	char				redir;
-	char				**file_id;
-	int					pipe;
-	int					beg;
+	int					nbrpipe;
+	int					iter;
     int					end;
-    //char                is_err;
+    int beg;
 	struct  s_cmd_list		*next;
 	struct  s_cmd_list		*prev;
 }						t_cmd_list;
@@ -62,6 +60,10 @@ typedef struct      e_parse
     char **sc_cmds;
     int pipe[100];
     char **sp_cmds;
+    int er;
+    int i;
+    int credir;
+    char tmp;
     err_p   err;
     t_cmd_list      *plst;
     s_split         *sp;

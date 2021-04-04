@@ -6,22 +6,22 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/02 15:26:13 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/04 22:54:13 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int     _check_special_chars_(char check, char check_nx, ms_p *prs)
-{
-    if ((check == '|' || check == '>' || check == '\\' || check == '<') && check_nx == '\0')
-        return (1);
-    if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
-        return 1;
-    if (check == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
-        return 1;
-    return 0;
-}
+// int     _check_special_chars_(char check, char check_nx, ms_p *prs)
+// {
+//     if ((check == '|' || check == '>' || check == '\\' || check == '<') && check_nx == '\0')
+//         return (1);
+//     if (check == ';' && check_nx == '\0' && prs->err.len <= 2)
+//         return 1;
+//     if (check == ';' && prs->err.tmp == ';' && prs->err.dq == 0 && prs->err.sq == 0)
+//         return 1;
+//     return 0;
+// }
 
 int     _char_in_tab_(char c, char tab[3])
 {
@@ -29,118 +29,257 @@ int     _char_in_tab_(char c, char tab[3])
         return 1;
     return 0;
 }
-// fix spc space spc????????????????????????
+// // fix spc space spc????????????????????????
 
-int  _check_4_repeated_spc_(char *buff)
-{
-    int nbrspc;
+// int  _check_4_repeated_spc_(char *buff)
+// {
+//     int nbrspc;
     
-    nbrspc = 0;
-    while (*buff)
+//     nbrspc = 0;
+//     while (*buff)
+//     {
+//         if (_char_in_tab_(*buff, "|<>"))
+//             nbrspc++;
+//         else
+//             nbrspc = 0;
+//         if (nbrspc == 3)
+//             return 1;
+//         buff++;
+//     }
+//     return 0;
+// }
+
+// int     _check_near_spc_(char *buff)
+// {
+//     int     spc;
+//     char    tmp;
+    
+//     spc = 0;
+//     tmp = ' ';
+//     while (*buff)
+//     {
+//         if ((*buff == '>' || *buff == '<' || *buff == '|') && tmp == ' ')
+//             spc++;
+//         else if (*buff == ' ' || *buff == '\t')
+//         {
+//             tmp = *buff;
+//             buff++;
+//             continue;
+//         }
+//         else
+//             spc = 0;
+//         buff++;
+//         if (spc == 2)
+//             return 1;
+//         tmp = *buff;
+//     }
+//     return 0;
+// }
+
+// int     _check_backslash_error_(char *checker, int i)
+// {
+//     int counter;
+
+//     counter = 0;
+//     printf("cc--%c--cc--%d\n", checker[i], i);
+//     while (checker[i] == '\\')
+//     {
+//         counter++;
+//         i--;
+//     }
+//     if (counter % 2 == 0)
+//         return 0;
+//     return 1;
+// }
+
+// int _check_parsing_errors(char *line, ms_p *prs)
+// {
+//     int ret;
+
+//     ret = 0;
+
+//     prs->err.i = -1;
+//     prs->err.sq = 0;
+//     prs->err.dq = 0;
+//     prs->err.countsq = 0;
+//     prs->err.countdq = 0;
+//     prs->err.tmp = '\0';
+//     line = ft_strtrim(line, " \t\n\v");
+//     prs->err.len = ft_strlen(line);
+//     while (line[++prs->err.i])
+//     {
+//         if (line[0] == ';' || line[0] == '|' || ret)
+//             return 1;
+//         if (_check_special_chars_(line[prs->err.i], line[prs->err.i + 1], prs))
+//             return 1;
+//         if (line[prs->err.i] == '"' && prs->err.dq == 0 && prs->err.sq == 0)
+//         {
+//             prs->err.countdq++;
+//             prs->err.dq = 1;
+//         }
+//         else if (line[prs->err.i] == '"' && prs->err.dq == 1)
+//         {
+//             prs->err.countdq--;
+//             prs->err.dq = 0;
+//             // if (_check_backslash_error_(line, prs->err.i - 1))
+//             //     return 1;
+//         }
+//         if (line[prs->err.i] == '\'' && prs->err.sq == 0 && prs->err.dq == 0)
+//         {
+//             prs->err.countsq++;
+//             prs->err.sq = 1;
+//         }
+//         else if (line[prs->err.i] == '\'' && prs->err.sq == 1)
+//         {
+//             prs->err.countsq--;
+//             prs->err.sq = 0;
+//         }
+//         if (_char_in_tab_(line[prs->err.i], "<>|") && !prs->err.dq && !prs->err.sq)
+//             ret = _check_4_repeated_spc_(line + prs->err.i) + _check_near_spc_(line + prs->err.i);
+//         // if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
+//         //     return (1);
+//         prs->err.tmp = line[prs->err.i];
+//     }
+//     return (prs->err.countsq + prs->err.countdq);
+// }
+
+int _check_semi_colon(char *line, ms_p *prs)
+{
+    prs->i++;
+    if (line[0] == ';') // if the first chars is semicolon it is an ms_por
     {
-        if (_char_in_tab_(*buff, "|<>"))
-            nbrspc++;
-        else
-            nbrspc = 0;
-        if (nbrspc == 3)
-            return 1;
-        buff++;
+        prs->er = 1;
+        return prs->i;
     }
-    return 0;
+    while (line[prs->i])
+    {
+        // if the char after the semicolon is one of this | or ; then it is an ms_por
+        if (line[prs->i] == '|' || line[prs->i] == ';')
+        {
+            prs->er = 1;
+            break;
+        }
+        else if (line[prs->i] == ' ') // skip while it's a white space
+            prs->i++;
+        else
+            break; // break if nothing above was executed
+    }
+    return(--prs->i);// for knowing the char that we break at .... pardon my english hahaha
 }
 
-int     _check_near_spc_(char *buff)
+int _check_pipe(char *line, ms_p *prs)
 {
-    int     spc;
-    char    tmp;
-    
-    spc = 0;
-    tmp = ' ';
-    while (*buff)
+    prs->i++;
+                // if the first char is pipe or the next one is backslash zero then it is an ms_por
+    if (line[0] == '|' || !line[prs->i + 1])
     {
-        if ((*buff == '>' || *buff == '<' || *buff == '|') && tmp == ' ')
-            spc++;
-        else if (*buff == ' ' || *buff == '\t')
+        prs->er = 1;
+        return prs->i;
+    }
+    while (line[prs->i])
+    {
+        // Skip white spaces :
+        if (line[prs->i] == ' ')
+            prs->i++;
+        else if (line[prs->i] == '|' || line[prs->i] == ';') // Raise an exception if this condtion true
         {
-            tmp = *buff;
-            buff++;
+            prs->er = 1;
+            break;
+        }
+        else
+            break;
+    }
+    return (--prs->i);
+}
+
+int _check_redirection(char *line, ms_p *prs)
+{
+    prs->credir = 1;
+    prs->i++;
+    while (line[prs->i])
+    {
+        // Start counting the redirection > 
+        if (prs->tmp == '>' && line[prs->i] == '>')
+        {
+            puts("hi");
+            prs->tmp = '>';
+            prs->credir += 1;
+            prs->i++;
+        }
+        else if (line[prs->i + 1] && prs->tmp == '>' && line[prs->i] == ' ' && line[prs->i + 1] == '>') // This condition for this case for example  > > 
+        {
+            prs->er = 1;
+            return prs->i;
+        }
+        else if (line[prs->i] == ' ')
+            prs->i++; // this condition for ; and | after redir | this  for > after < | this for  > or < after < | this for counting the number of redirection >  
+        else if (line[prs->i] == ';' || line[prs->i] == '|' || (line[prs->i] == '<' && prs->tmp == '>') || (prs->tmp == '<' && (line[prs->i] == '>' || line[prs->i] == '<')) || prs->credir >= 3)
+        {
+            prs->er = 1;
+            return prs->i;
+        }
+        else
+            break;
+    }
+    if (!line[prs->i])
+        prs->er = 1;
+    return (--prs->i);
+}
+
+int _check_double_quotes(char *line, ms_p *prs)
+{
+    prs->i++;
+    while (line[prs->i] != prs->tmp && line[prs->i])
+    {
+        // if you find backslash skip too chars the current one and the next one :
+        if (line[prs->i] == '\\' && line[prs->i + 1] != '\0')
+        {
+            prs->i += 2;
             continue;
         }
-        else
-            spc = 0;
-        buff++;
-        if (spc == 2)
-            return 1;
-        tmp = *buff;
+        prs->i++;
     }
-    return 0;
+    if (line[prs->i] != prs->tmp) // this for checking the double quotes exists : else we raise an exception
+        prs->er = 1; 
+    return prs->i;
 }
 
-int     _check_backslash_error_(char *checker, int i)
+int _check_single_quotes(char *line, ms_p *prs)
 {
-    int counter;
-
-    counter = 0;
-    printf("cc--%c--cc--%d\n", checker[i], i);
-    while (checker[i] == '\\')
-    {
-        counter++;
-        i--;
-    }
-    if (counter % 2 == 0)
-        return 0;
-    return 1;
+    prs->i++;
+    while (line[prs->i] != '\'' && line[prs->i])
+        prs->i++;
+    printf("|%c|\n", line[prs->i]);
+    if (line[prs->i] != prs->tmp) // checking that the last chars after loop is single quotes else it is an ms_por
+        prs->er = 1;
+    return prs->i;
 }
 
-int _check_parsing_errors(char *line, ms_p *prs)
+int parse(char *line, ms_p *prs)
 {
-    int ret;
 
-    ret = 0;
-
-    prs->err.i = -1;
-    prs->err.sq = 0;
-    prs->err.dq = 0;
-    prs->err.countsq = 0;
-    prs->err.countdq = 0;
-    prs->err.tmp = '\0';
-    line = ft_strtrim(line, " \t\n\v");
-    prs->err.len = ft_strlen(line);
-    while (line[++prs->err.i])
+    prs->i = 0;
+    // puts("im in");
+    prs->er = 0;
+    while (line[prs->i])
     {
-        if (line[0] == ';' || line[0] == '|' || ret)
+        prs->tmp = line[prs->i];
+        // Check ms_pors of semicolon :
+        if (line[prs->i] == ';')
+            prs->i = _check_semi_colon(line, prs);
+        else if (line[prs->i] == '|') 
+            prs->i = _check_pipe(line, prs);
+        else if ((line[prs->i] == '>' || line[prs->i] == '<')) // Check errors of redirection :
+            prs->i = _check_redirection(line, prs);
+       else if (prs->tmp == '"') // Check errors of double quotes :
+           prs->i = _check_double_quotes(line, prs);
+       else if (prs->tmp == '\'') // Check errors of single quotes :
+           prs->i = _check_single_quotes(line, prs);
+        if (prs->er)
             return 1;
-        if (_check_special_chars_(line[prs->err.i], line[prs->err.i + 1], prs))
-            return 1;
-        if (line[prs->err.i] == '"' && prs->err.dq == 0 && prs->err.sq == 0)
-        {
-            prs->err.countdq++;
-            prs->err.dq = 1;
-        }
-        else if (line[prs->err.i] == '"' && prs->err.dq == 1)
-        {
-            prs->err.countdq--;
-            prs->err.dq = 0;
-            // if (_check_backslash_error_(line, prs->err.i - 1))
-            //     return 1;
-        }
-        if (line[prs->err.i] == '\'' && prs->err.sq == 0 && prs->err.dq == 0)
-        {
-            prs->err.countsq++;
-            prs->err.sq = 1;
-        }
-        else if (line[prs->err.i] == '\'' && prs->err.sq == 1)
-        {
-            prs->err.countsq--;
-            prs->err.sq = 0;
-        }
-        if (_char_in_tab_(line[prs->err.i], "<>|") && !prs->err.dq && !prs->err.sq)
-            ret = _check_4_repeated_spc_(line + prs->err.i) + _check_near_spc_(line + prs->err.i);
-        // if (prs->err.tmp == '\\' && line[prs->err.i] == '"' && prs->err.sq == 0 && prs->err.dq ==  0)
-        //     return (1);
-        prs->err.tmp = line[prs->err.i];
+       prs->i++;
     }
-    return (prs->err.countsq + prs->err.countdq);
+    return (0);
 }
 
 
@@ -159,31 +298,31 @@ void        _initialize_vars(s_split *ps)
 
 
 
-int         _check_for_pipe(ms_p *prs, int current)
-{
-    int     i;
-    int     q;
-    int     dq;
+// int         _check_for_pipe(ms_p *prs, int current)
+// {
+//     int     i;
+//     int     q;
+//     int     dq;
 
-    i = 0;
-    q = 0;
-    dq = 0;
-    while (prs->sc_cmds[current][i])
-    {
-        if (prs->sc_cmds[current][i] == '"' && dq == 0 && q == 0)
-            dq = 1;
-        else if (prs->sc_cmds[current][i] == '\'' && q == 0 && dq == 0)
-            q = 1;
-        else if (prs->sc_cmds[current][i] == '|' && dq == 0 && q == 0)
-            return i;
-        else if (prs->sc_cmds[current][i] == '"' && dq == 1)
-            dq = 0;
-        else if (prs->sc_cmds[current][i] == '\'' && q == 1)
-            q = 0;
-        i++;
-    }
-    return (0);
-}
+//     i = 0;
+//     q = 0;
+//     dq = 0;
+//     while (prs->sc_cmds[current][i])
+//     {
+//         if (prs->sc_cmds[current][i] == '"' && dq == 0 && q == 0)
+//             dq = 1;
+//         else if (prs->sc_cmds[current][i] == '\'' && q == 0 && dq == 0)
+//             q = 1;
+//         else if (prs->sc_cmds[current][i] == '|' && dq == 0 && q == 0)
+//             return i;
+//         else if (prs->sc_cmds[current][i] == '"' && dq == 1)
+//             dq = 0;
+//         else if (prs->sc_cmds[current][i] == '\'' && q == 1)
+//             q = 0;
+//         i++;
+//     }
+//     return (0);
+// }
 
 void        _push_back_tokens(t_cmd_list **head, char **cmds)
 {
@@ -410,7 +549,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     
     // curr = *head;
     _initialize_vars(&sp);
-    if (_check_parsing_errors(line, prs))
+    if (parse(ft_strtrim(line, " \t\v\n"), prs))
         _raise_an_exception();
     else
     {

@@ -4,9 +4,128 @@
 #include "libft/libft.h"
 
 
-// Example of doubly linked list :
+typedef struct err
+{
+    int er;
+    int i;
+    int credir;
+    char tmp;
+}err;
 
-int parse(char *line)
+// Example of doubly linked list :
+int _check_semi_colon(char *line, err *prs)
+{
+    prs->i++;
+    if (line[0] == ';') // if the first chars is semicolon it is an error
+    {
+        prs->er = 1;
+        return prs->i;
+    }
+    while (line[prs->i])
+    {
+        // if the char after the semicolon is one of this | or ; then it is an error
+        if (line[prs->i] == '|' || line[prs->i] == ';')
+        {
+            prs->er = 1;
+            break;
+        }
+        else if (line[prs->i] == ' ') // skip while it's a white space
+            prs->i++;
+        else
+            break; // break if nothing above was executed
+    }
+    return(--prs->i);// for knowing the char that we break at .... pardon my english hahaha
+}
+
+int _check_pipe(char *line, err *prs)
+{
+    prs->i++;
+                // if the first char is pipe or the next one is backslash zero then it is an error
+    if (line[0] == '|' || !line[prs->i + 1])
+    {
+        prs->er = 1;
+        return prs->i;
+    }
+    while (line[prs->i])
+    {
+        // Skip white spaces :
+        if (line[prs->i] == ' ')
+            prs->i++;
+        else if (line[prs->i] == '|' || line[prs->i] == ';') // Raise an exception if this condtion true
+        {
+            prs->er = 1;
+            break;
+        }
+        else
+            break;
+    }
+    return (--prs->i);
+}
+
+int _check_redirection(char *line, err *prs)
+{
+    prs->credir = 1;
+    prs->i++;
+    while (line[prs->i])
+    {
+        // Start counting the redirection > 
+        if (prs->tmp == '>' && line[prs->i] == '>')
+        {
+            puts("hi");
+            prs->tmp = '>';
+            prs->credir += 1;
+            prs->i++;
+        }
+        else if (line[prs->i + 1] && prs->tmp == '>' && line[prs->i] == ' ' && line[prs->i + 1] == '>') // This condition for this case for example  > > 
+        {
+            prs->er = 1;
+            return prs->i;
+        }
+        else if (line[prs->i] == ' ')
+            prs->i++; // this condition for ; and | after redir | this  for > after < | this for  > or < after < | this for counting the number of redirection >  
+        else if (line[prs->i] == ';' || line[prs->i] == '|' || (line[prs->i] == '<' && prs->tmp == '>') || (prs->tmp == '<' && (line[prs->i] == '>' || line[prs->i] == '<')) || prs->credir >= 3)
+        {
+            prs->er = 1;
+            return prs->i;
+        }
+        else
+            break;
+    }
+    if (!line[prs->i])
+        prs->er = 1;
+    return (--prs->i);
+}
+
+int _check_double_quotes(char *line, err *prs)
+{
+    prs->i++;
+    while (line[prs->i] != prs->tmp && line[prs->i])
+    {
+        // if you find backslash skip too chars the current one and the next one :
+        if (line[prs->i] == '\\' && line[prs->i + 1] != '\0')
+        {
+            prs->i += 2;
+            continue;
+        }
+        prs->i++;
+    }
+    if (line[prs->i] != prs->tmp) // this for checking the double quotes exists : else we raise an exception
+        prs->er = 1; 
+    return prs->i;
+}
+
+int _check_single_quotes(char *line, err *prs)
+{
+    prs->i++;
+    while (line[prs->i] != '\'' && line[prs->i])
+        prs->i++;
+    printf("|%c|\n", line[prs->i]);
+    if (line[prs->i] != prs->tmp) // checking that the last chars after loop is single quotes else it is an error
+        prs->er = 1;
+    return prs->i;
+}
+
+int parse(char *line, err *prs)
 {
     int i;
     int count;
@@ -14,105 +133,125 @@ int parse(char *line)
     int pos;
     int credir;
 
-    i = 0;
+    prs->i = 0;
     count = 0;
     // puts("im in");
-    while (line[i])
+    prs->er = 0;
+    while (line[prs->i])
     {
-        c = line[i];
+        prs->tmp = line[prs->i];
         // Check errors of semicolon :
-        if (line[i] == ';')
+        if (line[prs->i] == ';')
         {
-            i++;
-            if (line[0] == ';') // if the first chars is semicolon it is an error
-                return 1;
-            while (line[i])
-            {
-                // if the char after the semicolon is one of this | or ; then it is an error
-                if (line[i] == '|' || line[i] == ';')
-                    return 1;
-                else if (line[i] == ' ') // skip while it's a white space
-                    i++;
-                else
-                    break; // break if nothing above was executed
-            }
-            i--;// for knowing the char that we break at .... pardon my english hahaha
+            prs->i = _check_semi_colon(line, prs);
+            // if (prs->er)
+            //     return 1;
+            // i++;
+            // if (line[0] == ';') // if the first chars is semicolon it is an error
+            //     return 1;
+            // while (line[prs->i])
+            // {
+            //     // if the char after the semicolon is one of this | or ; then it is an error
+            //     if (line[prs->i] == '|' || line[prs->i] == ';')
+            //         return 1;
+            //     else if (line[prs->i] == ' ') // skip while it's a white space
+            //         prs->i++;
+            //     else
+            //         break; // break if nothing above was executed
+            // }
+            // prs->i--;// for knowing the char that we break at .... pardon my english hahaha
         }
         // Check Errors of pipe :
-        else if (line[i] == '|') 
+        else if (line[prs->i] == '|') 
         {
-            i++;
-            // if the first char is pipe or the next one is backslash zero then it is an error
-            if (line[0] == '|' || !line[i + 1])
-                return 1;
-            while (line[i])
-            {
-                // Skip white spaces :
-                if (line[i] == ' ')
-                    i++;
-                else if (line[i] == '|' || line[i] == ';') // Raise an exception if this condtion true
-                    return 1;
-                else
-                    break;
-            }
-            i--;
+            prs->i = _check_pipe(line, prs);
+            // if (prs->er)
+            //     return 1;
+            // // if the first char is pipe or the next one is backslash zero then it is an error
+            // if (line[0] == '|' || !line[prs->i + 1])
+            //     return 1;
+            // while (line[prs->i])
+            // {
+            //     // Skip white spaces :
+            //     if (line[prs->i] == ' ')
+            //         prs->i++;
+            //     else if (line[prs->i] == '|' || line[prs->i] == ';') // Raise an exception if this condtion true
+            //         return 1;
+            //     else
+            //         break;
+            // }
+            // prs->i--;
         }
-        else if ((line[i] == '>' || line[i] == '<')) // Check errors of redirection :
+        else if ((line[prs->i] == '>' || line[prs->i] == '<')) // Check errors of redirection :
         {//     return 1;
-            credir = 1;
-            i++;
-            while (line[i])
-            {
-                // Start counting the redirection > 
-                if (c == '>' && line[i] == '>')
-                {
-                    puts("hi");
-                    c = '>';
-                    credir += 1;
-                    i++;
-                }
-                else if (line[i + 1] && c == '>' && line[i] == ' ' && line[i + 1] == '>') // This condition for this case for example  > > 
-                    return 1;
-                else if (line[i] == ' ')
-                    i++; // this condition for ; and | after redir | this  for > after < | this for  > or < after < | this for counting the number of redirection >  
-                else if (line[i] == ';' || line[i] == '|' || (line[i] == '<' && c == '>') || (c == '<' && (line[i] == '>' || line[i] == '<')) || credir >= 3)
-                    return 1;
-                else
-                    break;
-            }
-            if (!line[i])
-                return 1;
-            i--;
+            // prs->credir = 1;
+            // prs->i++;
+            // while (line[prs->i])
+            // {
+            //     // Start counting the redirection > 
+            //     if (c == '>' && line[prs->i] == '>')
+            //     {
+            //         puts("hi");
+            //         c = '>';
+            //         prs->credir += 1;
+            //         prs->i++;
+            //     }
+            //     else if (line[prs->i + 1] && c == '>' && line[prs->i] == ' ' && line[prs->i + 1] == '>') // This condition for this case for example  > > 
+            //         return 1;
+            //     else if (line[prs->i] == ' ')
+            //         prs->i++; // this condition for ; and | after redir | this  for > after < | this for  > or < after < | this for counting the number of redirection >  
+            //     else if (line[prs->i] == ';' || line[prs->i] == '|' || (line[prs->i] == '<' && c == '>') || (c == '<' && (line[prs->i] == '>' || line[prs->i] == '<')) || prs->credir >= 3)
+            //         return 1;
+            //     else
+            //         break;
+            // }
+            // if (!line[prs->i])
+            //     return 1;
+            // prs->i--;
+            prs->i = _check_redirection(line, prs);
+            printf("|-%d-|\n", prs->er);
+            // if (prs->er)
+            //     return 1;
         }    // printf("->%c,\t", c);
-       else if (c == '"') // Check errors of double quotes :
+       else if (prs->tmp == '"') // Check errors of double quotes :
        {
-           i++;
-           while (line[i] != c && line[i])
-           {
-               // if you find backslash skip too chars the current one and the next one :
-               if (line[i] == '\\' && line[i + 1] != '\0')
-               {
-                   i += 2;
-                   continue;
-               }
-               i++;
-           }
-           if (line[i] != c) // this for checking the double quotes exists : else we raise an exception
-           {
-               return (1);
-           }
+           prs->i = _check_double_quotes(line, prs);
+           printf("|%c|\n", line[prs->i]);
+        //    if (prs->er)
+        //         return 1;
+        //    puts("im in");
+        //    while (line[prs->i] != prs->tmp && line[prs->i])
+        //    {
+        //        // if you find backslash skip too chars the current one and the next one :
+        //        if (line[prs->i] == '\\' && line[prs->i + 1] != '\0')
+        //        {
+        //            prs->i += 2;
+        //            continue;
+        //        }
+        //        prs->i++;
+        //    }
+        //    if (line[prs->i] != prs->tmp) // this for checking the double quotes exists : else we raise an exception
+        //    {
+        //        return (1);
+        //    }
        }
-       else if (c == '\'') // Check errors of single quotes :
+       else if (prs->tmp == '\'') // Check errors of single quotes :
        {
-           i++;
-           while (line[i] != '\'' && line[i])
-               i++;
-           if (line[i] != c) // checking that the last chars after loop is single quotes else it is an error
-           {
-               return (1);
-           }
+           prs->i = _check_single_quotes(line, prs);
+        //    if (prs->er)
+        //         return 1;
+        //    prs->i++;
+        //    while (line[prs->i] != '\'' && line[prs->i])
+        //        prs->i++;
+        //     printf("|%c|\n", line[prs->i]);
+        //    if (line[prs->i] != prs->tmp) // checking that the last chars after loop is single quotes else it is an error
+        //    {
+        //        return (1);
+        //    }
        }
-       i++;
+        if (prs->er)
+            return 1;
+       prs->i++;
     }
     return (0);
 }
@@ -124,6 +263,7 @@ int main()
     char *tmp = "";
     size_t bufsize = 32;
     size_t r;
+    err prs;
 
 
     line = NULL;
@@ -139,7 +279,7 @@ int main()
             line = NULL;
             exit(0);
         }
-        checker = parse(line);
+        checker = parse(line, &prs);
         printf("--> %d\n", checker);
         printf("|%s|\n", line);
         // _start_parsing(line, prs, &head);

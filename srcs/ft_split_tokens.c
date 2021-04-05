@@ -16,19 +16,26 @@
 static int			_count_tokens(char const *s, char c, s_split *sp)
 {
 	int	count;
+	int i;
 
 	count = 0;
-	while (*s && *s == c)
-		s++;
-	while (*s)
+	i = 0;
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i])
 	{
-        if ('"' == *s && sp->check_sq % 2 == 0)
+		if (s[i] == '\\')
+		{
+			i += 2;
+			continue;
+		}
+        if ('"' == s[i] && sp->check_sq % 2 == 0)
             sp->check_dq += 1;
-        if ('\'' == *s && sp->check_dq % 2 == 0)
+        if ('\'' == s[i] && sp->check_dq % 2 == 0)
             sp->check_sq += 1;
-		if ((((*s == c && *(s + 1) != c) || *(s + 1) == '\0')) && sp->check_sq % 2 == 0 && sp->check_dq % 2 == 0)
+		if ((((s[i] == c && s[i + 1] != c) || s[i + 1] == '\0')) && sp->check_sq % 2 == 0 && sp->check_dq % 2 == 0)
 			count++;
-		s++;
+		i++;
 	}
 	sp->check_sq = 0;
 	sp->check_dq = 0;

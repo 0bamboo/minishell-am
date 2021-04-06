@@ -93,30 +93,50 @@ void _trim_tokens(char **tab)
 		tab[i] = ft_strtrim(tab[i], " ");
 }
 
+
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
+	int i;
+	int start;
+	int end;
+
+	i = 0;
 	if (!s)
 		return (NULL);
 	sp->size = _count_tokens(s, c, sp);
+	printf("size = |%d|\n", sp->size);
 	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
 		return (NULL);
 	while (sp->i < sp->size)
 	{
-		while (*s && *s == c)
-			s++;
+		while (s[i] && s[i] == c)
+			i++;
 		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_tokens(sp, s, c) + 1))))
 			return (_free(sp));
 		sp->j = 0;
-		while (*s)
+		while (s[i])
         {
-			if (*s == '\\' && *(s + 1) == '"' && sp->check_dq % 2 != 0) 
-				sp->check_dq -= 1;
-            if (*s == '\'' && sp->check_dq % 2 == 0)
-                sp->check_sq += 1;
-            if (*s == '"' && sp->check_sq % 2 == 0)
-                sp->check_dq += 1;
-            sp->p[sp->i][sp->j++] = *s++;
-            if (*s == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
+			if (s[i] == '"')
+			{
+				start = i++;
+				while (s[i] != '"')
+				{
+					if (s[i] == '\\')
+					{
+						i += 2;
+						continue;
+					}
+					i++;
+				}
+				end = i++;
+				printf("before->|%s|\n", sp->p[sp->i]);
+				ft_strlcat(sp->p[sp->i], (s + start), end);
+				printf("after->|%s|\n", sp->p[sp->i]);
+				sp->j += end - start;
+			}
+            else
+				sp->p[sp->i][sp->j++] = s[i++];
+            if (s[i] == c)
                 break;
         }
 		sp->p[sp->i++][sp->j] = '\0';

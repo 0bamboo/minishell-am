@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/05 11:12:07 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/06 23:01:43 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct r_split
     int size;
     int i;
     int j;
+    int idx;
     int check_dq;
     int check_sq;
 }               s_split;

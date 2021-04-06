@@ -27,7 +27,7 @@ static int			_count_tokens(char const *s, char c, s_split *sp)
 		if (s[i] == '"')
 		{
 			i++;
-			while (s[i] != '"')
+			while (s[i] && s[i] != '"')
 			{
 				if (s[i] == '\\')
 				{
@@ -36,6 +36,12 @@ static int			_count_tokens(char const *s, char c, s_split *sp)
 				}
 				i++;
 			}
+		}
+		else if (s[i] == '\'')
+		{
+			i++;
+			while (s[i] && s[i] != '\'')
+				i++;
 		}
 		if ((((s[i] == c && s[i + 1] != c) || s[i + 1] == '\0')))
 			count++;
@@ -94,55 +100,84 @@ void _trim_tokens(char **tab)
 }
 
 
-char				**_split_tokens(s_split *sp, char const *s, char c)
+void		_add_to_string_(char *dest, const char *src, int size)
 {
-	int i;
+	int		i;
+
+	i = ft_strlen(dest);
+	while (*src && size > 0)
+	{
+		dest[i++] = *src++;
+		size--;
+	}
+}
+
+int		_sp_handle_single_quotes_(s_split *sp, char const *s)
+{
 	int start;
 	int end;
 
-	i = 0;
+	start = sp->idx++;
+	while (s[sp->idx] && s[sp->idx] != '\'')
+		sp->idx++;
+	end = ++sp->idx;
+	_add_to_string_(sp->p[sp->i], (start + s), end - start);
+	return (end - start);
+}
+
+int		_sp_handle_double_quotes_(s_split *sp, char const *s)
+{
+	int start;
+	int end;
+
+	start = sp->idx++;
+	while (s[sp->idx] && s[sp->idx] != '"')
+	{
+		if (s[sp->idx] == '\\')
+		{
+			sp->idx += 2;
+			continue;
+		}
+		sp->idx++;
+	}
+	end = ++sp->idx;
+	_add_to_string_(sp->p[sp->i], (s + start), end - start);
+	return (end - start);
+}
+
+char				**_split_tokens(s_split *sp, char const *s, char c)
+{
+	// try this example tomorrow and find the problem : ls "hi hihi \\\\\" \\\\\\ |" 'hi " " " \\\\\' ; "hi hi hihi \\"
+	// the problem is not in split functions look for the error in functions that handles lists ??????
+	sp->idx = 0;
 	if (!s)
 		return (NULL);
 	sp->size = _count_tokens(s, c, sp);
-	printf("size = |%d|\n", sp->size);
+	printf("size of tokens = |%d|\n", sp->size);
 	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
 		return (NULL);
 	while (sp->i < sp->size)
 	{
-		while (s[i] && s[i] == c)
-			i++;
+		while (s[sp->idx] && s[sp->idx] == c)
+			sp->idx++;
 		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_tokens(sp, s, c) + 1))))
 			return (_free(sp));
 		sp->j = 0;
-		while (s[i])
+		while (s[sp->idx])
         {
-			if (s[i] == '"')
-			{
-				start = i++;
-				while (s[i] != '"')
-				{
-					if (s[i] == '\\')
-					{
-						i += 2;
-						continue;
-					}
-					i++;
-				}
-				end = i++;
-				printf("before->|%s|\n", sp->p[sp->i]);
-				ft_strlcat(sp->p[sp->i], (s + start), end);
-				printf("after->|%s|\n", sp->p[sp->i]);
-				sp->j += end - start;
-			}
+			if (s[sp->idx] == '"')
+				sp->j += _sp_handle_double_quotes_(sp, s);
+			else if (s[sp->idx] == '\'')
+				sp->j += _sp_handle_single_quotes_(sp, s);
             else
-				sp->p[sp->i][sp->j++] = s[i++];
-            if (s[i] == c)
+				sp->p[sp->i][sp->j++] = s[sp->idx++];
+            if (s[sp->idx] == c)
                 break;
         }
 		sp->p[sp->i++][sp->j] = '\0';
 	}
 	sp->p[sp->i] = NULL;
-	sp->i = 0;
+	// sp->i = 0;
 	_trim_tokens(sp->p);
 	return (sp->p);
 }

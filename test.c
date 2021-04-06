@@ -267,6 +267,7 @@ int main()
 
 
     line = NULL;
+    char *tmpp;
     write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
     while(get_next_line(0, &line) > 0)
     {

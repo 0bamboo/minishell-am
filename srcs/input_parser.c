@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/05 17:51:25 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:07:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,22 +326,19 @@ char *_handle_backslash_(char *buffer)
     
     i = 0;
     j = 0;
-    int dq = 0;
     tab = (char *)malloc(sizeof(char) * (ft_strlen(buffer) + 1));
     // printf("^%lu^\n", ft_strlen(buffer));
-    while (i + 1 < (int)ft_strlen(buffer))
+    while (i < (int)ft_strlen(buffer))
     {
-        if (buffer[i] == '"' && dq == 0)
+        if (buffer[i] == '"')
         {
-            dq = 1;
             tab[j] = buffer[i];
             i++;
             j++;
-            while (buffer[i] != '"' && dq == 1)
+            while (buffer[i] != '"')
             {
                 if (buffer[i] == '\\' && is_special(buffer[i + 1]))
                 {
-                    printf("buff[%d] = %c\n", i, buffer[i]);
                     // i gues this the place when you gonna add the value of dollar var ....
                     tab[j] = ret_spc(buffer[i + 1]);
                     j++;
@@ -402,7 +399,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
             // puts("im in ");
             if (in(prs->sc_cmds[i], '"'))
                 prs->sc_cmds[i] = _handle_backslash_(prs->sc_cmds[i]);
-            printf("--|%s|--\n", prs->sc_cmds[i]);
+            printf("%d --> |%s| \n", i, prs->sc_cmds[i]);
             // if (prs->sc_cmds[i] && prs->sc_cmds[i][0])
             // {
             //     _copy_tokens_data_(prs->sc_cmds[i], prs, head);

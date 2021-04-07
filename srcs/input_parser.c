@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/07 15:54:17 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/07 23:21:40 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,46 +316,46 @@ int _is_special(char c)
         return 1;
     return 0;
 }
-void        _bs_for_double_quotes_(ms_p *prs, char *buffer)
+void        _bs_for_double_quotes_(ms_p *prs, char *token)
 {
-    prs->buff[prs->j++] = buffer[prs->i++];
-    while (buffer[prs->i] != '"')
+    prs->buff[prs->j++] = token[prs->i++];
+    while (token[prs->i] != '"')
     {
-        if (buffer[prs->i] == '\\' && _is_special(buffer[prs->i + 1]))
+        if (token[prs->i] == '\\' && _is_special(token[prs->i + 1]))
         {
-            prs->buff[prs->j++] = _ret_special(buffer[prs->i + 1]);
+            puts("im in");
+            prs->buff[prs->j++] = _ret_special(token[prs->i + 1]);
             prs->i += 2;
             continue;
         }
-        // here hundle dollar
-        prs->buff[prs->j++] = buffer[prs->i++];
+        prs->buff[prs->j++] = token[prs->i++];
     }
-    prs->buff[prs->j++] = buffer[prs->i++];
+    prs->buff[prs->j++] = token[prs->i++];
 }
 
 
-void        _bs_for_single_quotes_(ms_p *prs, char *buffer)
+void        _bs_for_single_quotes_(ms_p *prs, char *token)
 {
-    prs->buff[prs->j++] = buffer[prs->i++];
-    while (buffer[prs->i] != '\'')
-        prs->buff[prs->j++] = buffer[prs->i++];
-    prs->buff[prs->j++] = buffer[prs->i++];
+    prs->buff[prs->j++] = token[prs->i++];
+    while (token[prs->i] != '\'')
+        prs->buff[prs->j++] = token[prs->i++];
+    prs->buff[prs->j++] = token[prs->i++];
 }
 
 
-char *_handle_backslash_(ms_p *prs, char *buffer)
+char *_handle_backslash_(ms_p *prs, char *token)
 {   
     prs->i = 0;
     prs->j = 0;
-    prs->buff = (char *)malloc(sizeof(char) * (ft_strlen(buffer) + 1));
-    while (prs->i < (int)ft_strlen(buffer))
+    prs->buff = (char *)malloc(sizeof(char) * (ft_strlen(token) + 1));
+    while (prs->i < (int)ft_strlen(token))
     {
-        if (buffer[prs->i] == '"')
-            _bs_for_double_quotes_(prs, buffer);
-        else if (buffer[prs->i] == '\'')
-            _bs_for_single_quotes_(prs, buffer);
-        else// and also here 
-            prs->buff[prs->j++] = buffer[prs->i++];
+        if (token[prs->i] == '"')
+            _bs_for_double_quotes_(prs, token);
+        else if (token[prs->i] == '\'')
+            _bs_for_single_quotes_(prs, token);
+        else
+            prs->buff[prs->j++] = token[prs->i++];
     }
     prs->buff[prs->j] = '\0';
     return (prs->buff);
@@ -391,7 +391,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
         i = -1;
         while (prs->sc_cmds[++i])
         {
-            // puts("im in ");
+            // i guess you need to handle the env variable before handling the backslash!!!!
             if (in(prs->sc_cmds[i], '"'))
                 prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
             printf("%d --> |%s| \n", i, prs->sc_cmds[i]);

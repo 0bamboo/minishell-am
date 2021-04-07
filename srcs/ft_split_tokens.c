@@ -147,8 +147,6 @@ int		_sp_handle_double_quotes_(s_split *sp, char const *s)
 
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
-	// try this example tomorrow and find the problem : ls "hi hihi \\\\\" \\\\\\ |" 'hi " " " \\\\\' ; "hi hi hihi \\"
-	// the problem is not in split functions look for the error in functions that handles lists ??????
 	sp->idx = 0;
 	if (!s)
 		return (NULL);

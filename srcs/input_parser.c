@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/06 17:07:53 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/07 15:54:17 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,7 +297,7 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
         // Fill the data of special tokens find a way to _handle_syntax_errors this tokens that has pipes and redirs in it..
 }
 
-char ret_spc(char buffer)
+char _ret_special(char buffer)
 {
     if (buffer == '\\')
         return ('\\');
@@ -305,65 +305,60 @@ char ret_spc(char buffer)
         return '"';
     else if (buffer == '$')
         return '$';
-    else if (buffer == '`')
+    else if (buffer == '`') // this one is not needed
         return '`';
     else
         return 0;
 }
-int is_special(char c)
+int _is_special(char c)
 {
     if (c == '\\' || c == '"' || c == '$' || c == '`')
         return 1;
     return 0;
 }
-
-char *_handle_backslash_(char *buffer)
+void        _bs_for_double_quotes_(ms_p *prs, char *buffer)
 {
-    int i;
-    char *tab;
-    // int open = 0;
-    int j;
-    
-    i = 0;
-    j = 0;
-    tab = (char *)malloc(sizeof(char) * (ft_strlen(buffer) + 1));
-    // printf("^%lu^\n", ft_strlen(buffer));
-    while (i < (int)ft_strlen(buffer))
+    prs->buff[prs->j++] = buffer[prs->i++];
+    while (buffer[prs->i] != '"')
     {
-        if (buffer[i] == '"')
+        if (buffer[prs->i] == '\\' && _is_special(buffer[prs->i + 1]))
         {
-            tab[j] = buffer[i];
-            i++;
-            j++;
-            while (buffer[i] != '"')
-            {
-                if (buffer[i] == '\\' && is_special(buffer[i + 1]))
-                {
-                    // i gues this the place when you gonna add the value of dollar var ....
-                    tab[j] = ret_spc(buffer[i + 1]);
-                    j++;
-                    i+=2;
-                    continue;
-                }
-                tab[j] = buffer[i];
-                j++;
-                i++;
-                // printf("*%d-%d*,\n", j, (i + 1));
-            }
-            tab[j] = buffer[i];
-            j++;
-            i++;
+            prs->buff[prs->j++] = _ret_special(buffer[prs->i + 1]);
+            prs->i += 2;
+            continue;
         }
-        else
-        {
-            tab[j] = buffer[i];
-            i++;
-            j++;
-        }
-        // Try to figure out the algorithm behind this one and test with bash not zsh AHOOOO
+        // here hundle dollar
+        prs->buff[prs->j++] = buffer[prs->i++];
     }
-    tab[j] = '\0';
-    return (tab);
+    prs->buff[prs->j++] = buffer[prs->i++];
+}
+
+
+void        _bs_for_single_quotes_(ms_p *prs, char *buffer)
+{
+    prs->buff[prs->j++] = buffer[prs->i++];
+    while (buffer[prs->i] != '\'')
+        prs->buff[prs->j++] = buffer[prs->i++];
+    prs->buff[prs->j++] = buffer[prs->i++];
+}
+
+
+char *_handle_backslash_(ms_p *prs, char *buffer)
+{   
+    prs->i = 0;
+    prs->j = 0;
+    prs->buff = (char *)malloc(sizeof(char) * (ft_strlen(buffer) + 1));
+    while (prs->i < (int)ft_strlen(buffer))
+    {
+        if (buffer[prs->i] == '"')
+            _bs_for_double_quotes_(prs, buffer);
+        else if (buffer[prs->i] == '\'')
+            _bs_for_single_quotes_(prs, buffer);
+        else// and also here 
+            prs->buff[prs->j++] = buffer[prs->i++];
+    }
+    prs->buff[prs->j] = '\0';
+    return (prs->buff);
 }
 
 int     in(char *check, char c)
@@ -398,7 +393,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
         {
             // puts("im in ");
             if (in(prs->sc_cmds[i], '"'))
-                prs->sc_cmds[i] = _handle_backslash_(prs->sc_cmds[i]);
+                prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
             printf("%d --> |%s| \n", i, prs->sc_cmds[i]);
             // if (prs->sc_cmds[i] && prs->sc_cmds[i][0])
             // {

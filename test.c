@@ -350,7 +350,7 @@ char *_get_env_var_(char *buffer)
             // printf("buffer[%d] = %c\n", i, buffer[i]);
             continue;
         }
-        else if (buffer[i] == '"')
+        else if (buffer[i] == '"' && !(_is_special_(buffer[i + 1])))
         {
             global[g++] = buffer[i++];
             while (buffer[i] != '"' && buffer[i])
@@ -438,6 +438,8 @@ int main()
         printf("tmp after editing = |%s|\n", tmp);
         // _start_parsing(line, prs, &head);
         free(line);
+        free(tmp);
+        tmp = NULL;
         line = NULL;
         write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
     }

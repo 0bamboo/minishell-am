@@ -347,6 +347,7 @@ char *_get_env_var_(char *buffer)
             {
                 tmp[j++] = buffer[i++];
             }
+            puts("hello");
             tmp[j] = '\0';
             // printf("tmp = |%s|\n", tmp);
             // i--;

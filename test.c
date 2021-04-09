@@ -305,6 +305,20 @@ void _add_to_string(char *buff, char *fill, int size)
 }
 
 
+int _line_counter_(char *buffer)
+{
+    int i;
+    int counter;
+
+    i = counter = 0;
+    while (buffer[i])
+    {
+        if (buffer[i] == '$' && buffer[i + 1] )
+        counter++;
+    }
+    return counter;
+}
+
 char *_get_env_var_(char *buffer)
 {
     int i;
@@ -314,30 +328,40 @@ char *_get_env_var_(char *buffer)
     char *fill;
     int g;
     char *global;
+    int counter;
 
     i = -1;
     g = 0;
+    counter = 0;
     global = (char *)malloc(sizeof(char *) * 100);
     while (buffer[++i])
     {
         if (buffer[i] == '$' && buffer[i + 1] == '?')
+        {
             global[g++] = buffer[i++];
+            counter++;
+        }
         else if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
         {
             if (buffer[++i] == 48)
             {
                 _add_to_string(global + g, "bash", 4);
                 g +=4;
+                counter += 4;
                 i++;
             }
             else
+            {
+                counter++;
                 i++;
+            }
             
         }
         else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
         {
             count = 0;
             j = ++i;
+            // counter++;
             // printf("first char = |%c|\n", buffer[i]);
             while (!(_is_special_(buffer[j])) && buffer[j++])
                 count++;
@@ -357,15 +381,18 @@ char *_get_env_var_(char *buffer)
             {
                 count = ft_strlen(fill);
                 _add_to_string(global + g, fill, count);
+                counter += count;
                 g += count;
             }
             i--;
+            counter--;
             // printf("buffer[%d] = %c\n", i, buffer[i]);
             continue;
         }
         else if (buffer[i] == '"' && !(_is_special_(buffer[i + 1])))
         {
             global[g++] = buffer[i++];
+            counter++;
             while (buffer[i] != '"' && buffer[i])
             {
                 // i++;
@@ -377,15 +404,20 @@ char *_get_env_var_(char *buffer)
                         _add_to_string(global + g, "bash", 4);
                         g +=4;
                         i++;
+                        counter += 4;
                     }
                     else
+                    {
+                        counter++;
                         i++;
+                    }
                     
                 }
                 else if (buffer[i] == '\\')
                 {
                     global[g++] = buffer[i++];
                     global[g++] = buffer[i++];
+                    counter += 2;
                     // printf("backslash = [%d] = [%c] | [%d] = [%c] \n", i-1, buffer[i - 1], i, buffer[i]);
                     // continue;
                 }
@@ -408,6 +440,7 @@ char *_get_env_var_(char *buffer)
                     if (fill)
                     {
                         count = ft_strlen(fill);
+                        counter += count;
                         _add_to_string(global + g, fill, count);
                         g += count;
                     }
@@ -417,16 +450,24 @@ char *_get_env_var_(char *buffer)
                     // continue;
                 }
                 else
+                {
+                    counter++;
                     global[g++] = buffer[i++];
+                }
 
             }
             if (buffer[i])
+            {
+                counter++;
                 global[g++] = buffer[i++];
+            }
             continue;
         }
         global[g++] = buffer[i];
+        counter++;
     }
     global[g] = '\0';
+    printf("len = |%d|\n", counter);
     // printf("global = |%s|\n", global);
     return global;
 }

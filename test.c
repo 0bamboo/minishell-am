@@ -286,7 +286,7 @@
 
 int     _is_special_(char c)
 {
-    if ((c >= 32 && c <= 47) || (c >= 58 && c <= 63) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
+    if ((c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
         return 1;
     return 0;
 }
@@ -297,13 +297,11 @@ void _add_to_string(char *buff, char *fill, int size)
     int i;
 
     i = strlen(buff);
-    puts("im here");
     while (*fill && size > 0)
     {
         buff[i++] = *fill++;
         size--;
     }
-    puts("im out");
 }
 
 
@@ -322,7 +320,21 @@ char *_get_env_var_(char *buffer)
     global = (char *)malloc(sizeof(char *) * 100);
     while (buffer[++i])
     {
-        if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
+        if (buffer[i] == '$' && buffer[i + 1] == '?')
+            global[g++] = buffer[i++];
+        else if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
+        {
+            if (buffer[++i] == 48)
+            {
+                _add_to_string(global + g, "bash", 4);
+                g +=4;
+                i++;
+            }
+            else
+                i++;
+            
+        }
+        else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
         {
             count = 0;
             j = ++i;
@@ -357,7 +369,19 @@ char *_get_env_var_(char *buffer)
             {
                 // i++;
                 // printf("before = [%c]\n", buffer[i]);
-                if (buffer[i] == '\\')
+                if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
+                {
+                    if (buffer[++i] == 48)
+                    {
+                        _add_to_string(global + g, "bash", 4);
+                        g +=4;
+                        i++;
+                    }
+                    else
+                        i++;
+                    
+                }
+                else if (buffer[i] == '\\')
                 {
                     global[g++] = buffer[i++];
                     global[g++] = buffer[i++];
@@ -378,10 +402,8 @@ char *_get_env_var_(char *buffer)
                         tmp[j++] = buffer[i++];
                     }
                     tmp[j] = '\0';
-                    printf("tmp = |%s|\n", tmp);
                     // i--;
                     fill = getenv(tmp);
-                    printf("fill = |%s|\n", fill);
                     if (fill)
                     {
                         count = ft_strlen(fill);
@@ -434,8 +456,10 @@ int main()
             exit(0);
         }
         printf("line = |%s|\n", line);
+        printf("line length = |%lu|\n", strlen(line));
         tmp = _get_env_var_(line);
         printf("tmp after editing = |%s|\n", tmp);
+        printf("tmp length = |%lu|\n", strlen(tmp));
         // _start_parsing(line, prs, &head);
         free(line);
         free(tmp);

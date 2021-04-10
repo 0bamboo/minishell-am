@@ -366,7 +366,7 @@ char *_get_env_var_(char *buffer)
             }
             else
             {
-                counter++;
+                // counter++;
                 i++;
             }
             
@@ -440,7 +440,7 @@ char *_get_env_var_(char *buffer)
                     }
                     else
                     {
-                        counter++;
+                        // counter++;
                         i++;
                     }
                     

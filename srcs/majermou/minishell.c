@@ -1,148 +1,118 @@
-#include "../includes/minishell.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 
-
-
-typedef struct			s_list
+typedef struct          s_cmd_list
 {
-	char				*command;
-	char				**args;
-	char				redir;
-	char				*file_id;
-	int					pipe;
-	int					beg;
-	int					end;
-	//char                is_err;
-	struct	o_list		*next;
-	struct	o_list		*prev;
-}						t_list;
+    char	              **args;
+    int		              nbrpipe;
+    int                 iterator;
+    struct s_cmd_list   *next;
+}                       t_cmd_list;
+
+size_t                  ft_strlen(const char *s);
+size_t                  ft_strlcpy(char *dst, const char *src, size_t size);
 
 
-int             sh_launch(char **args, char **envp)
+// void            clear(char **arr)
+// {
+//   int           i;
+
+//   i = 0;
+//   while (arr[i])
+//     free(arr[i++]);
+// }
+
+int             array_lenght(char **arr)
 {
-  pid_t         pid;
-  pid_t         wpid;
-  char          *path;
-  int           status;
+  int           lenght;
 
-  if ((pid = fork()) < 0)
-    perror("sh");
-  if (!pid)
+  lenght = 0;
+  while (arr[lenght])
+    lenght++;
+  return (lenght);
+}
+
+unsigned        random_num_generator(int  range)
+{
+  void          *allocation;
+  unsigned      random;
+
+  if (!(allocation = malloc(1)))
+    return (range/3);
+  random = (unsigned)allocation;
+  free(allocation);
+  return (random%range);
+}
+
+char            **env_vardup(char  **envp)
+{
+  char          **ret;
+  int           i;
+
+  if (!(ret = (char**)malloc((array_lenght(envp) + 1) * sizeof(char*))))
+    return (NULL);
+  i = 0;
+  while (envp[i])
   {
-    path = get_path(args, envp);
-    if (execve(path,args,envp) == -1)
-      perror("sh");
-    exit(EXIT_FAILURE);
+    if (!(ret[i] = (char*)malloc((ft_strlen(envp[i]) + 1) * sizeof(char))))
+    {
+      //free
+      return (NULL);
+    }
+    ft_strlcpy(ret[i],envp[i],ft_strlen(envp[i]) + 1);
+    i++;
   }
-  else
-    waitpid(pid, &status, WUNTRACED);
-  return (1);
+  ret[i] = NULL;
+  return (ret);
 }
 
-
-// int       sh_execute(char **args, char **envp)
-// {
-//   if(!strcmp(args[0],"echo"))
-//     return (builtin_echo(args));
-//   if(!strcmp(args[0],"cd"))
-//     return (builtin_cd(args));
-//   if(!strcmp(args[0],"pwd"))
-//     return (builtin_pwd());
-//   if(!strcmp(args[0],"export"))
-//     return (builtin_export(args));
-//   if(!strcmp(args[0],"unset"))
-//     return (builtin_unset(args));
-//   if(!strcmp(args[0],"env"))
-//     return (builtin_env(envp));
-//   if(!strcmp(args[0],"exit"))
-//     return (builtin_exit(args));
-//   return sh_launch(args, envp);
-// }
-
-// void            sh_loop(char **envp)
-// {
-//     char *line;
-//     char **args;
-//     int status;
-   
-//     status = 1;
-//     while (status)
-//     {
-//         printf("> ");
-//         line = sh_read_line();
-//         args = sh_split_line(line);
-
-//         status = sh_execute(args,envp);
-//         free(line);
-//         free(args);
-//     }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void			execute_cmds(p_list *cmds)
+char          **addTo_envList(char **envlist, char* new_var)
 {
-	
+  char        **ret;
+  int         i;
+  int         random;
 
-
-
-
-
-
+  if (!(ret = (char**)malloc(((array_lenght(envlist) + 2) * sizeof(char*)))))
+    return (NULL);
+  i = 0;
+  random = random_num_generator(array_lenght(envlist));
+  while (i < random)
+  {
+    //printf("%d\n",i);
+    if (!(ret[i] = (char*)malloc(ft_strlen(envlist[i]) * sizeof(char) + 1)))
+    {
+      //free
+      return (NULL);
+    }
+    ft_strlcpy(ret[i],envlist[i],ft_strlen(envlist[i]) + 1);
+    i++;
+  }
+  if (!(ret[i] = (char*)malloc(ft_strlen(new_var) * sizeof(char) + 1)))
+  {
+          //free
+      return (NULL);
+  }
+  ft_strlcpy(ret[i++],new_var,ft_strlen(new_var) + 1);
+  while (envlist[i])
+  {
+    //printf("%d\n",i);
+    if (!(ret[i] = (char*)malloc(ft_strlen(envlist[i]) * sizeof(char) + 1)))
+    {
+      //free
+      return (NULL);
+    }
+    ft_strlcpy(ret[i],envlist[i],ft_strlen(envlist[i]) + 1);
+    i++;
+  }
+  ret[i] = NULL;
+  return (ret);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -151,30 +121,40 @@ void			execute_cmds(p_list *cmds)
 
 int           main(int argc, char **argv, char **envp)
 {
-	char      **envlist;
+	char      **env_vars;
+  int       k;
+  char      *tmp = strdup("a=abcd");
 
-    if (!(envlist = envList_dup(envp)))
-    {
-        /*error*/
-        return (0);
-    }
-    p = envlist;
-    while (envlist[k])
-      printf("%s\n",envlist[k++]);
-    printf("\n\n\n%d\n\n\n",k);
-    if (!(envlist = addTo_envList(envp,tmp)))
-    {
-        /*error*/
-        return (0);
-    }
-    k = 0;
-    while (envlist[k])
-      printf("%s\n",envlist[k++]);
-    printf("\n\n\n%d\n\n\n",k);
-    clear(p);
-    clear(envlist);
-    free(p);
-    free(envlist);
-    //sh_loop(envp);
-    return EXIT_SUCCESS;
+  if (!(env_vars = env_vardup(envp)))
+  {
+    /*error*/
+    return (0);
+  }
+
+
+
+  // k = 0;
+  // while (env_vars[k])
+  // {
+  //   printf("%s\n",env_vars[k++]);  
+  // }
+
+  if (!(env_vars = addTo_envList(env_vars,tmp)))
+  {
+    /*error*/
+    return (0);
+  }
+
+  k = 0;
+  while (env_vars[k])
+    printf("%s\n",env_vars[k++]);
+
+
+  //printf("%d\n",random_num_generator(561595));
+  //clear(env_vars);
+  free(tmp);
+  free(env_vars);
+
+
+  return (0);
 }

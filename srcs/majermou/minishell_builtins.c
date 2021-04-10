@@ -53,5 +53,6 @@ int             builtin_env(char **envp)
 
 int             builtin_exit(char **args)
 {
-    return (0);
+    int num = ft_atoi(args[0]);
+    exit(num);
 }

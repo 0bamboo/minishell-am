@@ -188,12 +188,10 @@ int                 main(int argc, char **argv, char **envp)
 {
     t_cmd_list      *cmd = (t_cmd_list*)malloc(sizeof(t_cmd_list));
 
-    cmd->args = malloc(5 * sizeof(char*));
-    cmd->args[0] = strdup("wc");
-    cmd->args[1] = strdup("-c");
-    cmd->args[2] = strdup("<");
-    cmd->args[3] = strdup("file");
-    cmd->args[4] = NULL;
+    cmd->args = malloc(3 * sizeof(char*));
+    cmd->args[0] = strdup("ls");
+    cmd->args[1] = strdup("-al");
+    cmd->args[2] = NULL;
     cmd->nbrpipe = 0;
     cmd->iterator = 0;
     cmd->next = NULL;

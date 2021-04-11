@@ -517,6 +517,17 @@ char *_get_env_var_(char *buffer)
             // }
             // continue; // why you used this ///never mind hhhhh // no you need to mind
         }
+        else if (buffer[i] == '\'')
+        {
+            global[g++] = buffer[i++];
+            counter++;
+            while (buffer[i] && buffer[i] != '\'')
+            {    
+                global[g++] = buffer[i++];
+                counter++;
+            }
+            puts("im out ");
+        }
         // Copy the other chars of the string
         global[g++] = buffer[i];
         counter++;

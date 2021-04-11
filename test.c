@@ -297,14 +297,14 @@ void _add_to_string(char *buff, int index, char *fill, int size)
     int i;
 
     // i = strlen(buff);
-    printf("index of start == |%d|,\n", index);
-    printf("size == |%d|, \n", size);
-    printf("first char of fill = |%c|\n", *fill);
-    printf("buff[%d]indx - 1 == |%c|\n", index-1, buff[index-1]);
-    printf("buff[%d]indx     == |%c|\n", index, buff[index]);
+    // printf("index of start == |%d|,\n", index);
+    // printf("size == |%d|, \n", size);
+    // printf("first char of fill = |%c|\n", *fill);
+    // printf("buff[%d]indx - 1 == |%c|\n", index-1, buff[index-1]);
+    // printf("buff[%d]indx     == |%c|\n", index, buff[index]);
     while (*fill && size > 0)
     {
-        printf("|%c|\t,", *fill);
+        // printf("|%c|\t,", *fill);
         buff[index++] = *fill++;
         size--;
     }
@@ -351,6 +351,7 @@ char *_get_env_var_(char *buffer)
         {
             global[g++] = buffer[i++];
             counter++;
+            printf("$?global == 0 === |%lu| |%d|\n", strlen(global), counter);
         }
         else if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
         {
@@ -362,6 +363,7 @@ char *_get_env_var_(char *buffer)
                 _add_to_string(global, g, "bash", 4);
                 g +=4;
                 counter += 4;
+                printf("0global == 0 === |%lu| |%d|\n", strlen(global), counter);
                 i++;
             }
             else
@@ -414,6 +416,7 @@ char *_get_env_var_(char *buffer)
                 tmp = NULL;
             }
             i--;
+            printf("$global == 0 === |%lu| |%d|\n", strlen(global), counter);
             // counter--;
             // printf("buffer[%d] = %c\n", i, buffer[i]);
             continue;
@@ -437,6 +440,7 @@ char *_get_env_var_(char *buffer)
                         g +=4;
                         i++;
                         counter += 4;
+                        printf("dq$0global == 0 === |%lu| |%d|\n", strlen(global), counter);
                     }
                     else
                     {
@@ -454,6 +458,7 @@ char *_get_env_var_(char *buffer)
                     // printf("|%d| = |%c|\n", i, buffer[i]);
                     global[g++] = buffer[i++];
                     counter += 2;
+                    printf("bsglobal == 0 === |%lu| |%d|\n", strlen(global), counter);
                     // printf("backslash = [%d] = [%c] | [%d] = [%c] \n", i-1, buffer[i - 1], i, buffer[i]);
                 }
                 else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
@@ -478,7 +483,6 @@ char *_get_env_var_(char *buffer)
                         count = ft_strlen(fill);
                         counter += count;
                         _add_to_string(global, g, fill, count);
-                        printf("len of glob = |%lu| + |%d|\n", strlen(global), count);
                         g += count;
                     }
                     if (tmp)
@@ -488,6 +492,7 @@ char *_get_env_var_(char *buffer)
                         free(tmp);
                         tmp = NULL;
                     }
+                    printf("dq$global == 0 === |%lu| |%d|\n", strlen(global), counter);
 
                     // printf("buffer[%d] = %c\n", i, buffer[i]);
                     // continue;
@@ -498,26 +503,28 @@ char *_get_env_var_(char *buffer)
                     // printf("---> |%c|\n", buffer[i]);
                     counter++;
                     global[g++] = buffer[i++];
+                    printf("dq chars global == 0 === |%lu| |%d|\n", strlen(global), counter);
                 }
-
             }
-            if (buffer[i])
-            {
-                // Copy the last dq "
-                // printf("--> |%c|\n", buffer[i]);
-                counter++;
-                global[g++] = buffer[i++];
-                // printf("--> |%c|\n", buffer[i]);
-            }
+            // if (buffer[i])
+            // {
+            //     // Copy the last dq "
+            //     // printf("--> |%c|\n", buffer[i]);
+            //     counter++;
+            //     global[g++] = buffer[i++];
+            //     printf("dq allaho a3lam global == 0 === |%lu| |%d|\n", strlen(global), counter);
+            //     // printf("--> |%c|\n", buffer[i]);
+            // }
             // continue; // why you used this ///never mind hhhhh // no you need to mind
         }
         // Copy the other chars of the string
         global[g++] = buffer[i];
         counter++;
+        printf(" out global == 0 === |%lu| |%d|\n", strlen(global), counter);
     }
     global[g] = '\0';
     // printf("this global array : |%s|\n", global);
-    printf("len = |%d|\n", counter);
+    printf("----> counter = |%d|\n", counter);
     // printf("global = |%s|\n", global);
     return global;
 }

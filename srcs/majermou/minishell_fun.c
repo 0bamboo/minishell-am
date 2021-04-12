@@ -1,48 +1,73 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-
-
-
-void            clear(char **arr)
+void	cleanup(char **arr, int limit)
 {
-  int           i;
+	int		i;
 
-  i = 0;
-  while (arr[i])
-    free(arr[i++]);
+	i = 0;
+	while (i < limit)
+	{
+		free(arr[i]);
+		i++;
+	}
 }
 
-
-
-
-
-char            *get_path(char **args, char **envp)
+int	array_lenght(char **arr)
 {
-  struct stat   buf;
-  char          **arr;
-  char          *tmp;
-  char          *path;
-  int           i;
+	int		lenght;
 
-  i = 0;
-  while (strncmp(envp[i],"PATH=",5))
-    i++;
-  arr = ft_split(envp[i] + 5,':');
-  i = 0;
-  while (arr[i])
-  {
-    path = ft_strjoin(arr[i++],"/");
-    tmp = path;
-    path = ft_strjoin(path,args[0]);
-    free(tmp);
-    if (!stat(path,&buf))
-    {
-      i = 0;
-      while (arr[i])
-        free(arr[i++]);
-      return (path);
-    }
-    free(path);
-  }
-  return (NULL);
+	lenght = 0;
+	while (arr[lenght])
+		lenght++;
+	return (lenght);
+}
+
+unsigned int	random_num_generator(int range)
+{
+	void			*allocation;
+	unsigned int	random;
+
+	allocation = malloc(1);
+	if (!allocation)
+		return (range / 3);
+	random = (unsigned)allocation;
+	free(allocation);
+	return (random % range);
+}
+
+int	str_copying(char **dst, char *src, int index)
+{
+	dst[index] = (char *)malloc((ft_strlen(src) + 1) * sizeof(char));
+	if (!dst[index])
+	{
+		cleanup(dst, index);
+		return (1);
+	}
+	ft_strlcpy(dst[index], src, ft_strlen(src) + 1);
+	return (0);
+}
+
+int	env_varsdup(t_cmd_list *cmd, char **envp)
+{
+	char	**ret;
+	int		i;
+
+	ret = (char **)malloc((array_lenght(envp) + 1) * sizeof(char *));
+	if (!ret)
+		return (1);
+	i = 0;
+	while (envp[i])
+	{
+		ret[i] = (char *)malloc((ft_strlen(envp[i]) + 1) * sizeof(char));
+		if (!ret)
+		{
+			cleanup(ret, i);
+			return (1);
+		}
+		ft_strlcpy(ret[i], envp[i], ft_strlen(envp[i]) + 1);
+		i++;
+	}
+	ret[i] = NULL;
+	cmd->env_vars = ret;
+	return (0);
 }

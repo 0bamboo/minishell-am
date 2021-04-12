@@ -56,3 +56,39 @@ int	addto_envlist(t_cmd_list *cmd, char *new_var)
 	cmd->env_vars = ret;
 	return (0);
 }
+
+int search_equalkey(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	return (i);
+}
+
+void	*search_var(t_cmd_list *cmd, char *var)
+{
+	int   i;
+
+	i = 0;
+	while (cmd->env_vars[i])
+  	{
+		if (!ft_strncmp(cmd->env_vars[i],var,search_equalkey(var) + 1)
+			|| (!ft_strncmp(cmd->env_vars[i],var,search_equalkey(var))
+			&& cmd->env_vars[i][search_equalkey(var)] == '='))
+			return (i);
+    	i++;
+	}
+	return (-1);
+}
+
+int	replace_var(t_cmd_list *cmd,int index,char *new_var)
+{
+	free(cmd->env_vars[index]);
+	cmd->env_vars[index] = malloc((ft_strlen(new_var) + 1) * sizeof(char *));
+	if (!cmd->env_vars[index])
+		return (1);
+	ft_strlcpy(cmd->env_vars[index],new_var,ft_strlen(new_var));
+	return (0);
+}

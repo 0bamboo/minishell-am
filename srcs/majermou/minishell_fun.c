@@ -71,3 +71,19 @@ int	env_varsdup(t_cmd_list *cmd, char **envp)
 	cmd->env_vars = ret;
 	return (0);
 }
+
+int is_valid_id(char *id)
+{
+	int   i;
+
+	if (!ft_isalpha(id[0]))
+    	return (1);
+	i = 1;
+	while (id[i] && id[i] != '=')
+	{
+		if (!ft_isalpha(id[i]) && !ft_isalnum(id[i]) && id[i] != '_')
+			return (1);
+		i++;
+	}
+	return (0);
+}

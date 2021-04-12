@@ -28,7 +28,7 @@ typedef struct          s_cmd_list
     char	            **args;
     int		            nbrpipe;
     int                 iterator;
-    struct s_cmd_list   *next;                                   
+    struct s_cmd_list   *next;
 }                       t_cmd_list;
 
 size_t                  ft_strlen(const char *s);
@@ -38,7 +38,6 @@ char	                *ft_strjoin(char const *s1, char const *s2);
 int                     ft_strcmp(const char *s1, const char *s2);
 
 
-
 int             env_varsdup(t_cmd_list *cmd, char **envp);
 void	        cleanup(char **arr, int limit);
 int             array_lenght(char **arr);
@@ -46,6 +45,17 @@ unsigned int	random_num_generator(int range);
 int             str_copying(char **dst, char *src, int index);
 int             rmfrom_envlist(t_cmd_list *cmd, char* rm_var);
 int             addto_envlist(t_cmd_list *cmd, char* new_var);
+
+int builtin_unset(t_cmd_list *cmd);
+int builtin_export(t_cmd_list *cmd);
+int builtin_env(t_cmd_list *cmd);
+int search_equalkey(char *str);
+void *search_var(t_cmd_list *cmd, char *var);
+int insert_var(t_cmd_list *cmd, char *var);
+int is_valid_id(char *id);
+
+int     ft_isalpha(int c);
+int     ft_isalnum(int c);
 
 
 #endif

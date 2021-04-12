@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/07 14:46:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/12 15:54:01 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ typedef struct      e_parse
 
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);
-char        *my_strtok(char *s, char *check);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
 char				**_split_tokens(s_split *sp, char const *s, char c);
 void        _trim_tokens(char **sp);
 

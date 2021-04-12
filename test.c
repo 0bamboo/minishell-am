@@ -283,6 +283,19 @@
 // 	return (tmp);
 // }
 
+typedef struct sc
+{
+    char *buffer;
+    int i;
+    char *fill;
+    char *tmp;
+    int count;
+    int counter;
+    int j;
+
+} prs;
+
+
 
 int     _is_special_(char c)
 {
@@ -311,126 +324,141 @@ void _add_to_string(char *buff, int index, char *fill, int size)
     // puts("");
 }
 
-
-int _line_counter_(char *buffer)
+void _count_dollar_digits_(prs *prs)
 {
-    int i;
-    int counter;
-    char *tmp;
-    int j;
-    int count;
-    char *fill;
-
-    i = -1;
-    counter = 0;
-    while (buffer[++i])
+    if (prs->buffer[++prs->i] == 48)
     {
-        if (buffer[i] == '$' && buffer[i + 1] == '?')
-        {
-            i++;
-            counter++;
-        }
-        else if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
-        {
-            if (buffer[++i] == 48)
-            {
-                counter += 4;
-                i++;
-            }
-            else
-                i++;
-            
-        }
-        else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
-        {
-            count = 0;
-            j = ++i;
-            while (!(_is_special_(buffer[j])) && buffer[j++])
-                count++;
-            tmp = (char *)malloc(sizeof(char) * (count + 1));
-            j = 0;
-            while (!(_is_special_(buffer[i])) && buffer[i])
-                tmp[j++] = buffer[i++];
-            tmp[j] = '\0';
-            fill = getenv(tmp);
-            if (fill)
-                counter += ft_strlen(fill);
-            if (tmp)
-            {    
-                free(tmp);
-                tmp = NULL;
-            }
-            i--;
-            continue;
-        }
-        else if (buffer[i] == '"')
-        {
-            counter++;
-            i++;
-            while (buffer[i] != '"' && buffer[i])
-            {
-                if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
-                {
-                    if (buffer[++i] == 48)
-                    {
-                        i++;
-                        counter += 4;
-                    }
-                    else
-                        i++;
-                    
-                }
-                else if (buffer[i] == '\\')
-                {
-                    i += 2;
-                    counter += 2;
-                }
-                else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
-                {
-                    count = 0;
-                    j = ++i;
-                    while (!(_is_special_(buffer[j])) && buffer[j++])
-                        count++;
-                    tmp = (char *)malloc(sizeof(char) * (count + 1));
-                    j = 0;
-                    while (!(_is_special_(buffer[i])) && buffer[i])
-                        tmp[j++] = buffer[i++];
-                    tmp[j] = '\0';
-                    fill = getenv(tmp);
-                    if (fill)
-                    {
-                        counter += ft_strlen(fill);
-                    }
-                    if (tmp)
-                    {
-                        free(tmp);
-                        tmp = NULL;
-                    }
-                }
-                else
-                {
-                    counter++;
-                    i++;
-                }
-            }
-        }
-        else if (buffer[i] == '\'')
-        {
-            i++;
-            counter++;
-            while (buffer[i] && buffer[i] != '\'')
-            {    
-                i++;
-                counter++;
-            }
-        }
-        if (buffer[i])
-            counter++;
+        prs->counter += 4;
+        prs->i++;
     }
-    return counter;
+    else
+        prs->i++;
 }
 
-char *_get_env_var_(char *buffer)
+void _count_env_vars_(prs *prs)
+{
+    int count;
+    int j;
+    char *fill;
+    char *tmp;
+
+    count = 0;
+    j = ++prs->i;
+    while (!(_is_special_(prs->buffer[j])) && prs->buffer[j++])
+        count++;
+    tmp = (char *)malloc(sizeof(char) * (count + 1));
+    j = 0;
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+        tmp[j++] = prs->buffer[prs->i++];
+    tmp[j] = '\0';
+    fill = getenv(tmp);
+    if (fill)
+        prs->counter += ft_strlen(fill);
+    if (tmp)
+    {    
+        free(tmp);
+        tmp = NULL;
+    }
+    prs->i--;
+}
+
+void _dq_count_env_vars_(prs *prs)
+{
+    prs->count = 0;
+    prs->j = ++prs->i;
+    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+        prs->count++;
+    prs->tmp = (char *)malloc(sizeof(char) * (prs->count + 1));
+    prs->j = 0;
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+        prs->tmp[prs->j++] = prs->buffer[prs->i++];
+    prs->tmp[prs->j] = '\0';
+    prs->fill = getenv(prs->tmp);
+    if (prs->fill)
+        prs->counter += ft_strlen(prs->fill);
+    if (prs->tmp)
+    {
+        free(prs->tmp);
+        prs->tmp = NULL;
+    }
+}
+
+void _dq_count_dollar_digits_(prs *prs)
+{
+    if (prs->buffer[++prs->i] == 48)
+    {
+        prs->i++;
+        prs->counter += 4;
+    }
+    else
+        prs->i++;
+}
+
+void _count_inside_dq_(prs *prs)
+{
+    prs->counter++;
+    prs->i++;
+    while (prs->buffer[prs->i] != '"' && prs->buffer[prs->i])
+    {
+        if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+            _dq_count_dollar_digits_(prs);
+        else if (prs->buffer[prs->i] == '\\')
+        {
+            prs->i += 2;
+            prs->counter += 2;
+        }
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+            _dq_count_env_vars_(prs);
+        else
+        {
+            prs->counter++;
+            prs->i++;
+        }
+    }
+}
+
+void _count_inside_sq_(prs *prs)
+{
+    prs->i++;
+    prs->counter++;
+    while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
+    {    
+        prs->i++;
+        prs->counter++;
+    }
+}
+
+
+int _line_counter_(char *buffer, prs *prs)
+{
+    prs->i = -1;
+    prs->counter = 0;
+    prs->buffer = buffer;
+    while (prs->buffer[++prs->i])
+    {
+        if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+        {
+            prs->i++;
+            prs->counter++;
+        }
+        else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+            _count_dollar_digits_(prs);
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        {
+            _count_env_vars_(prs);
+            continue;
+        }
+        else if (prs->buffer[prs->i] == '"')
+            _count_inside_dq_(prs);
+        else if (prs->buffer[prs->i] == '\'')
+            _count_inside_sq_(prs);
+        if (prs->buffer[prs->i])
+            prs->counter++;
+    }
+    return prs->counter;
+}
+
+char *_get_env_var_(char *buffer, prs *prs)
 {
     int i;
     int j;
@@ -447,7 +475,7 @@ char *_get_env_var_(char *buffer)
     // This allocation is just for testing , but in the real project i need to calculate,
     //how much memory i will use first before changing the value of env variables.
     // printf("line counter = [%d]\n", _line_counter_(buffer));
-    counter = _line_counter_(buffer);
+    counter = _line_counter_(buffer, prs);
     printf("length = %d\n", counter);
     global = (char *)malloc(sizeof(char *) * (counter + 1));
     while (buffer[++i])
@@ -655,6 +683,7 @@ int main()
     char *tmp;
     size_t bufsize = 1;
     size_t r;
+    prs prs;
     // err prs;
 
 
@@ -674,7 +703,7 @@ int main()
         }
         // printf("line = |%s|\n", line);
         // printf("line length = |%lu|\n", strlen(line));
-        tmp = _get_env_var_(line);
+        tmp = _get_env_var_(line, &prs);
         printf("tmp length = |%lu|\n", strlen(tmp));
         printf("tmp after editing = |%s|\n", tmp);
         // _start_parsing(line, prs, &head);

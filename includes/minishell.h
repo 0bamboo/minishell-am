@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/12 15:54:01 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/12 23:33:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,13 @@ typedef struct      e_parse
     char tmp;
     char *buff;
     char *token;
+    char *buffer;
+    char *fill;
+    char *temp;
+    int count;
+    int counter;
+    char *global;
+    int g;
     err_p   err;
     t_cmd_list      *plst;
     s_split         *sp;

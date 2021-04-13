@@ -444,7 +444,11 @@ int _line_counter_(prs *prs)
             prs->counter++;
         }
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+        {
             _count_dollar_digits_(prs);
+            prs->i--;
+            continue;
+        }
         else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
         {
             _count_env_vars_(prs);
@@ -470,7 +474,7 @@ void    _copy_dollar_digits_(prs *prs)
         prs->i++;
     }
     else
-        prs->i++;
+        prs->i++; // i think you don't need to do this anyway test it and find out......
 }
 
 void _copy_env_vars_(prs *prs)
@@ -605,7 +609,11 @@ char *_get_env_var_(char *buffer, prs *prs)
         if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
             prs->global[prs->g++] = prs->buffer[prs->i++];
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+        {
             _copy_dollar_digits_(prs);
+            prs->i--;
+            continue;
+        }
         else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
         {
             _copy_env_vars_(prs);

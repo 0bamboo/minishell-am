@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/12 23:33:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/13 15:53:43 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ typedef struct			s_cmd_list
 	int					nbrpipe;
 	int					iter;
     int					end;
-    int beg;
-	struct  s_cmd_list		*next;
-	struct  s_cmd_list		*prev;
+    int                 beg;
+	struct  s_cmd_list	*next;
+	struct  s_cmd_list	*prev;
 }						t_cmd_list;
 
 typedef struct errors
@@ -85,6 +85,11 @@ typedef struct      e_parse
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);
 char				**_split_tokens(s_split *sp, char const *s, char c);
 void        _trim_tokens(char **sp);
+char *_get_env_vars_(char *buffer, ms_p *prs);
+int _handle_syntax_errors(char *line, ms_p *prs);
+void        _raise_an_exception();
+int     _char_in_tab_(char c, char tab[3]);
+char *_handle_backslash_(ms_p *prs, char *token);
 
 
 #endif

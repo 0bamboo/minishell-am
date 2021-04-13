@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int builtin_unset(t_cmd_list *cmd)
+int builtin_unset(t_cmd_list *cmd, t_envlist *envlist)
 {
   int     i;
   int     ret;
@@ -11,12 +11,12 @@ int builtin_unset(t_cmd_list *cmd)
   {
     if (!is_valid_id(cmd->args[i]))
     {
-      if (rmfrom_envlist(cmd, cmd->args[i]))
+      if (rmfrom_envlist(envlist, cmd->args[i]))
         return (1);
     }
     else
     {
-      printf("unset: `%s': not a valid identifier\n",cmd->args[i]);
+      printf("bash: unset: `%s': not a valid identifier\n",cmd->args[i]);
       ret = 1;
     }
     i++;
@@ -24,7 +24,26 @@ int builtin_unset(t_cmd_list *cmd)
   return (ret);
 }
 
-int builtin_export(t_cmd_list *cmd)
+int builtin_env(t_envlist *envlist)
+{
+  int     i;
+  int     j;
+
+  i = 0;
+  j = 0;
+  while (envlist->vars[i])
+  {
+    j = 0;
+    while (envlist->vars[i][j] && envlist->vars[i][j] != '=')
+      j++;
+    if (envlist->vars[i][j])
+      printf("%s\n",envlist->vars[i]);
+    i++;
+  }
+  return (0);
+}
+
+int builtin_export(t_cmd_list *cmd, t_envlist *envlist)
 {
   int   i;
   int   ret;
@@ -35,45 +54,27 @@ int builtin_export(t_cmd_list *cmd)
   {
     if (!is_valid_id(cmd->args[i]))
     {
-      if (search_var(cmd, cmd->args[i]) > 0)
+      if (search_var(envlist, cmd->args[i]) > 0)
       {
-        if (cmd->args[i][search_equalkey(cmd->args[i])])
-        {
-          if (replace_var(cmd,search_var(cmd, cmd->args[i]),cmd->args[i]))
-            return (1);
-        }
+        printf("%s\n",cmd->args[i]);
+        if (cmd->args[i][lenghtvar(cmd->args[i])])
+          replace_var(envlist, search_var(envlist, cmd->args[i]), cmd->args[i]);
       }
       else
-        if (addto_envlist(cmd, cmd->args[i]))
-          return (1);
+        addto_envlist(envlist, cmd->args[i]);
     }
     else
     {
-      printf("export: `%s': not a valid identifier\n",cmd->args[i]);
+      printf("bash: export: `%s': not a valid identifier\n",cmd->args[i]);
       ret = 1;
     }
     i++;
   }
   if (i == 1)
-    builtin_env(cmd);
+    builtin_env(envlist);
   //printing_envlist(cmd);
   return (ret);
 }
-
-int builtin_env(t_cmd_list *cmd)
-{
-  int     i;
-
-  i = 0;
-  while (cmd->env_vars[i])
-  {
-    if (cmd->env_vars[i][search_equalkey(cmd->env_vars[i])])
-      printf("%s\n",cmd->env_vars[i]);
-    i++;
-  }
-  return (0);
-}
-
 
 
 

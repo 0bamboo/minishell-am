@@ -1,53 +1,88 @@
 #include "minishell.h"
 
-void	cleanup(char **arr, int limit)
+int			search_var(t_envlist *envlist, char *var)
 {
 	int		i;
 
 	i = 0;
-	while (i < limit)
-	{
-		free(arr[i]);
-		i++;
+	while (envlist->vars[i])
+  	{
+		if (!ft_strcmp(envlist->vars[i], var)
+			|| (!ft_strncmp(envlist->vars[i], var,lenghtvar(var) + 1)))
+			return (i);
+    	i++;
 	}
+	return (-1);
 }
 
-int	array_lenght(char **arr)
+int	replace_var(t_envlist *envlist,int index,char *new_var)
 {
-	int		lenght;
-
-	lenght = 0;
-	while (arr[lenght])
-		lenght++;
-	return (lenght);
-}
-
-unsigned int	random_num_generator(int range)
-{
-	void			*allocation;
-	unsigned int	random;
-
-	allocation = malloc(1);
-	if (!allocation)
-		return (range / 3);
-	random = (unsigned)allocation;
-	free(allocation);
-	return (random % range);
-}
-
-int	str_copying(char **dst, char *src, int index)
-{
-	dst[index] = (char *)malloc((ft_strlen(src) + 1) * sizeof(char));
-	if (!dst[index])
-	{
-		cleanup(dst, index);
+	free(envlist->vars[index]);
+	envlist->vars[index] = malloc((ft_strlen(new_var) + 1) * sizeof(char *));
+	if (!envlist->vars[index])
 		return (1);
-	}
-	ft_strlcpy(dst[index], src, ft_strlen(src) + 1);
+	ft_strlcpy(envlist->vars[index],new_var,ft_strlen(new_var) + 1);
 	return (0);
 }
 
-int	env_varsdup(t_cmd_list *cmd, char **envp)
+int	addto_envlist(t_envlist *envlist, char *new_var)
+{
+	char		**ret;
+	int			i;
+	int			j;
+	int			random;
+
+	ret = (char **)malloc((array_lenght(envlist->vars) + 2) * sizeof(char *));
+	if (!ret)
+		return (1);
+	i = 0;
+	j = 0;
+	random = random_num_generator(array_lenght(envlist->vars));
+	while (i < random)
+		if (str_copying(ret, envlist->vars[i++], j++))
+			return (1);
+	if (str_copying(ret, new_var, j++))
+		return (1);
+	while (envlist->vars[i])
+		if (str_copying(ret, envlist->vars[i++], j++))
+			return (1);
+	ret[j] = NULL;
+	cleanup(envlist->vars, array_lenght(envlist->vars));
+	free(envlist->vars);
+	envlist->vars = ret;
+	return (0);
+}
+
+int	rmfrom_envlist(t_envlist *envlist, char *rm_var)
+{
+	char		**ret;
+	char		*str;
+	int			i;
+	int			j;
+
+	ret = (char **)malloc(((array_lenght(envlist->vars) + 1) * sizeof(char *)));
+	if (!ret)
+		return (1);
+	i = 0;
+	j = 0;
+	str = ft_strjoin(rm_var, "=");
+	while (envlist->vars[i])
+	{
+		if (ft_strcmp(envlist->vars[i], rm_var)
+			&& ft_strncmp(envlist->vars[i], str, ft_strlen(str)))
+			if (str_copying(ret, envlist->vars[i], j++))
+				return (1);
+		i++;
+	}
+	ret[j] = NULL;
+	free(str);
+	cleanup(envlist->vars, array_lenght(envlist->vars));
+	free(envlist->vars);
+	envlist->vars = ret;
+	return (0);
+}
+
+int	env_varsdup(t_envlist *envlist, char **envp)
 {
 	char	**ret;
 	int		i;
@@ -68,22 +103,6 @@ int	env_varsdup(t_cmd_list *cmd, char **envp)
 		i++;
 	}
 	ret[i] = NULL;
-	cmd->env_vars = ret;
-	return (0);
-}
-
-int is_valid_id(char *id)
-{
-	int   i;
-
-	if (!ft_isalpha(id[0]))
-    	return (1);
-	i = 1;
-	while (id[i] && id[i] != '=')
-	{
-		if (!ft_isalpha(id[i]) && !ft_isalnum(id[i]) && id[i] != '_')
-			return (1);
-		i++;
-	}
+	envlist->vars = ret;
 	return (0);
 }

@@ -9,27 +9,31 @@
 
 int             main(int argc, char **argv, char **envp)
 {
-  t_cmd_list    command;
-  command.args = malloc(6 * sizeof(char*));
+
+  t_envlist    envlist;
+  t_cmd_list   command;
+
+  command.args = malloc(9 * sizeof(char*));
   command.args[0] = strdup("export");
   command.args[1] = strdup("B=GxA");
-  command.args[2] = strdup("A=AAAAAAAAAAAAAAAAAAAAAAAA");
-  command.args[3] = strdup("A=FFFFFFFFFFFFFFFFFFFFFFFF");
-  command.args[4] = NULL;
+  command.args[2] = strdup("Afwf=");
+  command.args[3] = strdup("A");
+  command.args[4] = strdup("A=1-..gy+34");
+  command.args[5] = NULL;
 
 
   
-  if (env_varsdup(&command,envp))
+  if (env_varsdup(&envlist,envp))
   {
     printf("---------------------error_0---------------------\n");
     return (1);
   }
 
-  builtin_env(&command);
+  builtin_export(&command,&envlist);
   printf("\n\n\n\n\n\n\n");
-  builtin_export(&command);
-  printf("\n\n\n\n\n\n\n");
-  builtin_env(&command);
+  builtin_env(&envlist);
+  printf("\n\n\n\n\n\n\n");printf("\n\n\n\n\n\n\n");
+
 
 
   // if (addto_envlist(&command, "A=B"))

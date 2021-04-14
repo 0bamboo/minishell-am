@@ -1,63 +1,41 @@
 #include "minishell.h"
 
-int	rmfrom_envlist(t_cmd_list *cmd, char *rm_var)
+void	cleanup(char **arr, int limit)
 {
-	char		**ret;
-	char		*str;
-	int			i;
-	int			j;
+	int		i;
 
-	ret = (char **)malloc(((array_lenght(cmd->env_vars) + 1) * sizeof(char *)));
-	if (!ret)
-		return (1);
 	i = 0;
-	j = 0;
-	str = ft_strjoin(rm_var, "=");
-	while (cmd->env_vars[i])
+	while (i < limit)
 	{
-		if (ft_strcmp(cmd->env_vars[i], rm_var)
-			&& ft_strncmp(cmd->env_vars[i], str, ft_strlen(str)))
-			if (str_copying(ret, cmd->env_vars[i], j++))
-				return (1);
+		free(arr[i]);
 		i++;
 	}
-	ret[j] = NULL;
-	free(str);
-	cleanup(cmd->env_vars, array_lenght(cmd->env_vars));
-	free(cmd->env_vars);
-	cmd->env_vars = ret;
-	return (0);
 }
 
-int	addto_envlist(t_cmd_list *cmd, char *new_var)
+int	array_lenght(char **arr)
 {
-	char		**ret;
-	int			i;
-	int			j;
-	int			random;
+	int		lenght;
 
-	ret = (char **)malloc((array_lenght(cmd->env_vars) + 2) * sizeof(char *));
-	if (!ret)
-		return (1);
-	i = 0;
-	j = 0;
-	random = random_num_generator(array_lenght(cmd->env_vars));
-	while (i < random)
-		if (str_copying(ret, cmd->env_vars[i++], j++))
-			return (1);
-	if (str_copying(ret, new_var, j++))
-		return (1);
-	while (cmd->env_vars[i])
-		if (str_copying(ret, cmd->env_vars[i++], j++))
-			return (1);
-	ret[j] = NULL;
-	cleanup(cmd->env_vars, array_lenght(cmd->env_vars));
-	free(cmd->env_vars);
-	cmd->env_vars = ret;
-	return (0);
+	lenght = 0;
+	while (arr[lenght])
+		lenght++;
+	return (lenght);
 }
 
-int search_equalkey(char *str)
+unsigned int	random_num_generator(int range)
+{
+	void			*allocation;
+	unsigned int	random;
+
+	allocation = malloc(1);
+	if (!allocation)
+		return (range / 3);
+	random = (unsigned)allocation;
+	free(allocation);
+	return (random % range);
+}
+
+int	lenghtvar(char *str)
 {
 	int		i;
 
@@ -67,28 +45,30 @@ int search_equalkey(char *str)
 	return (i);
 }
 
-void	*search_var(t_cmd_list *cmd, char *var)
+int is_valid_id(char *id)
 {
 	int   i;
 
-	i = 0;
-	while (cmd->env_vars[i])
-  	{
-		if (!ft_strncmp(cmd->env_vars[i],var,search_equalkey(var) + 1)
-			|| (!ft_strncmp(cmd->env_vars[i],var,search_equalkey(var))
-			&& cmd->env_vars[i][search_equalkey(var)] == '='))
-			return (i);
-    	i++;
+	if (!ft_isalpha(id[0]))
+    	return (1);
+	i = 1;
+	while (id[i] && id[i] != '=')
+	{
+		if (!ft_isalpha(id[i]) && !ft_isalnum(id[i]) && id[i] != '_')
+			return (1);
+		i++;
 	}
-	return (-1);
+	return (0);
 }
 
-int	replace_var(t_cmd_list *cmd,int index,char *new_var)
+int	str_copying(char **dst, char *src, int index)
 {
-	free(cmd->env_vars[index]);
-	cmd->env_vars[index] = malloc((ft_strlen(new_var) + 1) * sizeof(char *));
-	if (!cmd->env_vars[index])
+	dst[index] = (char *)malloc((ft_strlen(src) + 1) * sizeof(char));
+	if (!dst[index])
+	{
+		cleanup(dst, index);
 		return (1);
-	ft_strlcpy(cmd->env_vars[index],new_var,ft_strlen(new_var));
+	}
+	ft_strlcpy(dst[index], src, ft_strlen(src) + 1);
 	return (0);
 }

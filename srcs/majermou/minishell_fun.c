@@ -1,30 +1,5 @@
 #include "minishell.h"
 
-int			search_var(t_envlist *envlist, char *var)
-{
-	int		i;
-
-	i = 0;
-	while (envlist->vars[i])
-  	{
-		if (!ft_strcmp(envlist->vars[i], var)
-			|| (!ft_strncmp(envlist->vars[i], var,lenghtvar(var) + 1)))
-			return (i);
-    	i++;
-	}
-	return (-1);
-}
-
-int	replace_var(t_envlist *envlist,int index,char *new_var)
-{
-	free(envlist->vars[index]);
-	envlist->vars[index] = malloc((ft_strlen(new_var) + 1) * sizeof(char *));
-	if (!envlist->vars[index])
-		return (1);
-	ft_strlcpy(envlist->vars[index],new_var,ft_strlen(new_var) + 1);
-	return (0);
-}
-
 int	addto_envlist(t_envlist *envlist, char *new_var)
 {
 	char		**ret;

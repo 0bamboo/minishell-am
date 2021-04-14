@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -36,7 +37,6 @@ typedef struct          s_envlist
 }                       t_envlist;
 
 
-
 size_t                  ft_strlen(const char *s);
 size_t                  ft_strlcpy(char *dst, const char *src, size_t size);
 int                     ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -52,7 +52,7 @@ int             str_copying(char **dst, char *src, int index);
 int             ft_isalpha(int c);
 int             ft_isalnum(int c);
 int             is_valid_id(char *id);
-int	            lenghtvar(char *str);
+int             is_equalkey(char *str);
 
 // int             rmfrom_envlist(t_cmd_list *cmd, char* rm_var);
 // int             addto_envlist(t_cmd_list *cmd, char* new_var);
@@ -72,5 +72,14 @@ int         builtin_unset(t_cmd_list *cmd, t_envlist *envlist);
 int         builtin_export(t_cmd_list *cmd, t_envlist *envlist);
 int         builtin_env(t_envlist *envlist);
 
+int             builtin_pwd(void);
+int             builtin_cd(t_envlist *envlist, t_cmd_list *cmd);
+char            **ft_split(char const *s, char c);
+int             is_valid_id0(char *id);
+int			    insert_var(t_envlist *envlist, char *var);
+
+char	*ft_strdup(const char *s);
+int         print_envlist(t_envlist *envlist);
+void  printing(char **arr);
 
 #endif

@@ -15,7 +15,7 @@
 // // Example of doubly linked list :
 // int _check_semi_colon(char *line, err *prs)
 // {
-//     prs->i++;
+//     prs->prs->i++;
 //     if (line[0] == ';') // if the first chars is semicolon it is an error
 //     {
 //         prs->er = 1;
@@ -257,11 +257,11 @@
 // }
 
 
-#include<stdio.h>
-#include<stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <unistd.h>
+// #include<stdio.h>
+// #include<stdlib.h>
+// #include <string.h>
+// #include <unistd.h>
+// #include <unistd.h>
 
 
 // Example of doubly linked list :
@@ -283,6 +283,21 @@
 // 	return (tmp);
 // }
 
+typedef struct sc
+{
+    char *buffer;
+    int i;
+    char *fill;
+    char *tmp;
+    int count;
+    int counter;
+    int j;
+    char *global;
+    int g;
+
+} prs;
+
+
 
 int     _is_special_(char c)
 {
@@ -297,229 +312,321 @@ void _add_to_string(char *buff, int index, char *fill, int size)
     int i;
 
     // i = strlen(buff);
-    printf("index of start == |%d|,\n", index);
-    printf("size == |%d|, \n", size);
-    printf("first char of fill = |%c|\n", *fill);
-    printf("buff[%d]indx - 1 == |%c|\n", index-1, buff[index-1]);
-    printf("buff[%d]indx     == |%c|\n", index, buff[index]);
+    // printf("index of start == |%d|,\n", index);
+    // printf("size == |%d|, \n", size);
+    // printf("first char of fill = |%c|\n", *fill);
+    // printf("buff[%d]indx - 1 == |%c|\n", index-1, buff[index-1]);
+    // printf("buff[%d]indx     == |%c|\n", index, buff[index]);
     while (*fill && size > 0)
     {
-        printf("|%c|\t,", *fill);
+        // printf("|%c|\t,", *fill);
         buff[index++] = *fill++;
         size--;
     }
-    puts("");
+    // puts("");
 }
 
-
-int _line_counter_(char *buffer)
+void _count_dollar_digits_(prs *prs)
 {
-    int i;
-    int counter;
-
-    i = counter = 0;
-    while (buffer[i])
+    if (prs->buffer[++prs->i] == 48)
     {
-        if (buffer[i] == '$' && buffer[i + 1] )
-        counter++;
+        prs->counter += 4;
+        prs->i++;
     }
-    return counter;
+    else
+        prs->i++;
 }
 
-char *_get_env_var_(char *buffer)
+void _count_env_vars_(prs *prs)
 {
-    int i;
-    int j;
     int count;
-    char *tmp;
+    int j;
     char *fill;
-    int g;
+    char *tmp;
+
+    count = 0;
+    j = ++prs->i;
+    while (!(_is_special_(prs->buffer[j])) && prs->buffer[j++])
+        count++;
+    tmp = (char *)malloc(sizeof(char) * (count + 1));
+    j = 0;
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+        tmp[j++] = prs->buffer[prs->i++];
+    tmp[j] = '\0';
+    fill = getenv(tmp);
+    if (fill)
+        prs->counter += ft_strlen(fill);
+    if (tmp)
+    {    
+        free(tmp);
+        tmp = NULL;
+    }
+    prs->i--;
+}
+
+void _dq_count_env_vars_(prs *prs)
+{
+    prs->count = 0;
+    prs->j = ++prs->i;
+    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+        prs->count++;
+    prs->tmp = (char *)malloc(sizeof(char) * (prs->count + 1));
+    prs->j = 0;
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+        prs->tmp[prs->j++] = prs->buffer[prs->i++];
+    prs->tmp[prs->j] = '\0';
+    prs->fill = getenv(prs->tmp);
+    if (prs->fill)
+        prs->counter += ft_strlen(prs->fill);
+    if (prs->tmp)
+    {
+        free(prs->tmp);
+        prs->tmp = NULL;
+    }
+}
+
+void _dq_count_dollar_digits_(prs *prs)
+{
+    if (prs->buffer[++prs->i] == 48)
+    {
+        prs->i++;
+        prs->counter += 4;
+    }
+    else
+        prs->i++;
+}
+
+void _count_inside_dq_(prs *prs)
+{
+    prs->counter++;
+    prs->i++;
+    while (prs->buffer[prs->i] != '"' && prs->buffer[prs->i])
+    {
+        if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+            _dq_count_dollar_digits_(prs);
+        else if (prs->buffer[prs->i] == '\\')
+        {
+            prs->i += 2;
+            prs->counter += 2;
+        }
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+            _dq_count_env_vars_(prs);
+        else
+        {
+            prs->counter++;
+            prs->i++;
+        }
+    }
+}
+
+void _count_inside_sq_(prs *prs)
+{
+    prs->i++;
+    prs->counter++;
+    while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
+    {    
+        prs->i++;
+        prs->counter++;
+    }
+}
+
+
+int _line_counter_(prs *prs)
+{
+    prs->i = -1;
+    prs->counter = 0;
+    // prs->buffer = buffer;
+    while (prs->buffer[++prs->i])
+    {
+        if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+        {
+            prs->i++;
+            prs->counter++;
+        }
+        else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+        {
+            _count_dollar_digits_(prs);
+            prs->i--;
+            continue;
+        }
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        {
+            _count_env_vars_(prs);
+            continue;
+        }
+        else if (prs->buffer[prs->i] == '"')
+            _count_inside_dq_(prs);
+        else if (prs->buffer[prs->i] == '\'')
+            _count_inside_sq_(prs);
+        if (prs->buffer[prs->i])
+            prs->counter++;
+    }
+    return prs->counter;
+}
+
+
+void    _copy_dollar_digits_(prs *prs)
+{
+    if (prs->buffer[++prs->i] == 48)
+    {
+        _add_to_string(prs->global, prs->g, "bash", 4);
+        prs->g +=4;
+        prs->i++;
+    }
+    else
+        prs->i++; // i think you don't need to do this anyway test it and find out......
+}
+
+void _copy_env_vars_(prs *prs)
+{
+    prs->count = 0;
+    prs->j = ++prs->i;
+    // counter++;
+    // printf("first char = |%c|\n", prs->buffer[prs->i]);
+    
+    // This loop is for counting the length of the string that prs->i will look for its real value in envs vars....
+    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+        prs->count++;
+    // Allocate the string 
+    prs->tmp = (char *)malloc(sizeof(char) * (prs->count + 1));
+    prs->j = 0;
+
+    // Copy the string into prs->tmp var....
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+    {
+        prs->tmp[prs->j++] = prs->buffer[prs->i++];
+    }
+    prs->tmp[prs->j] = '\0';
+    // printf("prs->tmp = |%s|\n", prs->tmp);
+    // prs->i--;
+
+    // Look for the real value of that string using the function getenv...
+    prs->fill = getenv(prs->tmp);
+    // printf("prs->fill = |%s|\n", prs->fill);
+    if (prs->fill)
+    {
+        // If prs->i did found the env value for that string then prs->i will concatenate it with the prs->global string 
+        prs->count = ft_strlen(prs->fill);
+        // counter += prs->count;
+        _add_to_string(prs->global, prs->g, prs->fill, prs->count);
+        prs->g += prs->count;
+        // This one for moving the index of prs->global string...
+    }
+    if (prs->tmp)
+    {    
+        // Freeing the prs->tmp string
+        free(prs->tmp);
+        prs->tmp = NULL;
+    }
+    prs->i--;
+}
+
+void _dq_copy_dollar_digits_(prs *prs)
+{
+    // The same case when prs->i found digits after dollar char...
+    if (prs->buffer[++prs->i] == 48)
+    {
+        _add_to_string(prs->global, prs->g, "bash", 4);
+        prs->g +=4;
+        prs->i++;
+    }
+    else
+        prs->i++;
+}
+
+void    _dq_copy_env_vars_(prs *prs)
+{
+    // Same thing when you found the $var...
+    prs->count = 0;
+    prs->j = ++prs->i;
+    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+        prs->count++;
+    prs->tmp = (char *)malloc(sizeof(char) * (prs->count + 1));
+    prs->j = 0;
+    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+        prs->tmp[prs->j++] = prs->buffer[prs->i++];
+    prs->tmp[prs->j] = '\0';
+    prs->fill = getenv(prs->tmp);
+    if (prs->fill)
+    {
+        prs->count = ft_strlen(prs->fill);
+        _add_to_string(prs->global, prs->g, prs->fill, prs->count);
+        prs->g += prs->count;
+    }
+    if (prs->tmp)
+    {
+        free(prs->tmp);
+        prs->tmp = NULL;
+    }
+}
+
+void        _copy_inside_dq_(prs *prs)
+{
+    prs->global[prs->g++] = prs->buffer[prs->i++]; // copy the dq var
+    while (prs->buffer[prs->i] != '"' && prs->buffer[prs->i])
+    {
+        // Loop throw the string inside dq..
+        if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+            _dq_copy_dollar_digits_(prs);
+        else if (prs->buffer[prs->i] == '\\')
+        {
+            // This case is one prs->i found the backslash so prs->i need to copy and skip two chars the current one and the next one,
+            // This algorithm will help me for skipping the $var if the number of backslashes is odd and looking for $var if the number of bs is even...
+            prs->global[prs->g++] = prs->buffer[prs->i++];
+            prs->global[prs->g++] = prs->buffer[prs->i++];
+        }
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+            _dq_copy_env_vars_(prs);
+        else // Copy the  other chars of inside dq "" ...
+            prs->global[prs->g++] = prs->buffer[prs->i++];
+    }
+}
+
+void    _copy_inside_sq_(prs *prs)
+{
+    prs->global[prs->g++] = prs->buffer[prs->i++];
+    while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
+        prs->global[prs->g++] = prs->buffer[prs->i++];
+}
+
+char *_get_env_var_(char *buffer, prs *prs)
+{
     char *global;
     int counter;
 
-    i = -1;
-    g = 0;
+    prs->g = 0;
     counter = 0;
-    // This allocation is just for testing , but in the real project i need to calculate,
-    //how much memory i will use first before changing the value of env variables.
-    global = (char *)malloc(sizeof(char *) * 100);
-    while (buffer[++i])
+    // This allocation is just for testing , but in the real project prs->i need to calculate,
+    //how much memory prs->i will use first before changing the value of env variables.
+    // printf("line counter = [%d]\n", _line_counter_(buffer));
+    prs->buffer = buffer;
+    counter = _line_counter_(prs);
+    printf("length = %d\n", counter);
+    prs->global = (char *)malloc(sizeof(char *) * (counter + 1));
+    prs->i = -1;
+    while (prs->buffer[++prs->i])
     {
-        // Fisrt i will check for the $ var and the special character ? cuz the output of this one is different than usual,
-        // the executer will handle this one, for me i will just skip this one and send it to him ... tjdert agmano mohmaaad hhhh
-        if (buffer[i] == '$' && buffer[i + 1] == '?')
+        if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+            prs->global[prs->g++] = prs->buffer[prs->i++];
+        else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
         {
-            global[g++] = buffer[i++];
-            counter++;
-        }
-        else if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
-        {
-            // This one is when i found the $ var again and numbers after it,
-            // so for zero i will print the name of shell,
-            // and for other numbers i will skip the first one and print every char next to it, 
-            if (buffer[++i] == 48)
-            {
-                _add_to_string(global, g, "bash", 4);
-                g +=4;
-                counter += 4;
-                i++;
-            }
-            else
-            {
-                counter++;
-                i++;
-            }
-            
-        }
-        else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
-        {
-            // This case is when i found $ char again and no special char next to it, so i need to get that string after that dollar char....
-            count = 0;
-            j = ++i;
-            // counter++;
-            // printf("first char = |%c|\n", buffer[i]);
-            
-            // This loop is for counting the length of the string that i will look for its real value in envs vars....
-            while (!(_is_special_(buffer[j])) && buffer[j++])
-                count++;
-            // Allocate the string 
-            tmp = (char *)malloc(sizeof(char) * (count + 1));
-            j = 0;
-
-            // Copy the string into tmp var....
-            while (!(_is_special_(buffer[i])) && buffer[i])
-            {
-                tmp[j++] = buffer[i++];
-            }
-            tmp[j] = '\0';
-            // printf("tmp = |%s|\n", tmp);
-            // i--;
-
-            // Look for the real value of that string using the function getenv...
-            fill = getenv(tmp);
-            // printf("fill = |%s|\n", fill);
-            if (fill)
-            {
-                // If i did found the env value for that string then i will concatenate it with the global string 
-                count = ft_strlen(fill);
-                counter += count;
-                _add_to_string(global, g, fill, count);
-                g += count;
-                // This one for moving the index of global string...
-            }
-            if (tmp)
-            {    
-                // Freeing the tmp string
-                free(tmp);
-                tmp = NULL;
-            }
-            i--;
-            // counter--;
-            // printf("buffer[%d] = %c\n", i, buffer[i]);
+            _copy_dollar_digits_(prs);
+            prs->i--;
             continue;
         }
-        else if (buffer[i] == '"')
+        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
         {
-            // This is another case when i found the dq " char i need to check for backslashes....
-            global[g++] = buffer[i++]; // copy the dq var
-            counter++;
-            while (buffer[i] != '"' && buffer[i])
-            {
-                // Loop throw the string inside dq..
-                // i++;
-                // printf("before = [%c]\n", buffer[i]);
-                if (buffer[i] == '$' && ft_isdigit(buffer[i + 1]))
-                {
-                    // The same case when i found digits after dollar char...
-                    if (buffer[++i] == 48)
-                    {
-                        _add_to_string(global, g, "bash", 4);
-                        g +=4;
-                        i++;
-                        counter += 4;
-                    }
-                    else
-                    {
-                        counter++;
-                        i++;
-                    }
-                    
-                }
-                else if (buffer[i] == '\\')
-                {
-                    // This case is one i found the backslash so i need to copy and skip two chars the current one and the next one,
-                    // This algorithm will help me for skipping the $var if the number of backslashes is odd and looking for $var if the number of bs is even...
-                    // printf("|%d| = |%c|\n", i, buffer[i]);
-                    global[g++] = buffer[i++];
-                    // printf("|%d| = |%c|\n", i, buffer[i]);
-                    global[g++] = buffer[i++];
-                    counter += 2;
-                    // printf("backslash = [%d] = [%c] | [%d] = [%c] \n", i-1, buffer[i - 1], i, buffer[i]);
-                }
-                else if (buffer[i] == '$' && !(_is_special_(buffer[i + 1])))
-                {
-                    // Same thing when you found the $var...
-                    count = 0;
-                    j = ++i;
-                    // printf("first char = |%c|\n", buffer[i]);
-                    while (!(_is_special_(buffer[j])) && buffer[j++])
-                        count++;
-                    tmp = (char *)malloc(sizeof(char) * (count + 1));
-                    j = 0;
-                    while (!(_is_special_(buffer[i])) && buffer[i])
-                    {
-                        tmp[j++] = buffer[i++];
-                    }
-                    tmp[j] = '\0';
-                    // i--;
-                    fill = getenv(tmp);
-                    if (fill)
-                    {
-                        count = ft_strlen(fill);
-                        counter += count;
-                        _add_to_string(global, g, fill, count);
-                        printf("len of glob = |%lu| + |%d|\n", strlen(global), count);
-                        g += count;
-                    }
-                    if (tmp)
-                    {
-                        // printf("tmp === > |%s|\n", tmp);
-                        // printf("fill == > |%s|\n", fill);
-                        free(tmp);
-                        tmp = NULL;
-                    }
-
-                    // printf("buffer[%d] = %c\n", i, buffer[i]);
-                    // continue;
-                }
-                else
-                {
-                    // Copy the  other chars of inside dq "" ...
-                    // printf("---> |%c|\n", buffer[i]);
-                    counter++;
-                    global[g++] = buffer[i++];
-                }
-
-            }
-            if (buffer[i])
-            {
-                // Copy the last dq "
-                // printf("--> |%c|\n", buffer[i]);
-                counter++;
-                global[g++] = buffer[i++];
-                // printf("--> |%c|\n", buffer[i]);
-            }
-            // continue; // why you used this ///never mind hhhhh // no you need to mind
+            _copy_env_vars_(prs);
+            continue;
         }
-        // Copy the other chars of the string
-        global[g++] = buffer[i];
-        counter++;
+        else if (prs->buffer[prs->i] == '"')
+            _copy_inside_dq_(prs);
+        else if (prs->buffer[prs->i] == '\'')
+            _copy_inside_sq_(prs);
+        prs->global[prs->g++] = prs->buffer[prs->i];
     }
-    global[g] = '\0';
-    // printf("this global array : |%s|\n", global);
-    printf("len = |%d|\n", counter);
-    // printf("global = |%s|\n", global);
-    return global;
+    prs->global[prs->g] = '\0';
+    return prs->global;
 }
 
 
@@ -530,6 +637,7 @@ int main()
     char *tmp;
     size_t bufsize = 1;
     size_t r;
+    prs prs;
     // err prs;
 
 
@@ -547,11 +655,11 @@ int main()
             line = NULL;
             exit(0);
         }
-        printf("line = |%s|\n", line);
-        printf("line length = |%lu|\n", strlen(line));
-        tmp = _get_env_var_(line);
-        printf("tmp after editing = |%s|\n", tmp);
+        // printf("line = |%s|\n", line);
+        // printf("line length = |%lu|\n", strlen(line));
+        tmp = _get_env_var_(line, &prs);
         printf("tmp length = |%lu|\n", strlen(tmp));
+        printf("tmp after editing = |%s|\n", tmp);
         // _start_parsing(line, prs, &head);
         free(line);
         free(tmp);
@@ -559,6 +667,6 @@ int main()
         line = NULL;
         write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
     }
-    // checker = check_special_(buffer);
+    // checker = check_special_(prs->buffer);
     return(0);
 }

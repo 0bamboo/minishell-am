@@ -81,5 +81,10 @@ int			    insert_var(t_envlist *envlist, char *var);
 char	*ft_strdup(const char *s);
 int         print_envlist(t_envlist *envlist);
 void  printing(char **arr);
+void          sorting(char **arr);
+
+int  get_path(t_envlist *envlist, t_cmd_list *cmd);
+
+int       builtin_exit(int ret);
 
 #endif

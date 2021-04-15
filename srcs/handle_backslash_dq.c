@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/13 11:58:57 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 13:55:40 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ char _ret_special(char buffer)
         return '"';
     else if (buffer == '$')
         return '$';
-    else if (buffer == '`') // this one is not needed
-        return '`';
     else
         return 0;
 }
@@ -38,7 +36,6 @@ void        _bs_for_double_quotes_(ms_p *prs, char *token)
     {
         if (token[prs->i] == '\\' && _is_special(token[prs->i + 1]))
         {
-            puts("im in");
             prs->buff[prs->j++] = _ret_special(token[prs->i + 1]);
             prs->i += 2;
             continue;
@@ -73,5 +70,6 @@ char *_handle_backslash_(ms_p *prs, char *token)
             prs->buff[prs->j++] = token[prs->i++];
     }
     prs->buff[prs->j] = '\0';
+    printf("after handling BS : |%s|\n", prs->buff);
     return (prs->buff);
 }

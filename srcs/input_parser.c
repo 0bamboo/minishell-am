@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/14 22:54:29 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 13:45:11 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
 {
     char **tmp;
     int i;
-    // s_split sp;
+    s_split sp;
 
     i = 0;
     prs->sp = &sp;
@@ -159,28 +159,31 @@ int     in(char *check, char c)
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
 {
-    s_split sp;
+    s_split *sp;
     int i;
     
-    _initialize_vars(&sp);
+    sp = malloc(sizeof(s_split));
+    _initialize_vars(sp);
     if (_handle_syntax_errors(ft_strtrim(line, " \t\v\n\r"), prs))
         _raise_an_exception();
     else
     {
-        prs->sc_cmds = _split_tokens(&sp, line, ';');
+        prs->sc_cmds = _split_tokens(sp, line, ';');
         i = -1;
+        printf("size = |%d|\n", sp->size);
         while (prs->sc_cmds[++i])
         {
             prs->sc_cmds[i] = _get_env_vars_(prs->sc_cmds[i], prs);
             if (in(prs->sc_cmds[i], '"'))
                 prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
-            printf("after removing bs : |%d| --> |%s| \n", i, prs->sc_cmds[i]);
             if (prs->sc_cmds[i])
                 _copy_tokens_data_(prs->sc_cmds[i], prs, head);
+            printf(" im out {global}   ---> : |%s|\n", prs->global);
         }
         // i = -1;
         // while (prs->sc_cmds[++i])
         //     free(prs->sc_cmds[i]);
         // free(prs->sc_cmds);
     }
+    // free(sp);
 }

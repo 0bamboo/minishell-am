@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/14 23:04:59 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 13:43:27 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@ int main()
 {
     // You need to allocate all the structs that you will use in this program, 
     // for handling some mermory errors......
-    ms_p prs;
+    ms_p *prs;
     // s_split sp;
 
     // prs.sp = &sp;
-    minishell(&prs);
+    prs = malloc(sizeof(ms_p));
+    minishell(prs);
+    // free(prs);
     return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/14 22:35:31 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 15:21:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct r_split
     int size;
     int i;
     int j;
+    int k;
     int idx;
     int check_dq;
     int check_sq;
@@ -61,7 +62,7 @@ typedef struct r_split
 typedef struct      e_parse
 {
     char **sc_cmds;
-    char **sp_cmds;
+    // char **sp_cmds;
     int er;
     int i;
     int j;
@@ -74,6 +75,7 @@ typedef struct      e_parse
     char *temp;
     int count;
     int counter;
+    int status;
     char *global;
     int g;
     err_p   err;

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 13:45:11 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:22:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
                 _copy_tokens_data_(prs->sc_cmds[i], prs, head);
             printf(" im out {global}   ---> : |%s|\n", prs->global);
         }
+        puts("imout");
         // i = -1;
         // while (prs->sc_cmds[++i])
         //     free(prs->sc_cmds[i]);

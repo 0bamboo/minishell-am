@@ -154,6 +154,7 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 	printf("size of tokens = |%d|\n", sp->size);
 	if (!(sp->p = (char **)malloc(sizeof(char*) * (sp->size + 1))))
 		return (NULL);
+	sp->i = 0;
 	while (sp->i < sp->size)
 	{
 		while (s[sp->idx] && s[sp->idx] == c)
@@ -175,7 +176,6 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 		sp->p[sp->i++][sp->j] = '\0';
 	}
 	sp->p[sp->i] = NULL;
-	// sp->i = 0;
 	_trim_tokens(sp->p);
 	return (sp->p);
 }

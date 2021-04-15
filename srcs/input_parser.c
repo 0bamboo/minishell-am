@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/14 15:27:10 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/14 22:54:29 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,12 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
 {
     char **tmp;
     int i;
+    // s_split sp;
 
     i = 0;
+    prs->sp = &sp;
+    // prs->count = 0;
+    // prs->sp = malloc(sizeof(s_split));
     tmp = NULL;
     *head = NULL;
     puts("im in copy");
@@ -123,14 +127,14 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
     // else
     //     puts("special tokens");
     puts("w hi");
-    printf("tmp[%d]=%s", 1,tmp[1]);
+    // printf("tmp[%d]=%s", 1,tmp[1]);
     while (tmp[i])
     {
         printf("pushing  = |%s|\n", tmp[i]);
         i++;
     }
-    free(token);
-    token = NULL;
+    // free(token);
+    // token = NULL;
     // i = 0;
     // while (tmp[i])     
     //     free(tmp[i]);
@@ -174,5 +178,9 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
             if (prs->sc_cmds[i])
                 _copy_tokens_data_(prs->sc_cmds[i], prs, head);
         }
+        // i = -1;
+        // while (prs->sc_cmds[++i])
+        //     free(prs->sc_cmds[i]);
+        // free(prs->sc_cmds);
     }
 }

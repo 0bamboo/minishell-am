@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/24 18:52:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2019/10/25 17:42:58 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/16 15:59:17 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char		*ft_itoa(int n)
 {
 	int		len;
 	char	*ptr;
+	char	*tmp;
 	int		i;
 	long	a;
 
@@ -55,5 +56,7 @@ char		*ft_itoa(int n)
 		a /= 10;
 	}
 	ptr[len] = '\0';
-	return (ptr);
+	tmp = ptr;
+	free(ptr);
+	return (tmp);
 }

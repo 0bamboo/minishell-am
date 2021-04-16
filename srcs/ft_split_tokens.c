@@ -83,8 +83,10 @@ static char			**_free(s_split *sp)
 	int i;
 
 	i = 0;
+	puts("here");
 	while (i++ < sp->size)
 		free(sp->p[i]);
+	puts("here1");
 	free(sp->p);
 	sp->p = NULL;
 	return (NULL);
@@ -118,6 +120,7 @@ int		_sp_handle_single_quotes_(s_split *sp, char const *s)
 	int end;
 
 	start = sp->idx++;
+	puts("h");
 	while (s[sp->idx] && s[sp->idx] != '\'')
 		sp->idx++;
 	end = ++sp->idx;
@@ -131,6 +134,7 @@ int		_sp_handle_double_quotes_(s_split *sp, char const *s)
 	int end;
 
 	start = sp->idx++;
+	puts("hdq");
 	while (s[sp->idx] && s[sp->idx] != '"')
 	{
 		if (s[sp->idx] == '\\')
@@ -142,11 +146,13 @@ int		_sp_handle_double_quotes_(s_split *sp, char const *s)
 	}
 	end = ++sp->idx;
 	_add_to_string_(sp->p[sp->i], (s + start), end - start);
+	puts("hdq out");
 	return (end - start);
 }
 
 char				**_split_tokens(s_split *sp, char const *s, char c)
 {
+	// test with this echo $$0$?"hi agina \\\$0 $$9abdennacer \\$?$?$??? hi \" \\\" out"
 	sp->idx = 0;
 	if (!s)
 		return (NULL);
@@ -171,6 +177,7 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 		// puts("im in3");
 		while (s[sp->idx])
         {
+			puts("im in");
 			if (s[sp->idx] == '"')
 				sp->j += _sp_handle_double_quotes_(sp, s);
 			else if (s[sp->idx] == '\'')

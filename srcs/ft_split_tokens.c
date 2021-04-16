@@ -47,8 +47,6 @@ static int			_count_tokens(char const *s, char c, s_split *sp)
 			count++;
 		i++;
 	}
-	sp->check_sq = 0;
-	sp->check_dq = 0;
 	return (count);
 }
 
@@ -58,23 +56,42 @@ static int			_len_tokens(s_split *sp, char const *s, char c)
 
 	k = 0;
 	// try to change this method that you used here ok
-	while (s[k])
+	while (s[k] && s[k] != c)
 	{
-		if (s[k] == '\\' && s[k + 1] == '"')
+		if (s[k] == '"')
 		{
-			k += 2;
-			continue;
+			k++;
+			while (s[k] && s[k] != '"')
+			{
+				if (s[k] == '\\')
+				{
+					k += 2;
+					continue;
+				}
+				k++;
+			}
+
 		}
-		if (s[k] == '\'' && sp->check_dq % 2 == 0)
-			sp->check_sq += 1;
-		if (s[k] == '"' && sp->check_sq % 2 == 0)
-			sp->check_dq += 1;
-		if (s[k] == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
-			break;
+		else if (s[k] == '\'')
+		{
+			k++;
+			while (s[k] && s[k] != '\'')
+				k++;
+		}
 		k++;
+		// if (s[k] == '\\' && s[k + 1] == '"')
+		// {
+		// 	k += 2;
+		// 	continue;
+		// }
+		// if (s[k] == '\'' && sp->check_dq % 2 == 0)
+		// 	sp->check_sq += 1;
+		// if (s[k] == '"' && sp->check_sq % 2 == 0)
+		// 	sp->check_dq += 1;
+		// if (s[k] == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
+		// 	break;
+		// k++;
 	}
-	sp->check_sq = 0;
-	sp->check_dq = 0;
 	return (k);
 }
 

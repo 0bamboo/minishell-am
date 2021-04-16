@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 16:22:48 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 22:48:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,18 +119,18 @@ void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
     prs->sp = &sp;
     // prs->count = 0;
     // prs->sp = malloc(sizeof(s_split));
-    tmp = NULL;
+    // tmp = NULL;
     *head = NULL;
-    puts("im in copy");
+    // puts("im in copy");
     // if (!_check_for_special_chars_(token))
     tmp = _split_tokens(prs->sp, token, ' '); // _push_back_normal_tokens_(head, prs);  
     // else
     //     puts("special tokens");
-    puts("w hi");
+    // puts("w hi");
     // printf("tmp[%d]=%s", 1,tmp[1]);
     while (tmp[i])
     {
-        printf("pushing  = |%s|\n", tmp[i]);
+        // printf("pushing  = |%s|\n", tmp[i]);
         i++;
     }
     // free(token);
@@ -162,6 +162,7 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     s_split *sp;
     int i;
     
+    *head = NULL;
     sp = malloc(sizeof(s_split));
     _initialize_vars(sp);
     if (_handle_syntax_errors(ft_strtrim(line, " \t\v\n\r"), prs))
@@ -176,8 +177,8 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
             prs->sc_cmds[i] = _get_env_vars_(prs->sc_cmds[i], prs);
             if (in(prs->sc_cmds[i], '"'))
                 prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
-            if (prs->sc_cmds[i])
-                _copy_tokens_data_(prs->sc_cmds[i], prs, head);
+            // if (prs->sc_cmds[i])
+            //     _copy_tokens_data_(prs->sc_cmds[i], prs, head);
             printf(" im out {global}   ---> : |%s|\n", prs->global);
         }
         puts("imout");

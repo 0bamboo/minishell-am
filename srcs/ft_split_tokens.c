@@ -158,14 +158,17 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
 	sp->k = 0;
 	while (sp->i < sp->size)
 	{
-		puts("im in1");
+		// puts("im in1");
 		while (s[sp->idx] && s[sp->idx] == c)
 			sp->idx++;
-		puts("im in2");
-		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (_len_tokens(sp, s + sp->k, c) + 1))))
+		// puts("im in2");
+		int size;
+		size = _len_tokens(sp, s + sp->k, c);
+		printf("size === |%d|\n", size);
+		if (!(sp->p[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
 			return (_free(sp));
 		sp->j = 0;
-		puts("im in3");
+		// puts("im in3");
 		while (s[sp->idx])
         {
 			if (s[sp->idx] == '"')
@@ -177,12 +180,12 @@ char				**_split_tokens(s_split *sp, char const *s, char c)
             if (s[sp->idx] == c)
 			{
 				sp->k = sp->idx + 1;
-				puts("break");
+				printf("idx = |%c|\n", s[sp->k]);
                 break;
 			}
-			printf("-%c-\n", s[sp->idx]);
+			// printf("-%c-\n", s[sp->idx]);
         }
-		puts("im out");
+		// puts("im out");
 		sp->p[sp->i++][sp->j] = '\0';
 	}
 	sp->p[sp->i] = NULL;

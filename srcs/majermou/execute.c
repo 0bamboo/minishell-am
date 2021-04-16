@@ -98,11 +98,15 @@ int                 handle_redirection(t_cmd_list *command)
 int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
 {
     pid_t       pid;
+    static int j = 0;
     pid_t       wpid;
+    pid_t       *w_pid = malloc(sizeof(pid_t) * command->nbrpipe);
     char        *path;
     int         status;
 
-    if ((pid = fork()) < 0)
+    pid = fork();
+    w_pid[j++] = pid;
+    if (pid < 0)
         perror("sh");
     if (!pid)
     {
@@ -114,7 +118,7 @@ int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
         handle_redirection(command);
         if (execve(path,command->args,envp) == -1)
             perror("sh");
-        exit(1);
+        exit(0);
     }
     else
     {
@@ -122,7 +126,12 @@ int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
            close(fds[command->iterator * 2 - 2]);
         if (command->next)
            close(fds[command->iterator * 2 + 1]);
-        waitpid(pid, &status, WUNTRACED);
+        if (command->nbrpipe == 0)
+            waitpid(pid, &status, WUNTRACED);
+        else {
+            for (int i = 0; i < command->nbrpipe + 1; i++)
+                waitpid(w_pid[i], &status, 0);
+        }
     }
     return (1);
 }
@@ -189,30 +198,37 @@ int                 main(int argc, char **argv, char **envp)
     t_cmd_list      *cmd = (t_cmd_list*)malloc(sizeof(t_cmd_list));
 
     cmd->args = malloc(3 * sizeof(char*));
-    cmd->args[0] = strdup("ls");
-    cmd->args[1] = strdup("-al");
+    cmd->args[0] = strdup("sleep");
+    cmd->args[1] = strdup("2");
     cmd->args[2] = NULL;
-    cmd->nbrpipe = 0;
+    cmd->nbrpipe = 1;
     cmd->iterator = 0;
-    cmd->next = NULL;
+    cmd->next = (t_cmd_list*)malloc(sizeof(t_cmd_list));
+    cmd->next->args = malloc(5 * sizeof(char*));
+    cmd->next->args[0] = strdup("ls");
+    cmd->next->args[1] = strdup("-la");
+    cmd->next->args[2] = NULL;
+    cmd->next->nbrpipe = 1;
+    cmd->next->iterator = 1;
+    cmd->next->next = NULL;
     // (t_cmd_list*)malloc(sizeof(t_cmd_list));
-    // cmd->next->args = malloc(5 * sizeof(char*));
-    // cmd->next->args[0] = strdup("wc");
-    // cmd->next->args[1] = strdup("-c");
-    // cmd->next->args[2] = strdup("<");
-    // cmd->next->args[3] = strdup("filee");
-    // cmd->next->args[4] = NULL;
-    // cmd->next->nbrpipe = 1;
-    // cmd->next->iterator = 1;
-    // cmd->next->next = NULL;
-    //(t_cmd_list*)malloc(sizeof(t_cmd_list));
     // cmd->next->next->args = malloc(3 * sizeof(char*));
-    // cmd->next->next->args[0] = strdup("wc");
-    // cmd->next->next->args[1] = strdup("-c");
+    // cmd->next->next->args[0] = strdup("awk");
+    // cmd->next->next->args[1] = strdup("{print $1}");
     // cmd->next->next->args[2] = NULL;
-    // cmd->next->next->nbrpipe = 2;
+    // cmd->next->next->nbrpipe = 4;
     // cmd->next->next->iterator = 2;
     // cmd->next->next->next = NULL;
+
+    // cmd->next->next->next = (t_cmd_list*)malloc(sizeof(t_cmd_list));
+    // cmd->next->next->next->args = malloc(4 * sizeof(char*));
+    // cmd->next->next->next->args[0] = strdup("tr");
+    // cmd->next->next->next->args[1] = strdup("-d");
+    // cmd->next->next->next->args[2] = strdup("-");
+    // cmd->next->next->next->args[3] = NULL;
+    // cmd->next->next->next->nbrpipe = 4;
+    // cmd->next->next->next->iterator = 3;
+    // cmd->next->next->next->next = NULL;
     
     execute_cmd(cmd,envp);
     return (0);

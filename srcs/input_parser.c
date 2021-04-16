@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/13 15:58:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/15 22:48:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,18 @@ void    _free_all_(ms_p *prs, t_cmd_list **head)
 
 int     _check_for_special_chars_(char *buff)
 {
-    while (*buff)
+    int i;
+
+    i = 0;
+    while (buff[i])
     {
-        if (_char_in_tab_(*buff, "><|"))
+        if (buff[i] == '"')
+            while (buff[++i] && buff[i] != '"');
+        else if (buff[i] == '\'')
+            while (buff[++i] && buff[i] != '\'');
+        if (_char_in_tab_(buff[i], "><|"))
             return 1;
-        buff++;
+        i++;
     }
     return 0;
 }
@@ -104,17 +111,34 @@ void _push_back_normal_tokens_(t_cmd_list **head, ms_p *prs)
 
 void        _copy_tokens_data_(char *token, ms_p *prs, t_cmd_list **head)
 {
-    if (token != NULL)
+    char **tmp;
+    int i;
+    s_split sp;
+
+    i = 0;
+    prs->sp = &sp;
+    // prs->count = 0;
+    // prs->sp = malloc(sizeof(s_split));
+    // tmp = NULL;
+    *head = NULL;
+    // puts("im in copy");
+    // if (!_check_for_special_chars_(token))
+    tmp = _split_tokens(prs->sp, token, ' '); // _push_back_normal_tokens_(head, prs);  
+    // else
+    //     puts("special tokens");
+    // puts("w hi");
+    // printf("tmp[%d]=%s", 1,tmp[1]);
+    while (tmp[i])
     {
-        if (!_check_for_special_chars_(token))
-        {
-            _push_back_normal_tokens_(head, prs);
-        }
-        else
-        {
-            puts("special tokens");
-        }
+        // printf("pushing  = |%s|\n", tmp[i]);
+        i++;
     }
+    // free(token);
+    // token = NULL;
+    // i = 0;
+    // while (tmp[i])     
+    //     free(tmp[i]);
+    // free(tmp);
 }
 
 
@@ -135,28 +159,33 @@ int     in(char *check, char c)
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
 {
-    s_split sp;
-    // int j;
+    s_split *sp;
     int i;
-    // t_cmd_list *curr;
     
-    _initialize_vars(&sp);
+    *head = NULL;
+    sp = malloc(sizeof(s_split));
+    _initialize_vars(sp);
     if (_handle_syntax_errors(ft_strtrim(line, " \t\v\n\r"), prs))
         _raise_an_exception();
     else
     {
-        prs->sc_cmds = _split_tokens(&sp, line, ';');
+        prs->sc_cmds = _split_tokens(sp, line, ';');
         i = -1;
+        printf("size = |%d|\n", sp->size);
         while (prs->sc_cmds[++i])
         {
             prs->sc_cmds[i] = _get_env_vars_(prs->sc_cmds[i], prs);
             if (in(prs->sc_cmds[i], '"'))
                 prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
-            printf("after removing bs : |%d| --> |%s| \n", i, prs->sc_cmds[i]);
-            if (prs->sc_cmds[i])
-            {
-                _copy_tokens_data_(prs->sc_cmds[i], prs, head);
-            }
+            // if (prs->sc_cmds[i])
+            //     _copy_tokens_data_(prs->sc_cmds[i], prs, head);
+            printf(" im out {global}   ---> : |%s|\n", prs->global);
         }
+        puts("imout");
+        // i = -1;
+        // while (prs->sc_cmds[++i])
+        //     free(prs->sc_cmds[i]);
+        // free(prs->sc_cmds);
     }
+    // free(sp);
 }

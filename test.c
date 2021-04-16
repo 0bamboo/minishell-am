@@ -294,10 +294,74 @@ typedef struct sc
     int j;
     char *global;
     int g;
+    int status;
 
 } prs;
 
 
+// char	*ft_strdup(const char *s)
+// {
+// 	int		i;
+// 	int		len;
+// 	char	*tmp;
+
+// 	i = 0;
+// 	len = strlen(s);
+// 	if (!(tmp = (char *)malloc(len + 1)))
+// 		return (0);
+// 	while (i <= len)
+// 	{
+// 		tmp[i] = s[i];
+// 		i++;
+// 	}
+// 	return (tmp);
+// }
+
+static int	ft_len_nbr(long n)
+{
+	int		size;
+
+	size = 0;
+	if (n < 0)
+	{
+		n *= -1;
+		size++;
+	}
+	while (n > 0)
+	{
+		n /= 10;
+		size++;
+	}
+	return (size);
+}
+
+char		*ft_itoa(int n)
+{
+	int		len;
+	char	*ptr;
+	int		i;
+	long	a;
+
+	a = n;
+	if (a == 0)
+		return (ft_strdup("0"));
+	len = ft_len_nbr(a);
+	i = len - 1;
+	if (!(ptr = (char *)malloc(sizeof(char) * (len + 1))))
+		return (NULL);
+	if (a < 0)
+	{
+		ptr[0] = '-';
+		a *= -1;
+	}
+	while (a)
+	{
+		ptr[i--] = (a % 10) + '0';
+		a /= 10;
+	}
+	ptr[len] = '\0';
+	return (ptr);
+}
 
 int     _is_special_(char c)
 {
@@ -411,6 +475,11 @@ void _count_inside_dq_(prs *prs)
         }
         else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
             _dq_count_env_vars_(prs);
+        else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+        {
+            prs->i += 2;
+            prs->counter += strlen(ft_itoa(prs->status));
+        }
         else
         {
             prs->counter++;
@@ -440,8 +509,11 @@ int _line_counter_(prs *prs)
     {
         if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
         {
-            prs->i++;
-            prs->counter++;
+            printf("line counter = |%c|\n", prs->buffer[prs->i]);
+            prs->i += 1;
+            // prs->counter++;
+            prs->counter += strlen(ft_itoa(prs->status));
+            continue;
         }
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
         {
@@ -574,9 +646,18 @@ void        _copy_inside_dq_(prs *prs)
             // This algorithm will help me for skipping the $var if the number of backslashes is odd and looking for $var if the number of bs is even...
             prs->global[prs->g++] = prs->buffer[prs->i++];
             prs->global[prs->g++] = prs->buffer[prs->i++];
+            printf("bs == |%c|\n", prs->buffer[prs->i]);
         }
         else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
             _dq_copy_env_vars_(prs);
+        else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+        {
+            printf("? == |%c|\n", prs->buffer[prs->i]);
+            prs->count = ft_strlen(ft_itoa(prs->status));
+            _add_to_string(prs->global, prs->g, ft_itoa(prs->status), prs->count);
+            prs->g += prs->count;
+            prs->i += 2;
+        }
         else // Copy the  other chars of inside dq "" ...
             prs->global[prs->g++] = prs->buffer[prs->i++];
     }
@@ -596,6 +677,7 @@ char *_get_env_var_(char *buffer, prs *prs)
 
     prs->g = 0;
     counter = 0;
+    prs->status = 75263;
     // This allocation is just for testing , but in the real project prs->i need to calculate,
     //how much memory prs->i will use first before changing the value of env variables.
     // printf("line counter = [%d]\n", _line_counter_(buffer));
@@ -607,7 +689,15 @@ char *_get_env_var_(char *buffer, prs *prs)
     while (prs->buffer[++prs->i])
     {
         if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
-            prs->global[prs->g++] = prs->buffer[prs->i++];
+        {
+            prs->count = ft_strlen(ft_itoa(prs->status));
+            _add_to_string(prs->global, prs->g, ft_itoa(prs->status), prs->count);
+            prs->g += prs->count;
+            prs->i++;
+            printf("out == |%c|\n", buffer[prs->i]);
+            continue;
+
+        }
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
         {
             _copy_dollar_digits_(prs);
@@ -620,7 +710,10 @@ char *_get_env_var_(char *buffer, prs *prs)
             continue;
         }
         else if (prs->buffer[prs->i] == '"')
+        {
+            puts("im in");
             _copy_inside_dq_(prs);
+        }
         else if (prs->buffer[prs->i] == '\'')
             _copy_inside_sq_(prs);
         prs->global[prs->g++] = prs->buffer[prs->i];

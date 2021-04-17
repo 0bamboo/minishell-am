@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 13:55:40 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 16:13:43 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int _is_special(char c)
         return 1;
     return 0;
 }
-void        _bs_for_double_quotes_(ms_p *prs, char *token)
+void        _bs_for_double_quotes_(t_mp *prs, char *token)
 {
     prs->buff[prs->j++] = token[prs->i++];
     while (token[prs->i] != '"')
@@ -46,7 +46,7 @@ void        _bs_for_double_quotes_(ms_p *prs, char *token)
 }
 
 
-void        _bs_for_single_quotes_(ms_p *prs, char *token)
+void        _bs_for_single_quotes_(t_mp *prs, char *token)
 {
     prs->buff[prs->j++] = token[prs->i++];
     while (token[prs->i] != '\'')
@@ -55,7 +55,7 @@ void        _bs_for_single_quotes_(ms_p *prs, char *token)
 }
 
 
-char *_handle_backslash_(ms_p *prs, char *token)
+char *_handle_backslash_(t_mp *prs, char *token)
 {   
     prs->i = 0;
     prs->j = 0;

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/13 11:55:44 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 16:13:25 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ int     _is_white_space(char c)
 }
 
 
-int _check_semi_colon(char *line, ms_p *prs)
+int _check_semi_colon(char *line, t_mp *prs)
 {
     prs->i++;
-    if (line[0] == ';') // if the first chars is semicolon it is an ms_por
+    if (line[0] == ';') // if the first chars is semicolon it is an t_mpor
     {
         prs->er = 1;
         return prs->i;
     }
     while (prs->i)
     {
-        // if the char after the semicolon is one of this | or ; then it is an ms_por
+        // if the char after the semicolon is one of this | or ; then it is an t_mpor
         if (line[prs->i] == '|' || line[prs->i] == ';')
         {
             prs->er = 1;
@@ -52,10 +52,10 @@ int _check_semi_colon(char *line, ms_p *prs)
     return(--prs->i);// for knowing the char that we break at .... pardon my english hahaha
 }
 
-int _check_pipe(char *line, ms_p *prs)
+int _check_pipe(char *line, t_mp *prs)
 {
     prs->i++;
-                // if the first char is pipe or the next one is backslash zero then it is an ms_por
+                // if the first char is pipe or the next one is backslash zero then it is an t_mpor
     if (line[0] == '|' || !line[prs->i + 1])
     {
         prs->er = 1;
@@ -77,7 +77,7 @@ int _check_pipe(char *line, ms_p *prs)
     return (--prs->i);
 }
 
-int _check_redirection(char *line, ms_p *prs)
+int _check_redirection(char *line, t_mp *prs)
 {
     prs->credir = 1;
     prs->i++;
@@ -111,7 +111,7 @@ int _check_redirection(char *line, ms_p *prs)
     return (--prs->i);
 }
 
-int _check_double_quotes(char *line, ms_p *prs)
+int _check_double_quotes(char *line, t_mp *prs)
 {
     prs->i++;
     while (line[prs->i] != prs->tmp && line[prs->i])
@@ -129,17 +129,17 @@ int _check_double_quotes(char *line, ms_p *prs)
     return prs->i;
 }
 
-int _check_single_quotes(char *line, ms_p *prs)
+int _check_single_quotes(char *line, t_mp *prs)
 {
     prs->i++;
     while (line[prs->i] != '\'' && line[prs->i])
         prs->i++;
-    if (line[prs->i] != prs->tmp) // checking that the last chars after loop is single quotes else it is an ms_por
+    if (line[prs->i] != prs->tmp) // checking that the last chars after loop is single quotes else it is an t_mpor
         prs->er = 1;
     return prs->i;
 }
 
-int _handle_syntax_errors(char *line, ms_p *prs)
+int _handle_syntax_errors(char *line, t_mp *prs)
 {
 
     prs->i = 0;
@@ -148,7 +148,7 @@ int _handle_syntax_errors(char *line, ms_p *prs)
     while (line[prs->i])
     {
         prs->tmp = line[prs->i];
-        // Check ms_pors of semicolon :
+        // Check t_mpors of semicolon :
         if (line[prs->i] == ';')
             prs->i = _check_semi_colon(line, prs);
         else if (line[prs->i] == '|') 

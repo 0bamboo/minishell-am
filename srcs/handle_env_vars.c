@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 00:01:03 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 16:13:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void _add_to_string(char *buff, int index, char *fill, int size)
     // puts("");
 }
 
-void _count_dollar_digits_(ms_p *prs)
+void _count_dollar_digits_(t_mp *prs)
 {
     if (prs->buffer[++prs->i] == 48)
     {
@@ -50,7 +50,7 @@ void _count_dollar_digits_(ms_p *prs)
         prs->i++;
 }
 
-void _count_env_vars_(ms_p *prs)
+void _count_env_vars_(t_mp *prs)
 {
     int count;
     int j;
@@ -77,7 +77,7 @@ void _count_env_vars_(ms_p *prs)
     prs->i--;
 }
 
-void _dq_count_env_vars_(ms_p *prs)
+void _dq_count_env_vars_(t_mp *prs)
 {
     prs->count = 0;
     prs->j = ++prs->i;
@@ -93,12 +93,12 @@ void _dq_count_env_vars_(ms_p *prs)
         prs->counter += ft_strlen(prs->fill);
     // if (prs->temp)
     // {
-    //     free(prs->temp);
-    //     prs->temp = NULL;
+        free(prs->temp);
+        prs->temp = NULL;
     // }
 }
 
-void _dq_count_dollar_digits_(ms_p *prs)
+void _dq_count_dollar_digits_(t_mp *prs)
 {
     if (prs->buffer[++prs->i] == 48)
     {
@@ -109,7 +109,7 @@ void _dq_count_dollar_digits_(ms_p *prs)
         prs->i++;
 }
 
-void _count_inside_dq_(ms_p *prs)
+void _count_inside_dq_(t_mp *prs)
 {
     prs->counter++;
     prs->i++;
@@ -142,7 +142,7 @@ void _count_inside_dq_(ms_p *prs)
     prs->i++;
 }
 
-void _count_inside_sq_(ms_p *prs)
+void _count_inside_sq_(t_mp *prs)
 {
     prs->i++;
     prs->counter++;
@@ -156,7 +156,7 @@ void _count_inside_sq_(ms_p *prs)
 }
 
 
-int _line_counter_(ms_p *prs)
+int _line_counter_(t_mp *prs)
 {
     prs->i = 0;
     prs->counter = 0;
@@ -199,7 +199,7 @@ int _line_counter_(ms_p *prs)
 }
 
 
-void    _copy_dollar_digits_(ms_p *prs)
+void    _copy_dollar_digits_(t_mp *prs)
 {
     if (prs->buffer[++prs->i] == 48)
     {
@@ -211,7 +211,7 @@ void    _copy_dollar_digits_(ms_p *prs)
         prs->i++;
 }
 
-void _copy_env_vars_(ms_p *prs)
+void _copy_env_vars_(t_mp *prs)
 {
     prs->count = 0;
     prs->j = ++prs->i;
@@ -246,14 +246,15 @@ void _copy_env_vars_(ms_p *prs)
         prs->g += prs->count;
         // This one for moving the index of prs->global string...
     }
-    if (prs->temp)
-    {    
-        // Freeing the prs->temp string
+    // if (prs->temp)
+    // {    
+    //     // Freeing the prs->temp string
         free(prs->temp);
-    }
+        // puts("============================================================");
+    // }
 }
 
-void _dq_copy_dollar_digits_(ms_p *prs)
+void _dq_copy_dollar_digits_(t_mp *prs)
 {
     // The same case when prs->i found digits after dollar char...
     if (prs->buffer[++prs->i] == 48)
@@ -266,7 +267,7 @@ void _dq_copy_dollar_digits_(ms_p *prs)
         prs->i++;
 }
 
-void    _dq_copy_env_vars_(ms_p *prs)
+void    _dq_copy_env_vars_(t_mp *prs)
 {
     // Same thing when you found the $var...
     prs->count = 0;
@@ -285,11 +286,11 @@ void    _dq_copy_env_vars_(ms_p *prs)
         _add_to_string(prs->global, prs->g, prs->fill, prs->count);
         prs->g += prs->count;
     }
-    if (prs->temp)
+    // if (prs->temp)
         free(prs->temp);
 }
 
-void        _copy_inside_dq_(ms_p *prs)
+void        _copy_inside_dq_(t_mp *prs)
 {
     prs->global[prs->g++] = prs->buffer[prs->i++]; // copy the dq var
     while (prs->buffer[prs->i] != '"' && prs->buffer[prs->i])
@@ -321,7 +322,7 @@ void        _copy_inside_dq_(ms_p *prs)
     prs->global[prs->g++] = prs->buffer[prs->i++];
 }
 
-void    _copy_inside_sq_(ms_p *prs)
+void    _copy_inside_sq_(t_mp *prs)
 {
     prs->global[prs->g++] = prs->buffer[prs->i++];
     while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
@@ -329,7 +330,7 @@ void    _copy_inside_sq_(ms_p *prs)
     prs->global[prs->g++] = prs->buffer[prs->i++];
 }
 
-void _get_env_vars_2_(ms_p *prs)
+void _get_env_vars_2_(t_mp *prs)
 {
     if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
     {
@@ -358,7 +359,7 @@ void _get_env_vars_2_(ms_p *prs)
 }
 
 
-char *_get_env_vars_(char *buffer, ms_p *prs)
+char *_get_env_vars_(char *buffer, t_mp *prs)
 {
     // char *global;
     int counter;

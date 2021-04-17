@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 00:09:50 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 16:18:03 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct			s_cmd_list
 	struct  s_cmd_list	*prev;
 }						t_cmd_list;
 
-typedef struct errors
+typedef struct s_err
 {
     int     dq;
     int     sq;
@@ -42,13 +42,13 @@ typedef struct errors
     int     i;
     char    tmp;
     int     len;
-}               err_p;
+}               t_err;
 
 
-typedef struct r_split
+typedef struct s_sp
 {
     char **str;
-    char const *tmp;
+    char *tmp;
     int start;
     int end;
     int size;
@@ -57,13 +57,13 @@ typedef struct r_split
     int k;
     int idx;
     int count;
-}               s_split;
+}               t_sp;
 
 
 
-typedef struct      e_parse
+typedef struct      s_mp
 {
-    char **sc_cmds;
+    char **cmds;
     // char **sp_cmds;
     int er;
     int i;
@@ -80,20 +80,20 @@ typedef struct      e_parse
     int status;
     char *global;
     int g;
-    err_p   err;
+    t_err   err;
     t_cmd_list      *plst;
-    s_split         *sp;
-}                   ms_p;
+    t_sp         *sp;
+}                   t_mp;
 
 
-void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);
-char				**_split_tokens(s_split *sp, char const *s, char c);
-void        _trim_tokens(s_split *sp);
-char *_get_env_vars_(char *buffer, ms_p *prs);
-int _handle_syntax_errors(char *line, ms_p *prs);
+void _start_parsing(char *line, t_mp *prs, t_cmd_list **head);
+void				_split_tokens(t_mp *prs, t_sp *sp, char *s, char c);
+void        _trim_tokens(t_mp *prs);
+char *_get_env_vars_(char *buffer, t_mp *prs);
+int _handle_syntax_errors(char *line, t_mp *prs);
 void        _raise_an_exception();
 int     _char_in_tab_(char c, char tab[3]);
-char *_handle_backslash_(ms_p *prs, char *token);
+char *_handle_backslash_(t_mp *prs, char *token);
 
 
 

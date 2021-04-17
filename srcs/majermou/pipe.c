@@ -103,6 +103,7 @@ int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
     pid_t       *w_pid = malloc(sizeof(pid_t) * command->nbrpipe);
     char        *path;
     int         status;
+    int         i;
 
     pid = fork();
     w_pid[j++] = pid;
@@ -127,10 +128,15 @@ int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
         if (command->next)
            close(fds[command->iterator * 2 + 1]);
         if (command->nbrpipe == 0)
-            waitpid(pid, &status, WUNTRACED);
-        else {
-            for (int i = 0; i < command->nbrpipe + 1; i++)
-                waitpid(w_pid[i], &status, 0);
+            waitpid(pid, &status, 0);
+        else
+        {
+            i = 0;
+            while (i < command->nbrpipe)
+		    {
+			    waitpid(w_pid[i], &status, 0);
+                i++;
+		    }
         }
     }
     return (1);

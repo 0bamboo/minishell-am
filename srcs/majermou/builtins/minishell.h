@@ -85,6 +85,7 @@ void          sorting(char **arr);
 
 int  get_path(t_envlist *envlist, t_cmd_list *cmd);
 
-int       builtin_exit(int ret);
+int   builtin_exit(t_cmd_list *cmd, int status);
+int builtin_echo(t_cmd_list *cmd);
 
 #endif

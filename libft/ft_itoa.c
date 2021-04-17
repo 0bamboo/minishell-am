@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/24 18:52:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/16 15:59:17 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/16 23:02:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char		*ft_itoa(int n)
 {
 	int		len;
 	char	*ptr;
-	char	*tmp;
 	int		i;
 	long	a;
 
@@ -56,7 +55,5 @@ char		*ft_itoa(int n)
 		a /= 10;
 	}
 	ptr[len] = '\0';
-	tmp = ptr;
-	free(ptr);
-	return (tmp);
+	return (ptr);
 }

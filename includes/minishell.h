@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 15:21:05 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 00:09:50 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ typedef struct errors
 
 typedef struct r_split
 {
-    char **p;
+    char **str;
+    char const *tmp;
+    int start;
+    int end;
     int size;
     int i;
     int j;
     int k;
     int idx;
-    int check_dq;
-    int check_sq;
+    int count;
 }               s_split;
 
 
@@ -86,7 +88,7 @@ typedef struct      e_parse
 
 void _start_parsing(char *line, ms_p *prs, t_cmd_list **head);
 char				**_split_tokens(s_split *sp, char const *s, char c);
-void        _trim_tokens(char **sp);
+void        _trim_tokens(s_split *sp);
 char *_get_env_vars_(char *buffer, ms_p *prs);
 int _handle_syntax_errors(char *line, ms_p *prs);
 void        _raise_an_exception();

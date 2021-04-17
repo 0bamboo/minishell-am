@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/16 15:56:28 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 00:19:57 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 void        _initialize_vars(s_split *ps)
 {
-    ps->check_dq = 0;
-    ps->check_sq = 0;
     ps->i = 0;
     
 }
@@ -183,9 +181,9 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
         }
         // puts("imout");
         // i = -1;
-        // while (prs->sc_cmds[++i])
-        //     free(prs->sc_cmds[i]);
-        // free(prs->sc_cmds);
+        while (prs->sc_cmds[++i])
+            free(prs->sc_cmds[i]);
+        free(prs->sc_cmds);
     }
     // free(sp);
 }

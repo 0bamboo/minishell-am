@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 22:48:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 00:22:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 void        _initialize_vars(s_split *ps)
 {
-    ps->check_dq = 0;
-    ps->check_sq = 0;
     ps->i = 0;
     
 }
@@ -171,21 +169,16 @@ void _start_parsing(char *line, ms_p *prs, t_cmd_list **head)
     {
         prs->sc_cmds = _split_tokens(sp, line, ';');
         i = -1;
-        printf("size = |%d|\n", sp->size);
+        // printf("size = |%d|\n", sp->size);
         while (prs->sc_cmds[++i])
         {
             prs->sc_cmds[i] = _get_env_vars_(prs->sc_cmds[i], prs);
-            if (in(prs->sc_cmds[i], '"'))
-                prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
+            // if (in(prs->sc_cmds[i], '"'))
+            // prs->sc_cmds[i] = _handle_backslash_(prs, prs->sc_cmds[i]);
+            printf(" im out {global}   ---> : |%s|\n", prs->sc_cmds[i]);
             // if (prs->sc_cmds[i])
             //     _copy_tokens_data_(prs->sc_cmds[i], prs, head);
-            printf(" im out {global}   ---> : |%s|\n", prs->global);
         }
-        puts("imout");
-        // i = -1;
-        // while (prs->sc_cmds[++i])
-        //     free(prs->sc_cmds[i]);
-        // free(prs->sc_cmds);
     }
     // free(sp);
 }

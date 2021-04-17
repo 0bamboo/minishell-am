@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 13:43:27 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 00:23:26 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void  minishell(ms_p *prs)
         {
             free(line);
             line = NULL;
+            free(prs);
             exit(0);
         }
         _start_parsing(line, prs, &head);

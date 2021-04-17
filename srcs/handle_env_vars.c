@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/15 22:41:32 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 00:01:03 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,11 @@ void _count_inside_dq_(ms_p *prs)
             _dq_count_env_vars_(prs);
         else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
         {
+            char *tmp;
             prs->i += 2;
-            prs->counter += strlen(ft_itoa(prs->status));
+            tmp = ft_itoa(prs->status);
+            prs->counter += strlen(tmp);
+            free(tmp);
         }
         else
         {
@@ -135,6 +138,8 @@ void _count_inside_dq_(ms_p *prs)
             prs->i++;
         }
     }
+    prs->counter++;
+    prs->i++;
 }
 
 void _count_inside_sq_(ms_p *prs)
@@ -146,40 +151,50 @@ void _count_inside_sq_(ms_p *prs)
         prs->i++;
         prs->counter++;
     }
+    prs->i++;
+    prs->counter++;
 }
 
 
 int _line_counter_(ms_p *prs)
 {
-    prs->i = -1;
+    prs->i = 0;
     prs->counter = 0;
     // prs->buffer = buffer;
-    while (prs->buffer[++prs->i])
+    while (prs->buffer[prs->i])
     {
         if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
         {
-            prs->i += 1;
-            prs->counter += ft_strlen(ft_itoa(prs->status));
-            continue;
+            prs->i += 2;
+            char *tmp;
+            tmp = ft_itoa(prs->status);
+            prs->counter += ft_strlen(tmp);
+            free(tmp);
+            // continue;
         }
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
         {
             _count_dollar_digits_(prs);
-            prs->i--;
-            continue;
+            // prs->i--;
+            // continue;
         }
         else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
         {
             _count_env_vars_(prs);
-            continue;
+            prs->i++;
+            // continue;
         }
         else if (prs->buffer[prs->i] == '"')
             _count_inside_dq_(prs);
         else if (prs->buffer[prs->i] == '\'')
             _count_inside_sq_(prs);
-        if (prs->buffer[prs->i])
+        else if (prs->buffer[prs->i])
+        {
             prs->counter++;
+            prs->i++;
+        }
     }
+    printf("counter = |%d|\n", prs->counter);
     return prs->counter;
 }
 
@@ -231,13 +246,11 @@ void _copy_env_vars_(ms_p *prs)
         prs->g += prs->count;
         // This one for moving the index of prs->global string...
     }
-    // if (prs->temp)
-    // {    
-    //     // Freeing the prs->temp string
-    //     free(prs->temp);
-    //     prs->temp = NULL;
-    // }
-    prs->i--;
+    if (prs->temp)
+    {    
+        // Freeing the prs->temp string
+        free(prs->temp);
+    }
 }
 
 void _dq_copy_dollar_digits_(ms_p *prs)
@@ -272,11 +285,8 @@ void    _dq_copy_env_vars_(ms_p *prs)
         _add_to_string(prs->global, prs->g, prs->fill, prs->count);
         prs->g += prs->count;
     }
-    // if (prs->temp)
-    // {
-    //     free(prs->temp);
-    //     prs->temp = NULL;
-    // }
+    if (prs->temp)
+        free(prs->temp);
 }
 
 void        _copy_inside_dq_(ms_p *prs)
@@ -299,13 +309,16 @@ void        _copy_inside_dq_(ms_p *prs)
         else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
         {
             prs->i += 2;
-            prs->count = ft_strlen(ft_itoa(prs->status));
-            _add_to_string(prs->global, prs->g, ft_itoa(prs->status), prs->count);
+            prs->temp = ft_itoa(prs->status);
+            prs->count = ft_strlen(prs->temp);
+            _add_to_string(prs->global, prs->g, prs->temp, prs->count);
             prs->g += prs->count;
+            free(prs->temp);
         }
         else // Copy the  other chars of inside dq "" ...
             prs->global[prs->g++] = prs->buffer[prs->i++];
     }
+    prs->global[prs->g++] = prs->buffer[prs->i++];
 }
 
 void    _copy_inside_sq_(ms_p *prs)
@@ -313,7 +326,37 @@ void    _copy_inside_sq_(ms_p *prs)
     prs->global[prs->g++] = prs->buffer[prs->i++];
     while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
         prs->global[prs->g++] = prs->buffer[prs->i++];
+    prs->global[prs->g++] = prs->buffer[prs->i++];
 }
+
+void _get_env_vars_2_(ms_p *prs)
+{
+    if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+    {
+        prs->temp = ft_itoa(prs->status);
+        prs->count = ft_strlen(prs->temp);
+        _add_to_string(prs->global, prs->g, prs->temp, prs->count);
+        prs->g += prs->count;
+        prs->i+=2;
+        free(prs->temp);
+    }
+    else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+        _copy_dollar_digits_(prs);
+    else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+    {
+        _copy_env_vars_(prs);
+        printf("special = |%c|\n", prs->buffer[prs->i]);
+        // prs->i++;
+        printf("special = |%c|\n", prs->buffer[prs->i]);
+    }
+    else if (prs->buffer[prs->i] == '"')
+        _copy_inside_dq_(prs);
+    else if (prs->buffer[prs->i] == '\'')
+        _copy_inside_sq_(prs);
+    else
+        prs->global[prs->g++] = prs->buffer[prs->i++];
+}
+
 
 char *_get_env_vars_(char *buffer, ms_p *prs)
 {
@@ -330,33 +373,45 @@ char *_get_env_vars_(char *buffer, ms_p *prs)
     counter = _line_counter_(prs);
     printf("length = %d\n", counter);
     prs->global = (char *)malloc(sizeof(char *) * (counter + 1));
-    prs->i = -1;
-    while (prs->buffer[++prs->i])
+    prs->i = 0;
+    while (prs->buffer[prs->i])
     {
-        if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
-        {
-            prs->count = ft_strlen(ft_itoa(prs->status));
-            _add_to_string(prs->global, prs->g, ft_itoa(prs->status), prs->count);
-            prs->g += prs->count;
-            prs->i += 1;
-            continue;
-        }
-        else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
-        {
-            _copy_dollar_digits_(prs);
-            prs->i--;
-            continue;
-        }
-        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
-        {
-            _copy_env_vars_(prs);
-            continue;
-        }
-        else if (prs->buffer[prs->i] == '"')
-            _copy_inside_dq_(prs);
-        else if (prs->buffer[prs->i] == '\'')
-            _copy_inside_sq_(prs);
-        prs->global[prs->g++] = prs->buffer[prs->i];
+        _get_env_vars_2_(prs);
+        // if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
+        // {
+        //     char *tmp;
+        //     tmp = ft_itoa(prs->status);
+        //     prs->count = ft_strlen(tmp);
+        //     _add_to_string(prs->global, prs->g, tmp, prs->count);
+        //     free(tmp);
+        //     prs->g += prs->count;
+        //     prs->i+=2;
+        //     printf("buffer1 = |%c|\n", prs->buffer[prs->i]);
+        //     // continue;
+        // }
+        // else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
+        // {
+        //     _copy_dollar_digits_(prs);
+        //     // prs->i--;
+        //     printf("buffer2 = |%c|\n", prs->buffer[prs->i]);
+        //     // continue;
+        // }
+        // else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        // {
+        //     _copy_env_vars_(prs);
+        //     prs->i++;
+        //     printf("buffer3 = |%c|\n", prs->buffer[prs->i]);
+        //     // continue;
+        // }
+        // else if (prs->buffer[prs->i] == '"')
+        //     _copy_inside_dq_(prs);
+        // else if (prs->buffer[prs->i] == '\'')
+        //     _copy_inside_sq_(prs);
+        // else
+        // {
+        //     printf("dq ==== |%c|\n", prs->buffer[prs->i]);
+        //     prs->global[prs->g++] = prs->buffer[prs->i++];
+        // }
     }
     prs->global[prs->g] = '\0';
     printf("after handling env : |%s|\n", prs->global);

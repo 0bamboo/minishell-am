@@ -47,53 +47,45 @@ static int			_count_tokens(char c, t_sp *sp)
 	return (sp->count);
 }
 
+void _len_tokens_dq_(t_sp *sp)
+{
+	sp->k++;
+	sp->count++;
+	while (sp->tmp[sp->k] && sp->tmp[sp->k] != '"')
+	{
+		if (sp->tmp[sp->k] == '\\')
+		{
+			sp->k += 2;
+			sp->count += 2;
+			continue;
+		}
+		sp->k++;
+		sp->count++;
+	}
+}
+
+void _len_tokens_sq_(t_sp *sp)
+{
+	sp->k++;
+	sp->count++;
+	while (sp->tmp[sp->k] && sp->tmp[sp->k] != '\'')
+	{
+		sp->count++;
+		sp->k++;
+	}	
+}
+
 static int			_len_tokens(t_sp *sp, char c)
 {
-	// sp->k = 0;
-	// try to change this method that you used here ok
 	sp->count = 0;
 	while (sp->tmp[sp->k] && sp->tmp[sp->k] != c)
 	{
 		if (sp->tmp[sp->k] == '"')
-		{
-			sp->k++;
-			sp->count++;
-			while (sp->tmp[sp->k] && sp->tmp[sp->k] != '"')
-			{
-				if (sp->tmp[sp->k] == '\\')
-				{
-					sp->k += 2;
-					sp->count += 2;
-					continue;
-				}
-				sp->k++;
-				sp->count++;
-			}
-
-		}
+			_len_tokens_dq_(sp);
 		else if (sp->tmp[sp->k] == '\'')
-		{
-			sp->k++;
-			sp->count++;
-			while (sp->tmp[sp->k] && sp->tmp[sp->k] != '\'')
-			{
-				sp->count++;
-				sp->k++;
-			}	
-		}
+			_len_tokens_sq_(sp);
 		sp->k++;
 		sp->count++;
-		// if (sp->tmp[k] == '\\' && s[k + 1] == '"')
-		// {
-		// 	k += 2;
-		// 	continue;
-		// }
-		// if (s[k] == '\'' && sp->check_dq % 2 == 0)
-		// 	sp->check_sq += 1;
-		// if (s[k] == '"' && sp->check_sq % 2 == 0)
-		// if (s[k] == c && sp->check_dq % 2 == 0 && sp->check_sq % 2 == 0)
-		// 	break;
-		// k++;
 	}
 	return (sp->count);
 }
@@ -216,5 +208,6 @@ void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
 	}
 	prs->cmds[sp->i] = NULL;
 	_trim_tokens(prs);
+	free(line);
 	// return (prs->cmds);
 }

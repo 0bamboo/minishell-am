@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 16:13:25 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 22:14:26 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int _check_redirection(char *line, t_mp *prs)
         // Start counting the redirection > 
         if (prs->tmp == '>' && line[prs->i] == '>')
         {
-            puts("hi");
             prs->tmp = '>';
             prs->credir += 1;
             prs->i++;

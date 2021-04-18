@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 16:19:20 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 00:20:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,48 +16,50 @@
 // {
 //     printf("Im in History :\n");
 // }
-
+void _free_(t_mp *prs)
+{
+    if (prs->global)
+        free(prs->global);
+    if (prs->cmds)
+    {
+        int i = -1;
+        while (prs->cmds[++i])
+            free(prs->cmds[i]);
+        free(prs->cmds);    
+    }
+    if (prs->temp)
+        free(prs->temp);
+    if (prs->sp)
+        free(prs->sp);
+    if (prs)
+        free(prs);
+}
 void  minishell(t_mp *prs)
 {
     char *line;
     t_cmd_list *head;
     
     line = NULL;
-    int i;
-    prs->sp = malloc(sizeof(t_sp));
+    // int i;
     // head = malloc(sizeof(p_list));
     write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
     while(get_next_line(0, &line) > 0)
     {
+    // prs->sp = malloc(sizeof(t_sp));
         // add_to_history(line, prs);
         // head = malloc(sizeof(p_list));
         head = NULL;
         if (!ft_strcmp(line, "exit"))
         {
             free(line);
+            // _free_(prs);
             line = NULL;
-            i = -1;
-            if (prs)
-            {
-                // while (prs->cmds[++i])
-                //     free(prs->cmds[i]);
-                // free(prs->cmds);
-                // free(prs->sp->tmp);
-                i = -1;
-                // while (prs->global[++i])
-                //     free(prs->global[i]);
-                // free(prs->global);
-                // free(prs->buff);
-                // free(prs->fill);
-                // // i = -1;
-                // // while (prs->cmds[++i])
-                // //     free(prs->cmds[i]);
-                // free(prs->sp);
-                // free(prs);
-            }
+            free(prs->sp);
+            free(prs);
             exit(0);
         }
         _start_parsing(line, prs, &head);
+        // _free_(prs);
         
         free(line);
         line = NULL;
@@ -65,6 +67,20 @@ void  minishell(t_mp *prs)
     }
 }
 
+void        _initialize_vars(t_mp *prs)
+{
+    prs->cmds = NULL;
+    prs->er = 0;
+    prs->i = 0;
+    prs->buff = NULL;
+    prs->token = NULL;
+    prs->buffer = NULL;
+    prs->fill = NULL;
+    prs->temp = NULL;
+    prs->global = NULL;
+    
+    
+}
 
 int main()
 {
@@ -75,6 +91,8 @@ int main()
 
     // prs.sp = &sp;
     prs = malloc(sizeof(t_mp));
+    prs->sp = malloc(sizeof(t_sp));
+    _initialize_vars(prs);
     minishell(prs);
     // free(prs);
     return 0;

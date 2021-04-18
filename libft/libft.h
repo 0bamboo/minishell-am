@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 18:45:53 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/31 10:39:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 23:45:26 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int				ft_strcmp(const char *s1, const char *s2);
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char			*ft_itoa(int n);
 char			**ft_split(char const *s, char c);
-char			*ft_strtrim(char const *s1, char const *set);
+char			*ft_strtrim(char *s1, char const *set);
 void			ft_putendl_fd(char *s, int fd);
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void			ft_putstr_fd(const char *str, int fd);

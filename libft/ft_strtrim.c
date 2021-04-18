@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 18:15:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2019/10/24 17:25:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 23:51:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int		ft_lastchar(char const *str, char const *set)
 	return (k);
 }
 
-char			*ft_strtrim(char const *s1, char const *set)
+char			*ft_strtrim(char *s1, char const *set)
 {
 	int		start;
 	int		l;
@@ -66,5 +66,6 @@ char			*ft_strtrim(char const *s1, char const *set)
 		return (ft_substr(s1, 0, 0));
 	l = ft_lastchar(s1, set) - start + 1;
 	p = ft_substr(s1, start, l);
+	// free(s1);
 	return (p);
 }

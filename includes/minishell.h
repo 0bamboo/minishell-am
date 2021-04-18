@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 16:18:03 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 00:20:15 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct      s_mp
     int status;
     char *global;
     int g;
-    t_err   err;
+    // t_err   err;
     t_cmd_list      *plst;
     t_sp         *sp;
 }                   t_mp;

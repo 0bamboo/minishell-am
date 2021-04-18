@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:18:02 by majermou          #+#    #+#             */
-/*   Updated: 2021/03/20 14:01:24 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/17 23:53:03 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 
-#define BUFFER_SIZE 100
+#define BUFFER_SIZE 1
 int			get_next_line(int fd, char **line);
 int			check_break_line(char *tab);
 size_t			ft_strlen(const char *str);

@@ -6,81 +6,36 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:17:27 by majermou          #+#    #+#             */
-/*   Updated: 2021/03/20 14:02:29 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 04:46:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../includes/minishell.h"
 
-char					*ft_strdup(const char *src)
+int		get_next_line(int fd, char **line)
 {
-	int			i;
-	char		*str;
+	static	char	*buff_s;
+	char			*buff;
+	int				b;
 
-	i = 0;
-	if (!(str = (char*)malloc(sizeof(char) * (ft_strlen(src) + 1))))
-		return (NULL);
-	while (i < (int)(ft_strlen(src)))
-	{
-		str[i] = src[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-int						error_check(int fd, char **line, char **tab)
-{
-	if (!line || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
-		return (0);
-	*line = ft_strdup("");
-	if (!*tab)
-	{
-		if (!(*tab = (char*)malloc(BUFFER_SIZE + 1)))
-			return (0);
-		**tab = '\0';
-	}
-	return (1);
-}
-
-int						dealocate(char **line, char **tab, int ret, int var_bol)
-{
-	if (!*line[0] && !var_bol && check_break_line(*tab) > 1)
-		if (!(check_previous_read(line, *tab)))
-			return (-1);
-	if (!ret && !check_break_line(*tab))
-	{
-		free(*tab);
-		*tab = 0;
-		return (0);
-	}
-	for_next_read(tab);
-	return (1);
-}
-
-int						get_next_line(int fd, char **line)
-{
-	static char			*tab;
-	char				*tmp;
-	int					ret;
-	int					var_bol;
-
-	var_bol = 0;
-	ret = 1;
-	if (!error_check(fd, line, &tab))
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0 ||
+		!line || !(*line = (char *)malloc(1 * sizeof(char))))
 		return (-1);
-	while (1)
+	**line = '\0';
+	b = 1;
+	if (!(buff = (char*)malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+		return (-1);
+	while (b)
 	{
-		tmp = *line;
-		if (!(*line = ft_strjoin(*line, tab)))
+		if (!buff_s && (b = read(fd, buff, BUFFER_SIZE)) == -1)
 			return (-1);
-		free(tmp);
-		if (!ret || check_break_line(tab) >= 1)
-			break ;
-		if ((ret = read(fd, tab, BUFFER_SIZE)) == -1)
-			return (-1);
-		tab[ret] = '\0';
-		var_bol = 1;
+		buff[b] = '\0';
+		if (!buff_s && build_line(line, &buff, &(buff_s), 1))
+			return (1);
+		else if (buff_s && build_line(line, &buff, &(buff_s), 0))
+			return (1);
 	}
-	return (dealocate(line, &tab, ret, var_bol));
+	free(buff_s);
+	free(buff);
+	return (0);
 }

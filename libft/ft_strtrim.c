@@ -6,66 +6,63 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 18:15:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/17 23:51:34 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 04:38:30 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int		ft_firstchar(char const *str, char const *set)
+static	int	ft_issp(char c, const char *set)
 {
-	int	i;
-	int	k;
+	int i;
 
-	i = 0;
-	k = 0;
-	while (set[i])
-	{
-		if (set[i] == str[k])
-		{
-			i = -1;
-			k++;
-		}
-		i++;
-	}
-	return (k);
+	i = -1;
+	while (set[++i])
+		if (c == set[i])
+			return (1);
+	return (0);
 }
 
-static int		ft_lastchar(char const *str, char const *set)
+static	int	ft_locate(char const *s1, char const *set, int *beg, int *end)
 {
-	int	k;
-	int	i;
+	int l;
 
-	k = 0;
-	i = 0;
-	while (str[k])
-		k++;
-	k--;
-	while (set[i])
-	{
-		if (set[i] == str[k])
-		{
-			k--;
-			i = -1;
-		}
-		i++;
-	}
-	return (k);
+	l = 0;
+	if (!*s1)
+		return (1);
+	while (s1[l])
+		l++;
+	*beg = 0;
+	*end = l - 1;
+	while (ft_issp(s1[*beg], set))
+		++*beg;
+	if (!s1[*beg])
+		return (0);
+	while (ft_issp(s1[*end], set) && ((*end && s1[*end - 1] != '\\') || !*end))
+		--*end;
+	return (0);
 }
 
-char			*ft_strtrim(char *s1, char const *set)
+char		*ft_strtrim(char const *s1, char const *set)
 {
-	int		start;
-	int		l;
-	char	*p;
+	int		k;
+	int		i;
+	int		j;
+	char	*res;
 
 	if (!s1)
 		return (NULL);
-	start = ft_firstchar(s1, set);
-	if (!s1[start])
-		return (ft_substr(s1, 0, 0));
-	l = ft_lastchar(s1, set) - start + 1;
-	p = ft_substr(s1, start, l);
-	// free(s1);
-	return (p);
+	if (!set || !*set)
+		return (ft_strdup(s1));
+	if (ft_locate(s1, set, &i, &j))
+		return ((char*)s1);
+	res = (char *)malloc((j - i + 2) * sizeof(char));
+	if (!res)
+		return (NULL);
+	k = 0;
+	while (i <= j)
+		res[k++] = s1[i++];
+	res[k] = '\0';
+	free((char *)s1);
+	return (res);
 }

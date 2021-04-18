@@ -6,85 +6,79 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:17:47 by majermou          #+#    #+#             */
-/*   Updated: 2021/03/20 14:01:43 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 04:46:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../includes/minishell.h"
 
-int						check_break_line(char *tab)
+size_t	len_if(char *s, int nl)
 {
-	int					i;
+	size_t	l;
 
-	i = 0;
-	while (*tab)
-		if (*tab++ == '\n')
-			i++;
-	return (i);
-}
-
-size_t						ft_strlen(const char *str)
-{
-	int					n;
-
-	n = 0;
-	while (*str && *str != '\n')
-	{
-		str++;
-		n++;
-	}
-	return (n);
-}
-
-int						check_previous_read(char **line, char *tab)
-{
-	int					i;
-	char				*tmp;
-
-	i = 0;
-	while (tab[i] != '\n')
-		i++;
-	tab[i++] = '&';
-	tmp = *line;
-	if (!(*line = ft_strjoin(*line, tab + i)))
-		return (0);
-	free(tmp);
-	return (1);
-}
-
-char					*ft_strjoin(char const *line, char const *tab)
-{
-	char				*ptr;
-	char				*tmp;
-
-	if (!(ptr = (char*)malloc(ft_strlen(line) + ft_strlen(tab) + 1)))
-		return (NULL);
-	tmp = ptr;
-	while (*line)
-		*ptr++ = *line++;
-	while (*tab && *tab != '\n')
-		*ptr++ = *tab++;
-	*ptr = '\0';
-	return (tmp);
-}
-
-void					for_next_read(char **tab)
-{
-	int					i;
-	int					j;
-
-	i = 0;
-	j = 0;
-	if (!check_break_line(*tab))
-		tab[0][0] = '\0';
+	l = 0;
+	if (!nl)
+		while (s[l])
+			l++;
 	else
+		while (s[l] && s[l] != '\n')
+			l++;
+	return (l);
+}
+
+char	*ft_dup_free(char *src, char **to_free)
+{
+	int		l;
+	int		i;
+	char	*dup;
+
+	if ((l = len_if(src, 0)) == 0)
 	{
-		while (tab[0][i] != '\n')
-			i++;
-		if (tab[0][i + 1] != '\n')
-			i++;
-		while (tab[0][i])
-			tab[0][j++] = tab[0][i++];
-		tab[0][j] = '\0';
+		if (*to_free)
+		{
+			free(*to_free);
+			*to_free = NULL;
+		}
+		return (NULL);
 	}
+	if (!(dup = (char*)malloc(sizeof(char) * (l + 1))))
+		return (NULL);
+	i = -1;
+	while (++i < l)
+		dup[i] = src[i];
+	dup[i] = '\0';
+	if (*to_free)
+	{
+		free(*to_free);
+		*to_free = NULL;
+	}
+	return (dup);
+}
+
+int		build_line(char **line, char **buff, char **buff_s, char step)
+{
+	char	*tmp;
+	char	*par;
+
+	if (step == 0)
+		par = *buff_s;
+	else
+		par = *buff;
+	tmp = ft_strjoin(*line, par);
+	free(*line);
+	*line = tmp;
+	if ((tmp = ft_strchr(par, '\n')) != NULL)
+	{
+		if (step == 0)
+		{
+			*buff_s = ft_dup_free(tmp + 1, buff_s);
+			free(*buff);
+		}
+		else if (step == 1)
+			*buff_s = ft_dup_free(tmp + 1, buff);
+		return (1);
+	}
+	free(*buff_s);
+	*buff_s = NULL;
+	return (0);
 }

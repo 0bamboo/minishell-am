@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 14:43:09 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/03/20 21:46:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 04:43:20 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,29 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	int		j;
-	int		l;
-	char	*join;
+	size_t		l1;
+	size_t		l2;
+	char		*res;
+	size_t		i;
 
 	if (!s1 || !s2)
-		return (0);
-	i = ft_strlen((char *)s1);
-	j = ft_strlen((char *)s2);
-	l = i + j;
-	if (!(join = (char *)malloc((l + 1) * sizeof(char))))
 		return (NULL);
-	i = -1;
-	while (s1[++i])
-		join[i] = s1[i];
-	j = -1;
-	while (s2[++j])
+	l1 = ft_strlen(s1);
+	l2 = ft_strlen(s2);
+	if (!(res = (char *)malloc((l1 + l2 + 1) * sizeof(char))))
+		return (NULL);
+	i = 0;
+	while (i < l1)
 	{
-		join[i] = s2[j];
+		res[i] = s1[i];
 		i++;
 	}
-	join[i] = '\0';
-	return (join);
+	i = 0;
+	while (i < l2)
+	{
+		res[i + l1] = s2[i];
+		i++;
+	}
+	res[i + l1] = '\0';
+	return (res);
 }

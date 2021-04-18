@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 04:47:50 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 13:41:59 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,19 @@ typedef struct			s_cmd_list
 	char				**args;
 	int					nbrpipe;
 	int					iter;
-    int					end;
-    int                 beg;
 	struct  s_cmd_list	*next;
-	struct  s_cmd_list	*prev;
 }						t_cmd_list;
 
-typedef struct s_err
-{
-    int     dq;
-    int     sq;
-    int     countdq;
-    int     countsq;
-    int     i;
-    char    tmp;
-    int     len;
-}               t_err;
+// typedef struct s_err
+// {
+//     int     dq;
+//     int     sq;
+//     int     countdq;
+//     int     countsq;
+//     int     i;
+//     char    tmp;
+//     int     len;
+// }               t_err;
 
 
 typedef struct s_sp

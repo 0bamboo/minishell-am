@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 00:22:32 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 16:22:12 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,34 @@ int     _check_for_special_chars_(char *buff)
 
 
 
-int     in(char *check, char c)
+int     _if_pipe_(char *check)
 {
-    while (*check)
+    int i;
+
+    i = -1;
+    while (check[++i])
     {
-        if (*check == c)
+        if (check[i] == '"')
+        {
+            i++;
+            while (check[i] && check[i] != '"')
+            {
+                if (check[i] == '\\')
+                {
+                    i += 2;
+                    continue;
+                }
+                i++;
+            }
+        }
+        else if (check[i] == '\'')
+        {
+            i++;
+            while (check[i] && check[i] != '\'')
+                i++;
+        }
+        else if (check[i] == '|')
             return 1;
-        check++;
     }
     return 0;
 }
@@ -126,6 +147,8 @@ void _start_parsing(char *line, t_mp *prs, t_cmd_list **head)
         while (prs->cmds[++i])
         {
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
+            if (_if_pipe_(prs->cmds[i]))
+                puts("PIPE IN");
             prs->cmds[i] = _handle_backslash_(prs, prs->cmds[i]);
             // free(prs->global);
             // printf(" im out {/global}   ---> : |%s|\n", prs->cmds[i]);

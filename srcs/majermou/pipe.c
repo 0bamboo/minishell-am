@@ -1,33 +1,12 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <string.h>
+#include "./builtins/minishell.h"
 
-typedef struct          s_cmd_list
+char    *get_path(char **args, char **envp)
 {
-    char	            **args;
-	int		            nbrpipe;
-    int                 iterator;
-	struct s_cmd_list   *next;
-}                       t_cmd_list;
-
-char                    **ft_split(char const *s, char c);
-char                    *ft_strjoin(char const *s1, char const *s2);
-int                     ft_strncmp(const char *s1, const char *s2, size_t n);
-
-
-
-char                    *get_path(char **args, char **envp)
-{
-    struct stat         buf;
-    char                **arr;
-    char                *tmp;
-    char                *path;
-    int                 i;
+    struct stat     buf;
+    char            **arr;
+    char            *tmp;
+    char            *path;
+    int             i;
 
     i = 0;
     while (strncmp(envp[i],"PATH=",5))
@@ -52,72 +31,24 @@ char                    *get_path(char **args, char **envp)
     return (NULL);
 }
 
-
-
-int                 handle_redirection(t_cmd_list *command)
-{
-    int             i;
-    int             input;
-    int             output;
-
-    i = 0;
-    //printf("been_here\n");
-    while (command->args[i] && ft_strncmp(command->args[i],"<",2) && ft_strncmp(command->args[i],">",2) && ft_strncmp(command->args[i],">>",2))
-    {
-        i++;
-    }
-    while (command->args[i])
-    {
-        if (!ft_strncmp(command->args[i],"<",2))
-        {
-            if ((input = open(command->args[i + 1], O_RDONLY)) == -1)
-            {
-                printf("%s\n", strerror(errno));
-                return (0);           
-            }
-            dup2(input,0);
-        }
-        if (!ft_strncmp(command->args[i],">",2))
-        {
-            output = open(command->args[i + 1], O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-            dup2(output,1);
-        }
-        if (!ft_strncmp(command->args[i],">>",2))
-        {
-            output = open(command->args[i + 1], O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-            dup2(output,1);
-        }
-        command->args[i] = NULL;
-        command->args[i + 1] = NULL;
-        i += 2;
-    }
-    return (0);
-}
-
-
-int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
+int fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut_pid)
 {
     pid_t       pid;
-    static int j = 0;
-    pid_t       wpid;
-    pid_t       *w_pid = malloc(sizeof(pid_t) * command->nbrpipe);
     char        *path;
-    int         status;
-    int         i;
+    static int  i;
 
     pid = fork();
-    w_pid[j++] = pid;
     if (pid < 0)
         perror("sh");
     if (!pid)
     {
-        path = get_path(command->args, envp);
+        path = get_path(command->args, envlist->envp);
         if (command->iterator && command->nbrpipe)
             dup2(fds[command->iterator * 2 - 2],0);
-        if (command->next)
+        if (command->next && is_redir(command) < 0)
             dup2(fds[command->iterator * 2 + 1],1);
         handle_redirection(command);
-        if (execve(path,command->args,envp) == -1)
+        if (execve(path,command->args,envlist->envp) == -1)
             perror("sh");
         exit(0);
     }
@@ -127,115 +58,53 @@ int             fork_subprocess(t_cmd_list *command, int *fds, char **envp)
            close(fds[command->iterator * 2 - 2]);
         if (command->next)
            close(fds[command->iterator * 2 + 1]);
-        if (command->nbrpipe == 0)
-            waitpid(pid, &status, 0);
-        else
-        {
-            i = 0;
-            while (i < command->nbrpipe)
-		    {
-			    waitpid(w_pid[i], &status, 0);
-                i++;
-		    }
-        }
+        shut_pid[i++] = pid;
     }
     return (1);
 }
 
-int         is_builtin(t_cmd_list *command)
+int             execute_cmd(t_cmd_list *envlist, t_cmd_list *cmd)
 {
-    if (!ft_strncmp(command->args[0],"echo",5))
-        return (1);
-    if (!ft_strncmp(command->args[0],"cd",3))
-        return (1);
-    if (!ft_strncmp(command->args[0],"pwd",4))
-        return (1);
-    if (!ft_strncmp(command->args[0],"export",7))
-        return (1);
-    if (!ft_strncmp(command->args[0],"unset",6))
-        return (1);
-    if (!ft_strncmp(command->args[0],"env",4))
-        return (1);
-    if (!ft_strncmp(command->args[0],"exit",5))
-        return (1);
-    return (0);
-}
-
-int         implement_cmd(t_cmd_list *command, int *fds, char **envp)
-{
-
-    if (is_builtin(command))
-    {
-        if (command->iterator && command->nbrpipe)
-            dup2(fds[command->iterator * 2 - 2],0);
-        if (command->next)
-            dup2(fds[command->iterator * 2 + 1],1);
-        handle_redirection(command);
-        //call_builtin;
-    }
-    else
-        fork_subprocess(command,fds,envp);
-    return (0);
-}
-
-
-int             execute_cmd(t_cmd_list *command, char **envp)
-{
+    int         *shut_pid;
     int         *fds;
-
-    fds = NULL;
-    if (command->nbrpipe)
-        if (!(fds = (int*)malloc(2 * command->nbrpipe * sizeof(int))))
-            return (0);
-    while (command)
-    {
-        if (command->next)
-            pipe(fds + command->iterator * 2);
-        implement_cmd(command,fds,envp);
-        command = command->next;
-    }
-    if (fds)
-      free(fds);
-    return (1);
-}
-
-int                 main(int argc, char **argv, char **envp)
-{
-    t_cmd_list      *cmd = (t_cmd_list*)malloc(sizeof(t_cmd_list));
-
-    cmd->args = malloc(3 * sizeof(char*));
-    cmd->args[0] = strdup("sleep");
-    cmd->args[1] = strdup("2");
-    cmd->args[2] = NULL;
-    cmd->nbrpipe = 1;
-    cmd->iterator = 0;
-    cmd->next = (t_cmd_list*)malloc(sizeof(t_cmd_list));
-    cmd->next->args = malloc(5 * sizeof(char*));
-    cmd->next->args[0] = strdup("ls");
-    cmd->next->args[1] = strdup("-la");
-    cmd->next->args[2] = NULL;
-    cmd->next->nbrpipe = 1;
-    cmd->next->iterator = 1;
-    cmd->next->next = NULL;
-    // (t_cmd_list*)malloc(sizeof(t_cmd_list));
-    // cmd->next->next->args = malloc(3 * sizeof(char*));
-    // cmd->next->next->args[0] = strdup("awk");
-    // cmd->next->next->args[1] = strdup("{print $1}");
-    // cmd->next->next->args[2] = NULL;
-    // cmd->next->next->nbrpipe = 4;
-    // cmd->next->next->iterator = 2;
-    // cmd->next->next->next = NULL;
-
-    // cmd->next->next->next = (t_cmd_list*)malloc(sizeof(t_cmd_list));
-    // cmd->next->next->next->args = malloc(4 * sizeof(char*));
-    // cmd->next->next->next->args[0] = strdup("tr");
-    // cmd->next->next->next->args[1] = strdup("-d");
-    // cmd->next->next->next->args[2] = strdup("-");
-    // cmd->next->next->next->args[3] = NULL;
-    // cmd->next->next->next->nbrpipe = 4;
-    // cmd->next->next->next->iterator = 3;
-    // cmd->next->next->next->next = NULL;
+    int         num;
+    int         i;
     
-    execute_cmd(cmd,envp);
+    i = 0;
+    fds = NULL;
+    num = cmd->nbrpipe;
+    if (num)
+    {
+        fds = malloc(2 * num * sizeof(int));
+        if (!fds)
+            return (1);
+        shut_pid = malloc((num + 1) * sizeof(int));
+        if (!shut_pid)
+            return (1);
+    }
+    while (cmd)
+    {
+        if (cmd->next)
+            pipe(fds + cmd->iterator * 2);
+        if (is_builtin(cmd))
+        {
+            if (cmd->iterator && cmd->nbrpipe)
+                dup2(fds[cmd->iterator * 2 - 2],0);
+            if (cmd->next && is_redir(cmd) < 0)
+                dup2(fds[cmd->iterator * 2 + 1],1);
+            handle_redirection(cmd);
+            return (call_builtin(cmd, envlist));
+        }
+        else
+            return (fork_subprocess(cmd, envlist, fds, shut_pid));
+        cmd = cmd->next;
+    }
+    while (i < num + 1)
+        waitpid(shut_pid[i++], NULL, 0);
+    if (num)
+    {
+        free(shut_pid);
+        free(fds);
+    }
     return (0);
 }

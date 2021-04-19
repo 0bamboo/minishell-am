@@ -44,8 +44,6 @@ int                     ft_strncmp(const char *s1, const char *s2, size_t n);
 char	                *ft_strjoin(char const *s1, char const *s2);
 int                     ft_strcmp(const char *s1, const char *s2);
 char                    **ft_split(char const *s, char c);
-// char                    *ft_strjoin(char const *s1, char const *s2);
-// int                     ft_strncmp(const char *s1, const char *s2, size_t n);
 
 
 
@@ -58,14 +56,7 @@ int             ft_isalnum(int c);
 int             is_valid_id(char *id);
 int             is_equalkey(char *str);
 
-// int             rmfrom_envlist(t_cmd_list *cmd, char* rm_var);
-// int             addto_envlist(t_cmd_list *cmd, char* new_var);
-// int             env_varsdup(char **env_vars, char **envp);
-// int             builtin_unset(t_cmd_list *cmd);
-// int             builtin_export(t_cmd_list *cmd);
-// int             builtin_env(t_cmd_list *cmd);
-// int             search_var(t_cmd_list *cmd, char *var);
-// int             replace_var(t_cmd_list *cmd,int index,char *new_var);
+
 
 int			    search_var(t_envlist *envlist, char *var);
 int	            replace_var(t_envlist *envlist,int index,char *new_var);
@@ -87,13 +78,19 @@ int             print_envlist(t_envlist *envlist);
 void            printing(char **arr);
 void            sorting(char **arr);
 
-char            *get_path(char **args, char **envp);
+// char            *get_path(char **args, char **envp);
 int	            check_homepath(t_envlist *envlist, t_cmd_list *cmd);
 
 int             builtin_exit(t_cmd_list *cmd, int status);
 int             builtin_echo(t_cmd_list *cmd);
 
-int     handle_redirection(t_cmd_list *command);
-int     is_redir(t_cmd_list *cmd);
+int             handle_redirection(t_cmd_list *command);
+int             is_redir(t_cmd_list *cmd);
+
+
+int             execute_cmd(t_cmd_list *cmd, t_envlist *envlist);
+int	            isbuiltin(t_cmd_list *command);
+int	            call_builtin(t_cmd_list *cmd, t_envlist *envlist);
+char            *get_home_path(char **args, char **envp);
 
 #endif

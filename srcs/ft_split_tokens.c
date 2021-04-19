@@ -208,6 +208,6 @@ void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
 	}
 	prs->cmds[sp->i] = NULL;
 	_trim_tokens(prs);
-	free(line);
+	// free(line);
 	// return (prs->cmds);
 }

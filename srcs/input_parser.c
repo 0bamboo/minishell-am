@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/19 00:46:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/19 15:29:59 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void _start_parsing(char *line, t_mp *prs)
         while (prs->cmds[++i])
         {
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
-            printf("t =========== %d\n", _count_token_length_(prs, i));
+            // printf("t =========== %d\n", _count_token_length_(prs, i));
             // if (_if_pipe_(prs->cmds[i]))
             //     puts("PIPE IN");
             // _copy_tokens_data_(prs, i);

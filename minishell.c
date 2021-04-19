@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 04:54:10 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 17:50:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void _free_(t_mp *prs)
 void  minishell(t_mp *prs)
 {
     char *line;
-    t_cmd_list *head;
+    // t_cmd_list *head;
     
     line = NULL;
     // int i;
@@ -48,7 +48,7 @@ void  minishell(t_mp *prs)
     // prs->sp = malloc(sizeof(t_sp));
         // add_to_history(line, prs);
         // head = malloc(sizeof(p_list));
-        head = NULL;
+        // head = NULL;
         if (line)
         {
             line[ft_strlen(line) - 1] = '\0';
@@ -58,11 +58,11 @@ void  minishell(t_mp *prs)
             free(line);
             // _free_(prs);
             line = NULL;
-            free(prs->sp);
-            free(prs);
+            // free(prs->sp);
+            // free(prs);
             exit(0);
         }
-        _start_parsing(line, prs, &head);
+        _start_parsing(line, prs);
         // _free_(prs);
         
         free(line);

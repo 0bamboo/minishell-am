@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 16:22:12 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/19 00:46:47 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,84 +58,127 @@ int     _check_for_special_chars_(char *buff)
 //     }
 // }
 
+int _count_token_length_(t_mp *prs, int index)
+{
+    int i;
+    int count;
 
-
-// void        _copy_tokens_data_(char *token, t_mp *prs, t_cmd_list **head)
+    i = -1;
+    count = 0;
+    while (prs->cmds[index][++i])
+    {
+        if (prs->cmds[index][i] == ' ')
+            continue;
+        else if (prs->cmds[index][i] == '>' || prs->cmds[index][i] == '<')
+        {
+            count++;
+            if ( prs->cmds[index][i + 1] ==  '>')
+                i++;
+        }
+        else
+        {
+            count++;
+            while (prs->cmds[index][i] && prs->cmds[index][i] != ' ' && prs->cmds[index][i] != '>' && prs->cmds[index][i] != '<')
+            {
+                if (prs->cmds[index][i] == '"')
+                {
+                    i++;
+                    while (prs->cmds[index][i] && prs->cmds[index][i] != '"')
+                    {
+                        if (prs->cmds[index][i] == '\\')
+                        {
+                            i += 2;
+                            continue;
+                        }
+                        i++;
+                    }
+                }
+                else if (prs->cmds[index][i] == '\'')
+                {
+                    i++;
+                    while (prs->cmds[index][i] && prs->cmds[index][i] != '\'')
+                        i++;
+                }
+                i++;
+            }
+            i--;
+        }
+ 
+    }
+    return (count);
+}
+// void _fill_list_data_(t_mp *prs, int index)
 // {
-//     char **tmp;
-//     int i;
-//     t_sp sp;
+//     int     i;
 
-//     i = 0;
-//     prs->sp = &sp;
-//     // prs->count = 0;
-//     // prs->sp = malloc(sizeof(t_sp));
-//     // tmp = NULL;
-//     *head = NULL;
-//     // puts("im in copy");
-//     // if (!_check_for_special_chars_(token))
-//     tmp = _split_tokens(prs->sp, token, ' '); // _push_back_normal_tokens_(head, prs);  
-//     // else
-//     //     puts("special tokens");
-//     // puts("w hi");
-//     // printf("tmp[%d]=%s", 1,tmp[1]);
-//     while (tmp[i])
+//     i = -1;
+//     while (prs->cmds[index][++i])
 //     {
-//         // printf("pushing  = |%s|\n", tmp[i]);
-//         i++;
+        
 //     }
-//     // free(token);
-//     // token = NULL;
-//     // i = 0;
-//     // while (tmp[i])     
-//     //     free(tmp[i]);
-//     // free(tmp);
+// }
+
+
+// void        _copy_tokens_data_(t_mp *prs, int index)
+// {
+//     t_cmd_list *curr;
+
+//     curr = prs->head;
+//     if (_if_pipe_(prs->cmds[index]))
+//     {
+//         // handle pipe ....
+//     }
+//     else
+//     {
+//         _fill_list_data_(prs, index);
+//     }
+    
 // }
 
 
 
-int     _if_pipe_(char *check)
-{
-    int i;
+// int     _if_pipe_(char *check)
+// {
+//     int i;
 
-    i = -1;
-    while (check[++i])
-    {
-        if (check[i] == '"')
-        {
-            i++;
-            while (check[i] && check[i] != '"')
-            {
-                if (check[i] == '\\')
-                {
-                    i += 2;
-                    continue;
-                }
-                i++;
-            }
-        }
-        else if (check[i] == '\'')
-        {
-            i++;
-            while (check[i] && check[i] != '\'')
-                i++;
-        }
-        else if (check[i] == '|')
-            return 1;
-    }
-    return 0;
-}
-
-
+//     i = -1;
+//     while (check[++i])
+//     {
+//         if (check[i] == '"')
+//         {
+//             i++;
+//             while (check[i] && check[i] != '"')
+//             {
+//                 if (check[i] == '\\')
+//                 {
+//                     i += 2;
+//                     continue;
+//                 }
+//                 i++;
+//             }
+//         }
+//         else if (check[i] == '\'')
+//         {
+//             i++;
+//             while (check[i] && check[i] != '\'')
+//                 i++;
+//         }
+//         else if (check[i] == '|')
+//             return 1;
+//     }
+//     return 0;
+// }
 
 
-void _start_parsing(char *line, t_mp *prs, t_cmd_list **head)
+
+
+void _start_parsing(char *line, t_mp *prs)
 {
     // t_sp *sp;
     int i;
+    prs->head = malloc(sizeof(t_cmd_list));
 	// char *tmp;
     
-    *head = NULL;
 	line = ft_strtrim(line, " \t\v\n\r");
     if (_handle_syntax_errors(line, prs))
         _raise_an_exception();
@@ -147,9 +190,11 @@ void _start_parsing(char *line, t_mp *prs, t_cmd_list **head)
         while (prs->cmds[++i])
         {
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
-            if (_if_pipe_(prs->cmds[i]))
-                puts("PIPE IN");
-            prs->cmds[i] = _handle_backslash_(prs, prs->cmds[i]);
+            printf("t =========== %d\n", _count_token_length_(prs, i));
+            // if (_if_pipe_(prs->cmds[i]))
+            //     puts("PIPE IN");
+            // _copy_tokens_data_(prs, i);
+            // prs->cmds[i] = _handle_backslash_(prs, prs->cmds[i]);
             // free(prs->global);
             // printf(" im out {/global}   ---> : |%s|\n", prs->cmds[i]);
             // if (prs->cmds[i])

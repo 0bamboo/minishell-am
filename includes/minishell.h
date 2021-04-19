@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 13:41:59 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/18 17:52:13 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,13 @@ typedef struct      s_mp
     char *global;
     int g;
     // t_err   err;
-    t_cmd_list      *plst;
+    t_cmd_list      *head;
     t_sp         *sp;
 }                   t_mp;
 
 int		get_next_line(int fd, char **line);
 int		build_line(char **line, char **buff, char **buff_s, char step);
-void _start_parsing(char *line, t_mp *prs, t_cmd_list **head);
+void _start_parsing(char *line, t_mp *prs);
 void				_split_tokens(t_mp *prs, t_sp *sp, char *s, char c);
 void        _trim_tokens(t_mp *prs);
 char *_get_env_vars_(char *buffer, t_mp *prs);

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 04:06:42 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:19:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,111 @@ int     _size_of_arg_(char *buffer, int i)
     return (counter);
 }
 
+void _free_tab_(char **buffer)
+{
+    int     i;
+    
+    i = -1;
+    if (buffer)
+    {
+        puts("im in ");
+        if (buffer[++i])
+            while (buffer[i])
+                free(buffer[i++]);
+        free(buffer);
+        buffer = NULL; 
+    }
+}
 
-void _fill_list_data_(t_mp *prs, int index)
+void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files, int len)
+{
+    t_cmd_list *curr;
+    int     i;
+    int     j;
+    
+    prs->head = malloc(sizeof(t_cmd_list));
+    curr = prs->head;
+    curr->next = NULL;
+    if (args[0])
+        curr->command = ft_strdup(args[0]);
+    curr->nbrpipe = 0;
+    curr->args = malloc(sizeof(char *) * (len + 1));
+    i = -1;
+    puts("im here");
+    if (args)
+        while (args[++i])
+            curr->args[i] = ft_strdup(args[i]);
+    j = -1;
+    while (files[++j])
+        curr->args[i++] = ft_strdup(files[j]);
+    curr->args[i] = NULL;
+    i = -1;
+    while (curr->args[++i])
+        printf("=|%s|= ", curr->args[i]);
+    puts("");
+    if (i == len)
+        puts("YAAAAY");
+    puts(curr->command);
+}
+
+
+void        _fix_the_order_(t_mp *prs, char **buffer, int len)
+{
+    char **args;
+    char **files;
+    int i;
+    int file;
+    int arg;
+
+    args = malloc(sizeof(char *) * (len + 1));
+    files = malloc(sizeof(char *) * (len + 1));
+    file = 0;
+    arg = 0;
+    i = 0;
+    prs->er = 0;
+    while (buffer[i])
+    {
+        if (buffer[i][0] == '>' || buffer[i][0] == '<')
+        {
+            if (buffer[i][1] == '>')
+            {
+                files[file++] = ft_strdup(">>");
+                files[file++] = ft_strdup(buffer[++i]);
+                i++;
+            }
+            else if (buffer[i][0] == '<')
+            {
+                files[file++] = ft_strdup("<");
+                files[file++] = ft_strdup(buffer[++i]);
+                i++;
+            }
+            else
+            {
+                files[file++] = ft_strdup(">");
+                files[file++] = ft_strdup(buffer[++i]);
+                i++;
+            }
+        }
+        else
+            args[arg++] = ft_strdup(buffer[i++]);
+    }
+    args[arg] = NULL;
+    files[file] = NULL;
+    file = -1;
+    printf("++%s++\n", args[0]);
+    while (files[++file])
+        printf("file______|%s|_____\n", files[file]);
+    file = -1;
+    while (args[++file])
+        printf("args______|%s|_____\n", args[file]);
+    // if (i == len)
+    //     puts("YAAAAY");
+    _fill_list_for_normal_args_(prs, args, files, len);
+    _free_tab_(args);
+    _free_tab_(files);
+}
+
+void _handle_normal_args_(t_mp *prs, int index)
 {
     int     i;
     int     len;
@@ -236,7 +339,9 @@ void _fill_list_data_(t_mp *prs, int index)
     tmp[size] = NULL;
     i = -1;
     while (tmp[++i])
-        printf("=====|%s|=====\n", tmp[i]);
+        printf("{=====|%s|=====}\n", tmp[i]);
+    _fix_the_order_(prs, tmp, len);
+    _free_tab_(tmp);
 }
 
 
@@ -251,7 +356,7 @@ void _fill_list_data_(t_mp *prs, int index)
 //     }
 //     else
 //     {
-//         _fill_list_data_(prs, index);
+//         _handle_normal_args_(prs, index);
 //     }
     
 // }
@@ -313,7 +418,7 @@ void _start_parsing(char *line, t_mp *prs)
         while (prs->cmds[++i])
         {
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
-            _fill_list_data_(prs, i);
+            _handle_normal_args_(prs, i);
             // if (_if_pipe_(prs->cmds[i]))
             //     puts("PIPE IN");
             // _copy_tokens_data_(prs, i);

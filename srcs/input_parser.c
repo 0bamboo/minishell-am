@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 15:32:49 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:44:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,10 +199,10 @@ void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files, int len)
     puts(curr->command);
 }
 
-// void _handle_files_(t_mp *prs)
-// {
+void _copy_files_(t_mp *prs)
+{
     
-// }
+}
 
 void        _fix_the_order_(t_mp *prs, char **buffer, int len)
 {
@@ -258,6 +258,21 @@ void        _fix_the_order_(t_mp *prs, char **buffer, int len)
     _fill_list_for_normal_args_(prs, args, files, len);
     _free_tab_(args);
     _free_tab_(files);
+}
+
+void    _copy_redirs_(t_mp *prs)
+{
+    return ;    
+}
+
+void _copy_args_with_dq_(t_mp *prs)
+{
+    return ;
+}
+
+void _copy_args_with_sq_(t_mp *prs)
+{
+    return ;    
 }
 
 void _handle_normal_args_(t_mp *prs, int index)

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 00:09:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 04:06:42 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,9 @@ void _fill_list_data_(t_mp *prs, int index)
         }
         else
         {
-            tmp[size] = malloc(sizeof(char) * (_size_of_arg_(buffer, i)));
+            int l = _size_of_arg_(buffer, i);
+            printf("length ==== {%d}\n", l);
+            tmp[size] = malloc(sizeof(char) * (l + 1));
             int j = 0;
             while (buffer[i])
             {

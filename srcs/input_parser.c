@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 15:19:34 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:28:36 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,16 +177,15 @@ void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files, int len)
     
     prs->head = malloc(sizeof(t_cmd_list));
     curr = prs->head;
+    curr->nbrpipe = 0;
     curr->next = NULL;
     if (args[0])
         curr->command = ft_strdup(args[0]);
-    curr->nbrpipe = 0;
     curr->args = malloc(sizeof(char *) * (len + 1));
     i = -1;
     puts("im here");
-    if (args)
-        while (args[++i])
-            curr->args[i] = ft_strdup(args[i]);
+    while (args[++i])
+        curr->args[i] = ft_strdup(args[i]);
     j = -1;
     while (files[++j])
         curr->args[i++] = ft_strdup(files[j]);

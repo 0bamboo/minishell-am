@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/04/19 15:43:44 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/04/19 18:53:49 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ $(LIBFT_LIB):
 			@make -C $(LIBFT)
 
 $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
-			@mv *.o ./srcs
+			# @mv *.o ./srcs
 			@ar -rcs $(MINISHELLLIB) $(OBJECT)
 			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) -o $(NAME)
 			@echo "\033[36m███╗░░░███╗██╗███╗░░██╗██╗░██████╗██╗░░██╗███████╗██╗░░░░░██╗░░░░░\033[0m"
@@ -48,7 +48,7 @@ $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 
 
 %.o:%.c $(HEADER)
-			@gcc -c $< $(FLAGS)
+			@gcc -c $< $(FLAGS) -o $@
 
 clean:
 			@make clean -C $(LIBFT)

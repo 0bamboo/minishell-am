@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/19 15:29:59 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 00:09:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,23 +107,142 @@ int _count_token_length_(t_mp *prs, int index)
     }
     return (count);
 }
-// void _fill_list_data_(t_mp *prs, int index)
-// {
-//     int     i;
 
-//     i = -1;
-//     while (prs->cmds[index][++i])
-//     {
-        
-//     }
-// }
+int     _size_of_arg_(char *buffer, int i)
+{
+    // int i;
+    int counter;
+
+    // i = 0;
+    counter = 0;
+    while (buffer[i] && buffer[i] == ' ')
+        i++;
+    while (buffer[i])
+    {
+        if (buffer[i] == '"')
+        {
+            i++;
+            counter++;
+            while (buffer[i] && buffer[i] != '"')
+            {
+                if (buffer[i] == '\\')
+                {
+                    counter += 2;
+                    i += 2;
+                    continue;
+                }
+                i++;
+                counter++;
+            }
+        }
+        else if (buffer[i] == '\'')
+        {
+            counter++;
+            i++;
+            while (buffer[i] && buffer[i] != '\'')
+            {
+                counter++;
+                i++;
+            }
+        }
+        if (buffer[i] == ' ' || buffer[i] == '>' || buffer[i] == '<')
+            break;
+        i++;
+        counter++;
+    }
+    return (counter);
+}
+
+
+void _fill_list_data_(t_mp *prs, int index)
+{
+    int     i;
+    int     len;
+    char    **tmp;
+    char *buffer;
+    int size;
+    // echo "ls"hello> file >hello
+
+    i = 0;
+    // prs->head = malloc(sizeof(t_cmd_list));
+    len = _count_token_length_(prs, index);
+    printf("t =========== %d\n", len);
+    size = 0;
+    buffer = prs->cmds[index];
+    tmp = malloc(sizeof(char *) * (len + 1));
+    while (buffer[i] && size < len)
+    {
+        if (buffer[i] == '>' || buffer[i] == '<')
+        {
+            if (buffer[i + 1] == '>')
+            {
+                tmp[size++] = ft_strdup(">>");
+                i += 2;
+            }
+            else if (buffer[i] == '<')
+            {
+                tmp[size++] = ft_strdup("<");
+                i++;
+            }
+            else
+            {
+                tmp[size++] = ft_strdup(">");
+                i++;
+            } 
+        }
+        else if (buffer[i] == ' ')
+        {
+            i++;
+            continue;
+        }
+        else
+        {
+            tmp[size] = malloc(sizeof(char) * (_size_of_arg_(buffer, i)));
+            int j = 0;
+            while (buffer[i])
+            {
+                if (buffer[i] == '>' || buffer[i] == '<' || buffer[i] == ' ')
+                    break;
+                else if (buffer[i] == '"')
+                {
+                    tmp[size][j++] = buffer[i++];
+                    while (buffer[i] && buffer[i] != '"')
+                    {
+                        if (buffer[i] == '\\')
+                        {
+                            tmp[size][j++] = buffer[i++];
+                            tmp[size][j++] = buffer[i++];
+                            continue;
+                        }
+                        tmp[size][j++] = buffer[i++];
+                    }
+                    tmp[size][j++] = buffer[i++];
+                }
+                else if (buffer[i] == '\'')
+                {
+                    tmp[size][j++] = buffer[i++];
+                    while (buffer[i] && buffer[i] != '\'')
+                        tmp[size][j++] = buffer[i++];
+                    tmp[size][j++] = buffer[i++];
+                }
+                else
+                    tmp[size][j++] = buffer[i++];
+            }
+            tmp[size++][j] = '\0';
+        }
+    }
+    tmp[size] = NULL;
+    i = -1;
+    while (tmp[++i])
+        printf("=====|%s|=====\n", tmp[i]);
+}
 
 
 // void        _copy_tokens_data_(t_mp *prs, int index)
 // {
-//     t_cmd_list *curr;
+//     // t_cmd_list *curr;
 
-//     curr = prs->head;
+//     // curr = prs->head;
 //     if (_if_pipe_(prs->cmds[index]))
 //     {
 //         // handle pipe ....
@@ -134,6 +253,8 @@ int _count_token_length_(t_mp *prs, int index)
 //     }
     
 // }
+   
+
 
 
 
@@ -176,7 +297,7 @@ void _start_parsing(char *line, t_mp *prs)
 {
     // t_sp *sp;
     int i;
-    prs->head = malloc(sizeof(t_cmd_list));
+    // prs->head = malloc(sizeof(t_cmd_list));
 	// char *tmp;
     
 	line = ft_strtrim(line, " \t\v\n\r");
@@ -190,7 +311,7 @@ void _start_parsing(char *line, t_mp *prs)
         while (prs->cmds[++i])
         {
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
-            // printf("t =========== %d\n", _count_token_length_(prs, i));
+            _fill_list_data_(prs, i);
             // if (_if_pipe_(prs->cmds[i]))
             //     puts("PIPE IN");
             // _copy_tokens_data_(prs, i);

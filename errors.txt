@@ -1,19 +1,7 @@
-the cases for the env vars :
-echo hello$var = hellovar
-echo '$var' = $var
-echo $var$var = varvar
-echo "$var$var" = varvar
-echo " \$var" = $var
-echo " \$var$var" = $varvar
-echo \$var = you are not gonna handle this so the answer should be = \var
+echo "$#" == echo "$@" == echo "$*" == echo "$(" == echo "$)" ==  echo "$-" == echo "$1" == |something|
 
-the same for :
-echo \$var$var = \varvar
+the other special char you need to trait them like delimeter for env string .....
 
-first of all you need to look for the $ character and check if you need to look for its value or not 
-(if there is a backslash after it),
-then look for the value of the env variable, then you need to claculate 
-the size of each value of that env variables you now what i mean ,
-then concatenate the value of env vars with the string, 
 
-+ you need to handle the env variable before you delete the backslashes, 
+---------------------
+command then args then redirs and name of filesd

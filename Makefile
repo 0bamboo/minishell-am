@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/04/02 14:48:31 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/04/19 18:53:49 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ LIBFT = ./libft
 
 LIBFT_LIB = $(LIBFT)/libft.a
 
-FILES = $(wildcard ./srcs/*.c)
+FILES = ./srcs/ft_strtok.c ./srcs/get_next_line.c ./srcs/get_next_line_utils.c ./srcs/input_parser.c ./srcs/handle_syntax_error.c  ./srcs/handle_env_vars.c ./srcs/ft_split_tokens.c ./srcs/handle_backslash_dq.c
 
 HEADER = ./includes/minishell.h
 
@@ -34,7 +34,7 @@ $(LIBFT_LIB):
 			@make -C $(LIBFT)
 
 $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
-			@mv *.o ./srcs
+			# @mv *.o ./srcs
 			@ar -rcs $(MINISHELLLIB) $(OBJECT)
 			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) -o $(NAME)
 			@echo "\033[36m███╗░░░███╗██╗███╗░░██╗██╗░██████╗██╗░░██╗███████╗██╗░░░░░██╗░░░░░\033[0m"
@@ -48,7 +48,7 @@ $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 
 
 %.o:%.c $(HEADER)
-			@gcc -c $< $(FLAGS)
+			@gcc -c $< $(FLAGS) -o $@
 
 clean:
 			@make clean -C $(LIBFT)

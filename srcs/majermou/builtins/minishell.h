@@ -37,6 +37,7 @@ typedef struct          s_envlist
     char                **envp;
 }                       t_envlist;
 
+int                     g_ret;
 
 size_t                  ft_strlen(const char *s);
 size_t                  ft_strlcpy(char *dst, const char *src, size_t size);
@@ -92,5 +93,8 @@ int             execute_cmd(t_cmd_list *cmd, t_envlist *envlist);
 int	            isbuiltin(t_cmd_list *command);
 int	            call_builtin(t_cmd_list *cmd, t_envlist *envlist);
 char            *get_home_path(char **args, char **envp);
+
+
+void    sig_handle(int sig);
 
 #endif

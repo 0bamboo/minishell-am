@@ -1,5 +1,13 @@
 #include "./builtins/minishell.h"
 
+void    sig_handle(int sig)
+{
+    if (sig == SIGINT)
+        printf("%d\n", sig);
+    else if (sig == SIGQUIT)
+        printf("Quit: 3\n");
+}
+
 int                 main(int argc, char **argv, char **envp)
 {
     t_envlist    envlist;
@@ -12,11 +20,12 @@ int                 main(int argc, char **argv, char **envp)
     }
     rmfrom_envlist(&envlist, "OLDPWD");
     envlist.envp = envp;
-
+    signal(SIGINT, sig_handle);
+    signal(SIGQUIT, sig_handle);
     cmd->args = malloc(20 * sizeof(char*));
-    cmd->args[0] = strdup("export");
-    cmd->args[1] = strdup("ls");
-    cmd->args[2] = strdup("file");
+    cmd->args[0] = strdup("cat");
+    // cmd->args[1] = strdup("ls");
+    // cmd->args[2] = strdup("file");
     cmd->args[1] = NULL;
     cmd->nbrpipe = 0;
     cmd->iterator = 0;

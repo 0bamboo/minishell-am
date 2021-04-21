@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 22:47:22 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/21 00:02:34 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int _check_semi_colon(char *line, t_mp *prs)
     while (prs->i)
     {
         // if the char after the semicolon is one of this | or ; then it is an t_mpor
-        if (line[prs->i] == '|' || line[prs->i] == ';')
+        if (line[prs->i] == '|' || line[prs->i] == ';' || line[prs->i] == '>' || line[prs->i] == '<')
         {
             prs->er = 1;
             break;
@@ -66,7 +66,7 @@ int _check_pipe(char *line, t_mp *prs)
         // Skip white spaces :
         if (_is_white_space(line[prs->i]))
             prs->i++;
-        else if (line[prs->i] == '|' || line[prs->i] == ';') // Raise an exception if this condtion true
+        else if (line[prs->i] == '|' || line[prs->i] == ';' || line[prs->i] == '>' || line[prs->i] == '<') // Raise an exception if this condtion true
         {
             prs->er = 1;
             break;
@@ -81,6 +81,11 @@ int _check_redirection(char *line, t_mp *prs)
 {
     prs->credir = 1;
     prs->i++;
+    if (line[0] == '>' || line[0] == '<')
+    {
+        prs->er = 1;
+        return prs->i;
+    }
     while (line[prs->i])
     {
         // Start counting the redirection > 

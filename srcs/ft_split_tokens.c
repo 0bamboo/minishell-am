@@ -97,48 +97,47 @@ static int			_len_tokens(t_sp *sp, char c)
 // 	i = 0;
 // 	puts("here");
 // 	while (i++ < sp->size)
-// 		free(prs->cmds[i]);
+// 		free(sp->str[i]);
 // 	puts("here1");
-// 	free(prs->cmds);
-// 	prs->cmds = NULL;
+// 	free(sp->str);
+// 	sp->str = NULL;
 // 	return (NULL);
 // }
 
-void    _trim_tokens(t_mp *prs)
+void    _trim_tokens(t_sp *sp)
 {
 	int i;
 	// char *tmp;
 
 	i = -1;
-	while (prs->cmds[++i])
-		prs->cmds[i] = ft_strtrim(prs->cmds[i], " ");
+	while (sp->str[++i])
+		sp->str[i] = ft_strtrim(sp->str[i], " ");
 }
 
 
-void		_add_to_string_(t_sp *sp, int size, t_mp *prs)
+void		_add_to_string_(t_sp *sp, int size)
 {
 	// int		i;
 
-	// i = ft_strlen(prs->cmds[sp->i]);
 	while (sp->tmp[sp->start] && size-- > 0)
 	{
-		prs->cmds[sp->i][sp->j++] = sp->tmp[sp->start];
+		sp->str[sp->i][sp->j++] = sp->tmp[sp->start];
 		sp->start++;
 	}
 }
 
-void		_sp_handle_single_quotes_(t_sp *sp, t_mp *prs)
+void		_sp_handle_single_quotes_(t_sp *sp)
 {
 	sp->start = sp->idx++;
 	// puts("h");
 	while (sp->tmp[sp->idx] && sp->tmp[sp->idx] != '\'')
 		sp->idx++;
 	sp->end = ++sp->idx;
-	_add_to_string_(sp, sp->end - sp->start, prs);
+	_add_to_string_(sp, sp->end - sp->start);
 	// return (sp->end - sp->start);
 }
 
-void		_sp_handle_double_quotes_(t_sp *sp, t_mp *prs)
+void		_sp_handle_double_quotes_(t_sp *sp)
 {
 	sp->start = sp->idx++;
 	// puts("hdq");
@@ -152,12 +151,12 @@ void		_sp_handle_double_quotes_(t_sp *sp, t_mp *prs)
 		sp->idx++;
 	}
 	sp->end = ++sp->idx;
-	_add_to_string_(sp, sp->end - sp->start, prs);
+	_add_to_string_(sp, sp->end - sp->start);
 	// puts("hdq out");
 	// return (sp->end - sp->start);
 }
 
-void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
+char				**_split_tokens(t_sp *sp, char *line, char c)
 {
 	// test with this 
 	//echo $bash12345"hi agina \\\$0 $abdennacer \\123451234512345?? hi \" \\\" out"
@@ -165,10 +164,10 @@ void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
 	sp->idx = 0;
 	sp->tmp = line;
 	if (!sp->tmp)
-		return;
+		return	NULL;
 	sp->size = _count_tokens(c, sp);
 	printf("size of tokens = |%d|\n", sp->size);
-	prs->cmds = (char **)malloc(sizeof(char*) * (sp->size + 1));
+	sp->str = (char **)malloc(sizeof(char*) * (sp->size + 1));
 		// return (NULL);
 	sp->i = 0;
 	sp->k = 0;
@@ -181,20 +180,20 @@ void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
 		int size;
 		size = _len_tokens(sp, c);
 		printf("len tokens === |%d|\n", size);
-		// if (!(prs->cmds[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
+		// if (!(sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
 		// 	return (_free(sp));
-		prs->cmds[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
+		sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
 		sp->j = 0;
 		// puts("im in3");
 		while (sp->tmp[sp->idx])
         {
 			// puts("im in");
 			if (sp->tmp[sp->idx] == '"')
-				_sp_handle_double_quotes_(sp, prs);
+				_sp_handle_double_quotes_(sp);
 			else if (sp->tmp[sp->idx] == '\'')
-				_sp_handle_single_quotes_(sp, prs);
+				_sp_handle_single_quotes_(sp);
             else
-				prs->cmds[sp->i][sp->j++] = sp->tmp[sp->idx++];
+				sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
             if (sp->tmp[sp->idx] == c)
 			{
 				sp->k = sp->idx + 1;
@@ -204,10 +203,10 @@ void				_split_tokens(t_mp *prs, t_sp *sp, char *line, char c)
 			// printf("-%c-\n", sp->tmp[sp->idx]);
         }
 		// puts("im out");
-		prs->cmds[sp->i++][sp->j] = '\0';
+		sp->str[sp->i++][sp->j] = '\0';
 	}
-	prs->cmds[sp->i] = NULL;
-	_trim_tokens(prs);
+	sp->str[sp->i] = NULL;
+	_trim_tokens(sp);
 	// free(line);
-	// return (prs->cmds);
+	return (sp->str);
 }

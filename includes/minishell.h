@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 23:30:36 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/21 14:24:38 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ typedef struct      s_mp
     int status;
     int size;
     int nbrpipe;
+    int len;
+    char **pipe;
     char **cmds;
     char **files;
     char **args;
@@ -76,8 +78,8 @@ int     _is_white_space(char c);
 int		get_next_line(int fd, char **line);
 int		build_line(char **line, char **buff, char **buff_s, char step);
 void _start_parsing(char *line, t_mp *prs);
-void				_split_tokens(t_mp *prs, t_sp *sp, char *s, char c);
-void        _trim_tokens(t_mp *prs);
+char				**_split_tokens(t_sp *sp, char *s, char c);
+void        _trim_tokens(t_sp *sp);
 char *_get_env_vars_(char *buffer, t_mp *prs);
 int _handle_syntax_errors(char *line, t_mp *prs);
 void        _raise_an_exception();

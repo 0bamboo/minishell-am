@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 12:42:31 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 22:37:44 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int     _is_special_(char c)
 }
 
 
-void _add_string_(char *buff, int index, char *fill, int size)
+void _push_back_string_(char *buff, int index, char *fill, int size)
 {
     while (*fill && size > 0)
     {
@@ -51,9 +51,9 @@ void _count_env_vars_(t_mp *prs)
     while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
         prs->temp[prs->j++] = prs->buffer[prs->i++];
     prs->temp[prs->j] = '\0';
-    prs->fill = getenv(prs->temp);
-    if (prs->fill)
-        prs->counter += ft_strlen(prs->fill);
+    prs->env = getenv(prs->temp);
+    if (prs->env)
+        prs->counter += ft_strlen(prs->env);
     free(prs->temp);
     prs->temp = NULL;
 }
@@ -151,7 +151,7 @@ void    _copy_dollar_digits_(t_mp *prs)
 {
     if (prs->buffer[++prs->i] == 48)
     {
-        _add_string_(prs->global, prs->g, "bash", 4);
+        _push_back_string_(prs->global, prs->g, "bash", 4);
         prs->g +=4;
         prs->i++;
     }
@@ -185,14 +185,14 @@ void _copy_env_vars_(t_mp *prs)
     // prs->i--;
 
     // Look for the real value of that string using the function getenv...
-    prs->fill = getenv(prs->temp);
-    // printf("prs->fill = |%s|\n", prs->fill);
-    if (prs->fill)
+    prs->env = getenv(prs->temp);
+    // printf("prs->env = |%s|\n", prs->env);
+    if (prs->env)
     {
         // If prs->i did found the env value for that string then prs->i will concatenate it with the prs->global string 
-        prs->count = ft_strlen(prs->fill);
+        prs->count = ft_strlen(prs->env);
         // counter += prs->count;
-        _add_string_(prs->global, prs->g, prs->fill, prs->count);
+        _push_back_string_(prs->global, prs->g, prs->env, prs->count);
         prs->g += prs->count;
         // This one for moving the index of prs->global string...
     }
@@ -205,7 +205,7 @@ void _dq_copy_dollar_digits_(t_mp *prs)
     // The same case when prs->i found digits after dollar char...
     if (prs->buffer[++prs->i] == 48)
     {
-        _add_string_(prs->global, prs->g, "bash", 4);
+        _push_back_string_(prs->global, prs->g, "bash", 4);
         prs->g +=4;
         prs->i++;
     }
@@ -225,11 +225,11 @@ void _dq_copy_dollar_digits_(t_mp *prs)
 //     while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
 //         prs->temp[prs->j++] = prs->buffer[prs->i++];
 //     prs->temp[prs->j] = '\0';
-//     prs->fill = getenv(prs->temp);
-//     if (prs->fill)
+//     prs->env = getenv(prs->temp);
+//     if (prs->env)
 //     {
-//         prs->count = ft_strlen(prs->fill);
-//         _add_string_(prs->global, prs->g, prs->fill, prs->count);
+//         prs->count = ft_strlen(prs->env);
+//         _push_back_string_(prs->global, prs->g, prs->env, prs->count);
 //         prs->g += prs->count;
 //     }
 //     // if (prs->temp)
@@ -242,7 +242,7 @@ void    _copy_command_status(t_mp *prs)
     
     tmp = ft_itoa(prs->status);
     prs->count = ft_strlen(tmp);
-    _add_string_(prs->global, prs->g, tmp, prs->count);
+    _push_back_string_(prs->global, prs->g, tmp, prs->count);
     prs->g += prs->count;
     prs->i+=2;
     free(tmp);

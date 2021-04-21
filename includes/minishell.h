@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 17:52:13 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/20 23:30:36 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,6 @@ typedef struct			s_cmd_list
 	struct  s_cmd_list	*next;
 }						t_cmd_list;
 
-// typedef struct s_err
-// {
-//     int     dq;
-//     int     sq;
-//     int     countdq;
-//     int     countsq;
-//     int     i;
-//     char    tmp;
-//     int     len;
-// }               t_err;
-
-
 typedef struct s_sp
 {
     char **str;
@@ -60,28 +48,31 @@ typedef struct s_sp
 
 typedef struct      s_mp
 {
-    char **cmds;
     // char **sp_cmds;
     int er;
     int i;
     int j;
+    int g;
     int credir;
-    char tmp;
-    char *buff;
-    char *token;
-    char *buffer;
-    char *fill;
-    char *temp;
     int count;
     int counter;
     int status;
+    int size;
+    int nbrpipe;
+    char **cmds;
+    char **files;
+    char **args;
+    char **array;
+    char *buffer;//useable
+    char *env;
+    char *temp;//useable
     char *global;
-    int g;
+    char tmp;
     // t_err   err;
     t_cmd_list      *head;
     t_sp         *sp;
 }                   t_mp;
-
+int     _is_white_space(char c);
 int		get_next_line(int fd, char **line);
 int		build_line(char **line, char **buff, char **buff_s, char step);
 void _start_parsing(char *line, t_mp *prs);

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/21 22:17:41 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 14:09:42 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int _check_semi_colon(char *line, t_mp *prs)
     while (prs->i)
     {
         // if the char after the semicolon is one of this | or ; then it is an t_mpor
-        if (line[prs->i] == '|' || line[prs->i] == ';' || line[prs->i] == '>' || line[prs->i] == '<')
+        if (line[prs->i] == '|' || line[prs->i] == ';')
         {
             prs->er = 1;
             break;

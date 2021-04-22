@@ -105,5 +105,7 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	allocation_free(&fds, &shut_pid, nbr_pipes, 1);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+        ret = status + 128;
 	return (ret);
 }

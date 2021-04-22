@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/20 22:37:44 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/21 23:06:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int     _is_special_(char c)
 {
-    if ((c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
+    if ((c >= 32 && c <= 47 && c != 35 && c != 40 && c != 42 && c != 41 && c != 45 && c != 33) || (c >= 58 && c <= 63) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
         return 1;
     return 0;
 }
@@ -212,29 +212,6 @@ void _dq_copy_dollar_digits_(t_mp *prs)
     else
         prs->i++;
 }
-
-// void    _dq_copy_env_vars_(t_mp *prs)
-// {
-//     // Same thing when you found the $var...
-//     prs->count = 0;
-//     prs->j = ++prs->i;
-//     while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
-//         prs->count++;
-//     prs->temp = (char *)malloc(sizeof(char) * (prs->count + 1));
-//     prs->j = 0;
-//     while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
-//         prs->temp[prs->j++] = prs->buffer[prs->i++];
-//     prs->temp[prs->j] = '\0';
-//     prs->env = getenv(prs->temp);
-//     if (prs->env)
-//     {
-//         prs->count = ft_strlen(prs->env);
-//         _push_back_string_(prs->global, prs->g, prs->env, prs->count);
-//         prs->g += prs->count;
-//     }
-//     // if (prs->temp)
-//         // free(prs->temp);
-// }
 
 void    _copy_command_status(t_mp *prs)
 {

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/21 14:24:38 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 00:02:47 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct			s_cmd_list
 	char				**args;
 	int					nbrpipe;
 	int					iter;
+    int                 redir;
 	struct  s_cmd_list	*next;
 }						t_cmd_list;
 
@@ -75,6 +76,23 @@ typedef struct      s_mp
     t_sp         *sp;
 }                   t_mp;
 int     _is_white_space(char c);
+int     _check_for_special_chars_(char *buff);
+int _count_token_length_(t_mp *prs);
+int     _size_of_arg_(char *buffer, int i);
+void _free_tab_(char **buffer);
+void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
+void _copy_files_(t_mp *prs);
+void        _fix_the_order_(t_mp *prs);
+void    _copy_redirs_(t_mp *prs);
+void _copy_args_with_dq_(t_mp *prs);
+void _copy_args_with_sq_(t_mp *prs);
+void _handle_normal_args_2_(t_mp *prs);
+void _handle_normal_args_(t_mp *prs, char *tmp);
+int     _if_pipe_(t_mp *prs, int index);
+void _fill_first_node_(t_mp *prs, char **args, char **files);
+void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files);
+void        _handle_pipe_args_(t_mp *prs);
+void        _copy_tokens_data_(t_mp *prs, int index);
 int		get_next_line(int fd, char **line);
 int		build_line(char **line, char **buff, char **buff_s, char step);
 void _start_parsing(char *line, t_mp *prs);

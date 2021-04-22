@@ -1,4 +1,4 @@
-echo "$#" == echo "$@" == echo "$*" == echo "$(" == echo "$)" ==  echo "$-" == echo "$1" == |something|
+echo "$#35" c== echo "$@64" == echo "$*42" == echo "$(40" == echo "$)41" ==  echo "$-45" == echo "$!33" == |something|
 
 the other special char you need to trait them like delimeter for env string .....
 

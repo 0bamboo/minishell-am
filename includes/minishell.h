@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 00:02:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/23 00:49:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../srcs/get_next_line.h"
+// #include "../srcs/get_next_line.h"
 #include "../libft/libft.h"
+#define BUFFER_SIZE 1
 
 
 
@@ -76,9 +77,17 @@ typedef struct      s_mp
     t_sp         *sp;
 }                   t_mp;
 int     _is_white_space(char c);
+void _count_tokens_dq_(t_sp *sp);
+int			_count_tokens(char delim, t_sp *sp);
+int			_len_tokens(t_sp *sp, char delim);
+void _len_tokens_dq_(t_sp *sp);
+void _len_tokens_sq_(t_sp *sp);
+size_t	len_if(char *s, int nl);
+char	*ft_dup_free(char *src, char **to_free);
+int		build_line(char **line, char **buff, char **buff_s, char step);
 int     _check_for_special_chars_(char *buff);
 int _count_token_length_(t_mp *prs);
-int     _size_of_arg_(char *buffer, int i);
+int     _size_of_arg_(t_mp *prs, char *buffer, int i);
 void _free_tab_(char **buffer);
 void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
 void _copy_files_(t_mp *prs);

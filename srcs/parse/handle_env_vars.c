@@ -6,11 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/21 23:06:53 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 23:57:52 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int     _is_special_(char c)
 {

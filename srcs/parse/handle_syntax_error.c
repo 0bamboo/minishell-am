@@ -6,11 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 14:09:42 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 23:58:00 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 
 int     _char_in_tab_(char c, char tab[3])

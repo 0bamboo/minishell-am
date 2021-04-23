@@ -6,13 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 00:11:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/23 00:03:50 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-
-
+#include "../../includes/minishell.h"
 
 
 int     _check_for_special_chars_(char *buff)
@@ -33,11 +31,6 @@ int     _check_for_special_chars_(char *buff)
     return 0;
 }
 
-
-
-
-
-   
 
 void _if_pipe_dq_(t_mp *prs, int index)
 {

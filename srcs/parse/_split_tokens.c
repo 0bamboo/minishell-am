@@ -10,85 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-
-
-static int			_count_tokens(char c, t_sp *sp)
-{
-	sp->count = 0;
-	sp->i = 0;
-	while (sp->tmp[sp->i] && sp->tmp[sp->i] == c)
-		sp->i++;
-	while (sp->tmp[sp->i])
-	{
-		if (sp->tmp[sp->i] == '"')
-		{
-			sp->i++;
-			while (sp->tmp[sp->i] && sp->tmp[sp->i] != '"')
-			{
-				if (sp->tmp[sp->i] == '\\')
-				{
-					sp->i += 2;
-					continue;
-				}
-				sp->i++;
-			}
-		}
-		else if (sp->tmp[sp->i] == '\'')
-		{
-			sp->i++;
-			while (sp->tmp[sp->i] && sp->tmp[sp->i] != '\'')
-				sp->i++;
-		}
-		if ((((sp->tmp[sp->i] == c && sp->tmp[sp->i + 1] != c) || sp->tmp[sp->i + 1] == '\0')))
-			sp->count++;
-		sp->i++;
-	}
-	return (sp->count);
-}
-
-void _len_tokens_dq_(t_sp *sp)
-{
-	sp->k++;
-	sp->count++;
-	while (sp->tmp[sp->k] && sp->tmp[sp->k] != '"')
-	{
-		if (sp->tmp[sp->k] == '\\')
-		{
-			sp->k += 2;
-			sp->count += 2;
-			continue;
-		}
-		sp->k++;
-		sp->count++;
-	}
-}
-
-void _len_tokens_sq_(t_sp *sp)
-{
-	sp->k++;
-	sp->count++;
-	while (sp->tmp[sp->k] && sp->tmp[sp->k] != '\'')
-	{
-		sp->count++;
-		sp->k++;
-	}	
-}
-
-static int			_len_tokens(t_sp *sp, char c)
-{
-	sp->count = 0;
-	while (sp->tmp[sp->k] && sp->tmp[sp->k] != c)
-	{
-		if (sp->tmp[sp->k] == '"')
-			_len_tokens_dq_(sp);
-		else if (sp->tmp[sp->k] == '\'')
-			_len_tokens_sq_(sp);
-		sp->k++;
-		sp->count++;
-	}
-	return (sp->count);
-}
+#include "../../includes/minishell.h"
 
 // static char			**_free(t_sp *sp)
 // {
@@ -156,7 +78,32 @@ void		_sp_handle_double_quotes_(t_sp *sp)
 	// return (sp->end - sp->start);
 }
 
-char				**_split_tokens(t_sp *sp, char *line, char c)
+void		_split_utils_(t_sp *sp, char delim)
+{
+	int size;
+
+	while (sp->tmp[sp->idx] && sp->tmp[sp->idx] == delim)
+		sp->idx++;
+	size = _len_tokens(sp, delim);
+	printf("len tokens === |%d|\n", size);
+	// if (!(sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
+	// 	return (_free(sp));
+	sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
+	sp->j = 0;
+}
+
+void _split_utils_2_(t_sp *sp)
+{
+	// puts("im in2");
+	if (sp->tmp[sp->idx] == '"')
+		_sp_handle_double_quotes_(sp);
+	else if (sp->tmp[sp->idx] == '\'')
+		_sp_handle_single_quotes_(sp);
+	else
+		sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
+}
+
+char				**_split_tokens(t_sp *sp, char *line, char delim)
 {
 	// test with this 
 	//echo $bash12345"hi agina \\\$0 $abdennacer \\123451234512345?? hi \" \\\" out"
@@ -165,7 +112,7 @@ char				**_split_tokens(t_sp *sp, char *line, char c)
 	sp->tmp = line;
 	if (!sp->tmp)
 		return	NULL;
-	sp->size = _count_tokens(c, sp);
+	sp->size = _count_tokens(delim, sp);
 	printf("size of tokens = |%d|\n", sp->size);
 	sp->str = (char **)malloc(sizeof(char*) * (sp->size + 1));
 		// return (NULL);
@@ -173,28 +120,30 @@ char				**_split_tokens(t_sp *sp, char *line, char c)
 	sp->k = 0;
 	while (sp->i < sp->size)
 	{
+		_split_utils_(sp, delim);
 		// puts("im in1");
-		while (sp->tmp[sp->idx] && sp->tmp[sp->idx] == c)
-			sp->idx++;
-		// puts("im in2");
-		int size;
-		size = _len_tokens(sp, c);
-		printf("len tokens === |%d|\n", size);
-		// if (!(sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
-		// 	return (_free(sp));
-		sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
-		sp->j = 0;
+		// while (sp->tmp[sp->idx] && sp->tmp[sp->idx] == delim)
+		// 	sp->idx++;
+		// // puts("im in2");
+		// int size;
+		// size = _len_tokens(sp, delim);
+		// printf("len tokens === |%d|\n", size);
+		// // if (!(sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1))))
+		// // 	return (_free(sp));
+		// sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
+		// sp->j = 0;
 		// puts("im in3");
 		while (sp->tmp[sp->idx])
         {
 			// puts("im in");
-			if (sp->tmp[sp->idx] == '"')
-				_sp_handle_double_quotes_(sp);
-			else if (sp->tmp[sp->idx] == '\'')
-				_sp_handle_single_quotes_(sp);
-            else
-				sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
-            if (sp->tmp[sp->idx] == c)
+			_split_utils_2_(sp);
+			// if (sp->tmp[sp->idx] == '"')
+			// 	_sp_handle_double_quotes_(sp);
+			// else if (sp->tmp[sp->idx] == '\'')
+			// 	_sp_handle_single_quotes_(sp);
+            // else
+			// 	sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
+            if (sp->tmp[sp->idx] == delim)
 			{
 				sp->k = sp->idx + 1;
 				printf("idx = |%c|\n", sp->tmp[sp->k]);

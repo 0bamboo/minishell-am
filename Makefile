@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/04/21 23:40:20 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/04/23 00:50:27 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,10 @@ LIBFT = ./libft
 
 LIBFT_LIB = $(LIBFT)/libft.a
 
-FILES = ./srcs/fill_list.c ./srcs/get_next_line.c ./srcs/get_next_line_utils.c ./srcs/input_parser.c ./srcs/handle_syntax_error.c  ./srcs/handle_env_vars.c ./srcs/ft_split_tokens.c ./srcs/handle_backslash_dq.c
+FILES = ./srcs/parse/fill_list_pipe.c ./srcs/parse/fill_tools.c ./srcs/parse/fill_list.c \
+		./srcs/parse/get_next_line.c ./srcs/parse/get_next_line_utils.c ./srcs/parse/input_parser.c \
+		./srcs/parse/handle_syntax_error.c ./srcs/parse/handle_env_vars.c ./srcs/parse/_split_tokens.c \
+		./srcs/parse/handle_backslash_dq.c ./srcs/parse/fill_tools_sec.c ./srcs/parse/_split_tools.c
 
 HEADER = ./includes/minishell.h
 
@@ -51,7 +54,7 @@ $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 
 clean:
 			@make clean -C $(LIBFT)
-			@rm -rf srcs/*.o $(LIB)
+			@rm -rf srcs/parse/*.o $(LIB)
 			@echo "\n\033[32mCleaning is Done!\033[0m\n"
 
 fclean: clean

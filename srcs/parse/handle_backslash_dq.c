@@ -6,11 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/21 23:24:34 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 23:57:44 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 char _ret_special(char buffer)
 {

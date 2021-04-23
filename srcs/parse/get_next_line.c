@@ -6,11 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:17:27 by majermou          #+#    #+#             */
-/*   Updated: 2021/04/18 04:46:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/22 23:57:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int		get_next_line(int fd, char **line)
 {

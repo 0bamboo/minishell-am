@@ -22,7 +22,8 @@ void _fill_pipe_arg_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
     (*curr)->args = malloc(sizeof(char *) * (prs->len + 1));
     while (args[++i])
         (*curr)->args[i] = ft_strdup(args[i]);
-    (*curr)->redir = i;
+    if (files[0])
+        (*curr)->redir = i;
     while (files[++j])
         (*curr)->args[i++] = ft_strdup(files[j]);
     (*curr)->args[i] = NULL;

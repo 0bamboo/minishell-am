@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 23:57:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/23 15:17:56 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int     _is_special_(char c)
 {
-    if ((c >= 32 && c <= 47 && c != 35 && c != 40 && c != 42 && c != 41 && c != 45 && c != 33) || (c >= 58 && c <= 63) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
-        return 1;
+    // if ((c >= 32 && c <= 47 && c != 35 && c != 40 && c != 42 && c != 41 && c != 45 && c != 33) || (c >= 58 && c <= 63) || (c >= 91 && c <= 96) || ((c >= 123 && c <= 126)) || c == '\0')
+    //     return 1;
+    if (c == '_' || c == '@' || c == '&' || c == '!')
+        return (1);
     return 0;
 }
 
@@ -44,11 +46,11 @@ void _count_env_vars_(t_mp *prs)
 {
     prs->count = 0;
     prs->j = ++prs->i;
-    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+    while (ft_isalpha(prs->buffer[prs->j]) && prs->buffer[prs->j++])
         prs->count++;
     prs->temp = (char *)malloc(sizeof(char) * (prs->count + 1));
     prs->j = 0;
-    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+    while (ft_isalpha(prs->buffer[prs->i]) && prs->buffer[prs->i])
         prs->temp[prs->j++] = prs->buffer[prs->i++];
     prs->temp[prs->j] = '\0';
     prs->env = getenv(prs->temp);
@@ -92,7 +94,7 @@ void _count_inside_dq_(t_mp *prs)
             prs->i += 2;
             prs->counter += 2;
         }
-        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        else if (prs->buffer[prs->i] == '$' && ft_isalpha(prs->buffer[prs->i + 1]))
             _count_env_vars_(prs);
         else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
             _count_command_status(prs);
@@ -130,7 +132,7 @@ int _line_counter_(t_mp *prs)
             _count_command_status(prs);
         else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
             _count_dollar_digits_(prs);
-        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        else if (prs->buffer[prs->i] == '$' && ft_isalpha(prs->buffer[prs->i + 1]))
             _count_env_vars_(prs);
         else if (prs->buffer[prs->i] == '"')
             _count_inside_dq_(prs);
@@ -167,7 +169,7 @@ void _copy_env_vars_(t_mp *prs)
     // printf("first char = |%c|\n", prs->buffer[prs->i]);
     
     // This loop is for counting the length of the string that prs->i will look for its real value in envs vars....
-    while (!(_is_special_(prs->buffer[prs->j])) && prs->buffer[prs->j++])
+    while (ft_isalpha(prs->buffer[prs->j]) && prs->buffer[prs->j++])
         prs->count++;
     // Allocate the string 
     // if (prs->temp)
@@ -176,7 +178,7 @@ void _copy_env_vars_(t_mp *prs)
     prs->j = 0;
 
     // Copy the string into prs->temp var....
-    while (!(_is_special_(prs->buffer[prs->i])) && prs->buffer[prs->i])
+    while (ft_isalpha(prs->buffer[prs->i]) && prs->buffer[prs->i])
     {
         prs->temp[prs->j++] = prs->buffer[prs->i++];
     }
@@ -240,7 +242,7 @@ void        _copy_inside_dq_(t_mp *prs)
             prs->global[prs->g++] = prs->buffer[prs->i++];
             prs->global[prs->g++] = prs->buffer[prs->i++];
         }
-        else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+        else if (prs->buffer[prs->i] == '$' && ft_isalpha(prs->buffer[prs->i + 1]))
             _copy_env_vars_(prs);
         else if (prs->buffer[prs->i] == '$' && prs->buffer[prs->i + 1] == '?')
             _copy_command_status(prs);
@@ -265,7 +267,7 @@ void _get_env_vars_2_(t_mp *prs)
         _copy_command_status(prs);
     else if (prs->buffer[prs->i] == '$' && ft_isdigit(prs->buffer[prs->i + 1]))
         _copy_dollar_digits_(prs);
-    else if (prs->buffer[prs->i] == '$' && !(_is_special_(prs->buffer[prs->i + 1])))
+    else if (prs->buffer[prs->i] == '$' && ft_isalpha(prs->buffer[prs->i + 1]))
         _copy_env_vars_(prs);
     else if (prs->buffer[prs->i] == '"')
         _copy_inside_dq_(prs);

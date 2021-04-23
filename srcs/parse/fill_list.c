@@ -87,7 +87,8 @@ void _fill_normal_args_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
     while (args[++i])
         (*curr)->args[i] = ft_strdup(args[i]);
     j = -1;
-    (*curr)->redir = i;
+    if (files[0])
+        (*curr)->redir = i;
     printf("redir = :%d:\n", (*curr)->redir);
     while (files[++j])
         (*curr)->args[i++] = ft_strdup(files[j]);

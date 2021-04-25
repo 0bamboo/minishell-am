@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/25 08:43:32 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/25 13:32:36 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,5 +143,9 @@ void _start_parsing(char *line, t_mp *prs)
         i = -1;
         while (prs->cmds[++i])
             printf("---> |%s|\n", prs->cmds[i]);
+        i = -1;
+        while (prs->cmds[++i])
+            free(prs->cmds[i]);
+        free(prs->cmds);
     }
 }

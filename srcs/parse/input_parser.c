@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/23 00:03:50 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/25 08:43:32 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ void        _copy_tokens_data_(t_mp *prs, int index)
     {
         _handle_normal_args_(prs, prs->cmds[index]);
         _fill_list_for_normal_args_(prs, prs->args, prs->files);
-        _free_tab_(prs->args);
-        _free_tab_(prs->files);
+        // _free_tab_(prs->args);
+        // _free_tab_(prs->files);
         
     }
 }

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/23 22:26:11 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/25 11:28:18 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ int _line_counter_(t_mp *prs)
             prs->i++;
         }
     }
-    // printf("counter = |%d|\n", prs->counter);
+    printf("counter = |%d|\n", prs->counter);
     return prs->counter;
 }
 
@@ -305,6 +305,5 @@ char *_get_env_vars_(char *buffer, t_mp *prs)
         _get_env_vars_2_(prs);
     prs->global[prs->g] = '\0';
     // printf("after handling env : |%s|\n", prs->global);
-    free(buffer);
     return prs->global;
 }

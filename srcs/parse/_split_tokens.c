@@ -156,6 +156,6 @@ char				**_split_tokens(t_sp *sp, char *line, char delim)
 	}
 	sp->str[sp->i] = NULL;
 	_trim_tokens(sp);
-	// free(line);
+	free(line);
 	return (sp->str);
 }

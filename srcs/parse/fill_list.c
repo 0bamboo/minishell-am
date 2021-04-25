@@ -31,7 +31,9 @@ void _free_tab_(char **buffer)
 
 void _handle_normal_args_2_(t_mp *prs)
 {
-    int l = _size_of_arg_(prs, prs->buffer, prs->i);
+    int l ;
+    
+    l = _size_of_arg_(prs, prs->buffer, prs->i);
     prs->array[prs->size] = malloc(sizeof(char) * (l + 1));
     prs->j = 0;
     //echo >file "hiag"'hi'hi >file "hi"
@@ -108,9 +110,10 @@ void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
     // curr = prs->head;
     curr->nbrpipe = 0;
     curr->next = NULL;
+    curr->command = NULL;
     if (args[0])
         curr->command = ft_strdup(args[0]);
-    _fill_normal_args_(prs, &curr,args, files);
+    _fill_normal_args_(prs, &curr, args, files);
     // curr->args = malloc(sizeof(char *) * (prs->len + 1));
     // i = -1;
     // // puts("im here");

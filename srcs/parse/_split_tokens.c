@@ -12,47 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-// static char			**_free(t_sp *sp)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	puts("here");
-// 	while (i++ < sp->size)
-// 		free(sp->str[i]);
-// 	puts("here1");
-// 	free(sp->str);
-// 	sp->str = NULL;
-// 	return (NULL);
-// }
-
-void	_trim_tokens(t_sp *sp)
-{
-	int	i;
-
-	i = -1;
-	while (sp->str[++i])
-		sp->str[i] = ft_strtrim(sp->str[i], " ");
-}
-
-void	_add_to_string_(t_sp *sp, int size)
-{
-	while (sp->tmp[sp->start] && size-- > 0)
-	{
-		sp->str[sp->i][sp->j++] = sp->tmp[sp->start];
-		sp->start++;
-	}
-}
-
-void	_sp_handle_single_quotes_(t_sp *sp)
-{
-	sp->start = sp->idx++;
-	while (sp->tmp[sp->idx] && sp->tmp[sp->idx] != '\'')
-		sp->idx++;
-	sp->end = ++sp->idx;
-	_add_to_string_(sp, sp->end - sp->start);
-}
-
 void	_sp_handle_double_quotes_(t_sp *sp)
 {
 	sp->start = sp->idx++;
@@ -91,9 +50,23 @@ void	_split_utils_2_(t_sp *sp)
 		sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
 }
 
+void _split_(t_sp *sp, char delim)
+{
+	_split_utils_(sp, delim);
+	while (sp->tmp[sp->idx])
+	{
+		_split_utils_2_(sp);
+		if (sp->tmp[sp->idx] == delim)
+		{
+			sp->k = sp->idx + 1;
+			printf("idx = |%c|\n", sp->tmp[sp->k]);
+			break ;
+		}
+	}
+}
+
 char	**_split_tokens(t_sp *sp, char *line, char delim)
 {
-	sp->idx = 0;
 	sp->tmp = line;
 	if (!sp->tmp)
 		return (NULL);
@@ -102,19 +75,21 @@ char	**_split_tokens(t_sp *sp, char *line, char delim)
 	sp->str = (char **)malloc(sizeof(char*) * (sp->size + 1));
 	sp->i = 0;
 	sp->k = 0;
+	sp->idx = 0;
 	while (sp->i < sp->size)
 	{
-		_split_utils_(sp, delim);
-		while (sp->tmp[sp->idx])
-		{
-			_split_utils_2_(sp);
-			if (sp->tmp[sp->idx] == delim)
-			{
-				sp->k = sp->idx + 1;
-				printf("idx = |%c|\n", sp->tmp[sp->k]);
-				break ;
-			}
-		}
+		_split_(sp, delim);
+			// _split_utils_(sp, delim);
+	// while (sp->tmp[sp->idx])
+	// {
+	// 	_split_utils_2_(sp);
+	// 	if (sp->tmp[sp->idx] == delim)
+	// 	{
+	// 		sp->k = sp->idx + 1;
+	// 		printf("idx = |%c|\n", sp->tmp[sp->k]);
+	// 		break ;
+	// 	}
+	// }
 		sp->str[sp->i++][sp->j] = '\0';
 	}
 	sp->str[sp->i] = NULL;

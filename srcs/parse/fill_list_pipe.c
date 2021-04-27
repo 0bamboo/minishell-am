@@ -30,6 +30,8 @@ void _fill_pipe_arg_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
     i = -1;
     while ((*curr)->args[++i])
         (*curr)->args[i] = _handle_backslash_(prs, (*curr)->args[i]);
+    _free_tab_(args);
+    _free_tab_(files);
 }
 
 void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files)

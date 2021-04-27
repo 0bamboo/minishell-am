@@ -6,30 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/25 13:32:36 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:43:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-
-int     _check_for_special_chars_(char *buff)
-{
-    int i;
-
-    i = 0;
-    while (buff[i])
-    {
-        if (buff[i] == '"')
-            while (buff[++i] && buff[i] != '"');
-        else if (buff[i] == '\'')
-            while (buff[++i] && buff[i] != '\'');
-        if (_char_in_tab_(buff[i], "><|"))
-            return 1;
-        i++;
-    }
-    return 0;
-}
 
 
 void _if_pipe_dq_(t_mp *prs, int index)
@@ -82,9 +63,7 @@ void        _handle_pipe_args_(t_mp *prs)
         _fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
         if (i == 0)
             prs->head = curr;
-        _free_tab_(prs->files);
     }
-    _free_tab_(prs->args);
 }
 
 void        _copy_tokens_data_(t_mp *prs, int index)
@@ -94,6 +73,9 @@ void        _copy_tokens_data_(t_mp *prs, int index)
     if (_if_pipe_(prs, index))
     {
         prs->pipe = _split_tokens(prs->sp, prs->cmds[index], '|');
+        int i = -1;
+        while (prs->pipe[++i])
+            printf("pipe == |%s|\n", prs->pipe[i]);
         _handle_pipe_args_(prs);
         // handle pipe ....
     }
@@ -144,8 +126,8 @@ void _start_parsing(char *line, t_mp *prs)
         while (prs->cmds[++i])
             printf("---> |%s|\n", prs->cmds[i]);
         i = -1;
-        while (prs->cmds[++i])
-            free(prs->cmds[i]);
-        free(prs->cmds);
+        // while (prs->cmds[++i])
+        //     free(prs->cmds[i]);
+        // free(prs->cmds);
     }
 }

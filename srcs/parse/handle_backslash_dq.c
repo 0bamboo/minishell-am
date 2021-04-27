@@ -6,26 +6,26 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 23:57:44 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:28:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char _ret_special(char buffer)
+char _ret_special(char c)
 {
-    if (buffer == '\\')
+    if (c == '\\')
         return ('\\');
-    else if (buffer == '"')
+    else if (c == '"')
         return '"';
-    else if (buffer == '$')
+    else if (c == '$')
         return '$';
     else
         return 0;
 }
-int _is_special(char c)
+int _bs_special(char c)
 {
-    if (c == '\\' || c == '"' || c == '$' || c == '`')
+    if (c == '\\' || c == '"' || c == '$')
         return 1;
     return 0;
 }
@@ -35,7 +35,7 @@ void        _bs_for_double_quotes_(t_mp *prs, char *token)
     prs->i++;
     while (token[prs->i] != '"')
     {
-        if (token[prs->i] == '\\' && _is_special(token[prs->i + 1]))
+        if (token[prs->i] == '\\' && _bs_special(token[prs->i + 1]))
         {
             prs->buffer[prs->j++] = _ret_special(token[prs->i + 1]);
             prs->i += 2;
@@ -77,6 +77,6 @@ char *_handle_backslash_(t_mp *prs, char *token)
             prs->buffer[prs->j++] = token[prs->i++];
     }
     prs->buffer[prs->j] = '\0';
-    free(token);
+    // free(token);
     return (prs->buffer);
 }

@@ -12,13 +12,10 @@
 
 #include "../../includes/minishell.h"
 
-
-
-void _free_tab_(char **buffer)
+void	_free_tab_(char **buffer)
 {
-    int     i;
-    
-    i = -1;
+	int	i;
+	i = -1;
     if (buffer)
     {
         if (buffer[++i])
@@ -75,6 +72,7 @@ void _handle_normal_args_(t_mp *prs, char *tmp)
             _handle_normal_args_2_(prs);
     }
     prs->array[prs->size] = NULL;
+    free(prs->buffer);
     _fix_the_order_(prs);
     _free_tab_(prs->array);
 }
@@ -98,6 +96,8 @@ void _fill_normal_args_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
     i = -1;
     while ((*curr)->args[++i])
         (*curr)->args[i] = _handle_backslash_(prs, (*curr)->args[i]);
+    _free_tab_(args);
+    _free_tab_(files);
 }
 
 void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
@@ -114,23 +114,5 @@ void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
     if (args[0])
         curr->command = ft_strdup(args[0]);
     _fill_normal_args_(prs, &curr, args, files);
-    // curr->args = malloc(sizeof(char *) * (prs->len + 1));
-    // i = -1;
-    // // puts("im here");
-    // while (args[++i])
-    //     curr->args[i] = ft_strdup(args[i]);
-    // j = -1;
-    // curr->redir = i;
-    // printf("redir = :%d:\n", curr->redir);
-    // while (files[++j])
-    //     curr->args[i++] = ft_strdup(files[j]);
-    // curr->args[i] = NULL;
-    // i = -1;
-    // while (curr->args[++i])
-    //     curr->args[i] = _handle_backslash_(prs, curr->args[i]);
-    puts("");
-    // if (i == prs->len)
-    //     puts("YAAAAY");
     prs->head = curr;
-    // puts(curr->command);
 }

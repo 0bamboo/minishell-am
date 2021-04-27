@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 18:15:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 16:02:33 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:51:35 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ char		*ft_strtrim(char const *s1, char const *set)
 	while (i <= j)
 		res[k++] = s1[i++];
 	res[k] = '\0';
-	// free((char *)s1);
 	return (res);
 }

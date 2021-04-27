@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 14:15:25 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/25 08:35:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/27 00:16:12 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ char	*ft_strdup(const char *s)
 		tmp[i] = s[i];
 		i++;
 	}
-	free((char *)s);
 	return (tmp);
 }

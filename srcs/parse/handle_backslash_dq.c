@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/27 00:28:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/27 01:02:26 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,6 @@ char *_handle_backslash_(t_mp *prs, char *token)
             prs->buffer[prs->j++] = token[prs->i++];
     }
     prs->buffer[prs->j] = '\0';
-    // free(token);
+    free(token);
     return (prs->buffer);
 }

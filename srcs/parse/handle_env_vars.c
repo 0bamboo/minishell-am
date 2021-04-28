@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/27 00:14:25 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:20:07 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ char *_get_env_vars_(char *buffer, t_mp *prs)
     while (prs->buffer[prs->i])
         _get_env_vars_2_(prs);
     prs->global[prs->g] = '\0';
-    // printf("after handling env : |%s|\n", prs->global);
+    printf("after handling env : |%s|\n", prs->global);
     return prs->global;
 }

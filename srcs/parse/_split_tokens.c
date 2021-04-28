@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/24 15:40:07 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/25 13:29:33 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:14:12 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	_split_utils_(t_sp *sp, char delim)
 	while (sp->tmp[sp->idx] && sp->tmp[sp->idx] == delim)
 		sp->idx++;
 	size = _len_tokens(sp, delim);
-	printf("len tokens === |%d|\n", size);
-	sp->str[sp->i] = (char *)malloc(sizeof(char) * (size + 1));
+	sp->str[sp->i] = (char *) malloc(sizeof(char) * (size + 1));
 	sp->j = 0;
 }
 
@@ -50,7 +49,7 @@ void	_split_utils_2_(t_sp *sp)
 		sp->str[sp->i][sp->j++] = sp->tmp[sp->idx++];
 }
 
-void _split_(t_sp *sp, char delim)
+void	_split_(t_sp *sp, char delim)
 {
 	_split_utils_(sp, delim);
 	while (sp->tmp[sp->idx])
@@ -71,25 +70,13 @@ char	**_split_tokens(t_sp *sp, char *line, char delim)
 	if (!sp->tmp)
 		return (NULL);
 	sp->size = _count_tokens(delim, sp);
-	printf("size of tokens = |%d|\n", sp->size);
-	sp->str = (char **)malloc(sizeof(char*) * (sp->size + 1));
+	sp->str = (char **) malloc(sizeof(char *) * (sp->size + 1));
 	sp->i = 0;
 	sp->k = 0;
 	sp->idx = 0;
 	while (sp->i < sp->size)
 	{
 		_split_(sp, delim);
-			// _split_utils_(sp, delim);
-	// while (sp->tmp[sp->idx])
-	// {
-	// 	_split_utils_2_(sp);
-	// 	if (sp->tmp[sp->idx] == delim)
-	// 	{
-	// 		sp->k = sp->idx + 1;
-	// 		printf("idx = |%c|\n", sp->tmp[sp->k]);
-	// 		break ;
-	// 	}
-	// }
 		sp->str[sp->i++][sp->j] = '\0';
 	}
 	sp->str[sp->i] = NULL;

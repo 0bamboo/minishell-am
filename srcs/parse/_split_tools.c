@@ -6,13 +6,13 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/23 00:47:04 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/23 00:47:04 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/28 15:46:13 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void _count_tokens_dq_(t_sp *sp)
+void	_count_tokens_dq_(t_sp *sp)
 {
 	sp->i++;
 	while (sp->tmp[sp->i] && sp->tmp[sp->i] != '"')
@@ -20,13 +20,13 @@ void _count_tokens_dq_(t_sp *sp)
 		if (sp->tmp[sp->i] == '\\')
 		{
 			sp->i += 2;
-			continue;
+			continue ;
 		}
 		sp->i++;
 	}
 }
 
-int			_count_tokens(char delim, t_sp *sp)
+int	_count_tokens(char delim, t_sp *sp)
 {
 	sp->count = 0;
 	sp->i = 0;
@@ -35,33 +35,22 @@ int			_count_tokens(char delim, t_sp *sp)
 	while (sp->tmp[sp->i])
 	{
 		if (sp->tmp[sp->i] == '"')
-		{
 			_count_tokens_dq_(sp);
-			// sp->i++;
-			// while (sp->tmp[sp->i] && sp->tmp[sp->i] != '"')
-			// {
-			// 	if (sp->tmp[sp->i] == '\\')
-			// 	{
-			// 		sp->i += 2;
-			// 		continue;
-			// 	}
-			// 	sp->i++;
-			// }
-		}
 		else if (sp->tmp[sp->i] == '\'')
 		{
-			// sp->i++;
-			while (sp->tmp[++sp->i] && sp->tmp[sp->i] != '\'');
-				// sp->i++;
+			sp->i++;
+			while (sp->tmp[sp->i] && sp->tmp[sp->i] != '\'')
+				sp->i++;
 		}
-		if ((((sp->tmp[sp->i] == delim && sp->tmp[sp->i + 1] != delim) || sp->tmp[sp->i + 1] == '\0')))
+		if ((((sp->tmp[sp->i] == delim && sp->tmp[sp->i + 1] != delim)
+					|| sp->tmp[sp->i + 1] == '\0')))
 			sp->count++;
 		sp->i++;
 	}
 	return (sp->count);
 }
 
-void _len_tokens_dq_(t_sp *sp)
+void	_len_tokens_dq_(t_sp *sp)
 {
 	sp->k++;
 	sp->count++;
@@ -71,14 +60,14 @@ void _len_tokens_dq_(t_sp *sp)
 		{
 			sp->k += 2;
 			sp->count += 2;
-			continue;
+			continue ;
 		}
 		sp->k++;
 		sp->count++;
 	}
 }
 
-void _len_tokens_sq_(t_sp *sp)
+void	_len_tokens_sq_(t_sp *sp)
 {
 	sp->k++;
 	sp->count++;
@@ -86,10 +75,10 @@ void _len_tokens_sq_(t_sp *sp)
 	{
 		sp->count++;
 		sp->k++;
-	}	
+	}
 }
 
-int			_len_tokens(t_sp *sp, char delim)
+int	_len_tokens(t_sp *sp, char delim)
 {
 	sp->count = 0;
 	while (sp->tmp[sp->k] && sp->tmp[sp->k] != delim)

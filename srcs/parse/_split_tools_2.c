@@ -24,12 +24,12 @@
 // 	free(sp->str);
 // 	sp->str = NULL;
 // 	return (NULL);
-// }
+// 	// }
 
 void	_trim_tokens(t_sp *sp)
 {
 	int	i;
-	char *tmp;
+	char	*tmp;
 
 	i = -1;
 	while (sp->str[++i])
@@ -37,7 +37,6 @@ void	_trim_tokens(t_sp *sp)
 		tmp = ft_strtrim(sp->str[i], " ");
 		free(sp->str[i]);
 		sp->str[i] = tmp;
-		
 	}
 }
 

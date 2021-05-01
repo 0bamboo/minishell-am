@@ -100,4 +100,17 @@ int	            call_builtin(t_cmd_list *cmd, t_envlist *envlist);
 char            *get_home_path(char **args, char **envp);
 void            sig_handle(int sig);
 
+
+
+
+int     ft_putstrs(char *str);
+int     ft_putchars(int c);
+int     addToline(t_envlist *envlist, char buff);
+int     removeFromline(t_envlist *envlist);
+int     addTohistory(t_envlist *envlist);
+void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index);
+int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
+int     readline(t_envlist *envlist);
+
+
 #endif

@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/21 15:48:22 by abdait-m          #+#    #+#              #
-#    Updated: 2021/04/06 22:00:42 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/05/01 15:03:18 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,13 +19,7 @@ NAME = libft.a
 # 		ft_strnstr.c ft_strrchr.c ft_substr.c ft_tolower.c ft_toupper.c ft_putstr_fd.c ft_strlcat.c
 FILES = $(wildcard ./*.c)
 
-C_FILES = ft_lstadd_back_bonus.c ft_lstclear_bonus.c ft_lstadd_front_bonus.c \
-		  ft_lstdelone_bonus.c ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstnew_bonus.c \
-		  ft_lstsize_bonus.c ft_lstmap_bonus.c
-
 OBJ = $(FILES:.c=.o)
-
-B_OBJ = $(C_FILES:.c=.o)
 
 FLG = -Wall -Wextra -Werror
 
@@ -35,11 +29,6 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 		@ar -rcs $(NAME) $(OBJ)
-# ranlib $(NAME) 
-
-bonus : all $(B_OBJ)
-		@ar -rcs $(NAME) $(B_OBJ)
-# @ranlib $(NAME) 
 
 %.o:%.c 
 		@gcc  -c $< $(FLG)

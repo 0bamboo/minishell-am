@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:23:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/01 14:43:21 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,13 @@ typedef struct      s_mp
     t_cmd_list      *head;
     t_sp         *sp;
 }                   t_mp;
+
 int     _is_white_space(char c);
+void	_size_of_arg_dq_(t_mp *prs);
+void	_size_of_arg_sq_(t_mp *prs);
+int	_check_semi_colon(char *line, t_mp *prs);
+int	_check_pipe(char *line, t_mp *prs);
+int	_check_single_quotes(char *line, t_mp *prs);
 int _line_counter_(t_mp *prs);
 void _count_inside_sq_(t_mp *prs);
 void _count_inside_dq_(t_mp *prs);

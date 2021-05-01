@@ -89,25 +89,3 @@ void	_size_of_arg_sq_(t_mp *prs)
 		prs->j++;
 	}
 }
-
-int	_size_of_arg_(t_mp *prs, char *buffer, int i)
-{
-	prs->counter = 0;
-	prs->j = i;
-	prs->temp = buffer;
-	while (prs->temp[prs->j] && prs->temp[prs->j] == ' ')
-		prs->j++;
-	while (prs->temp[prs->j])
-	{
-		if (prs->temp[prs->j] == '"')
-			_size_of_arg_dq_(prs);
-		else if (prs->temp[prs->j] == '\'')
-			_size_of_arg_sq_(prs);
-		if (prs->temp[prs->j] == ' ' || prs->temp[prs->j] == '>'
-			|| prs->temp[prs->j] == '<')
-			break ;
-		prs->j++;
-		prs->counter++;
-	}
-	return (prs->counter);
-}

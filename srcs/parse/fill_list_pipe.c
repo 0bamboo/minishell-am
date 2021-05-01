@@ -12,6 +12,28 @@
 
 #include "../../includes/minishell.h"
 
+int	_size_of_arg_(t_mp *prs, char *buffer, int i)
+{
+	prs->counter = 0;
+	prs->j = i;
+	prs->temp = buffer;
+	while (prs->temp[prs->j] && prs->temp[prs->j] == ' ')
+		prs->j++;
+	while (prs->temp[prs->j])
+	{
+		if (prs->temp[prs->j] == '"')
+			_size_of_arg_dq_(prs);
+		else if (prs->temp[prs->j] == '\'')
+			_size_of_arg_sq_(prs);
+		if (prs->temp[prs->j] == ' ' || prs->temp[prs->j] == '>'
+			|| prs->temp[prs->j] == '<')
+			break ;
+		prs->j++;
+		prs->counter++;
+	}
+	return (prs->counter);
+}
+
 void	_fill_pipe_arg_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
 {
 	int	i;
@@ -38,7 +60,6 @@ void	_fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head,
 char **args, char **files)
 {
 	t_cmd_list	*new;
-	//> file | ls  > file helo > fil| s > file; ls > fi
 
 	new = malloc(sizeof(t_cmd_list));
 	new->next = NULL;

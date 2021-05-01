@@ -43,7 +43,8 @@ char **args, char **files)
 	new = malloc(sizeof(t_cmd_list));
 	new->next = NULL;
 	new->nbrpipe = prs->nbrpipe;
-	new->command = ft_strdup(args[0]);
+	if (args[0])
+		new->command = ft_strdup(args[0]);
 	_fill_pipe_arg_(prs, &new, args, files);
 	if ((*head) == NULL)
 		(*head) = new;

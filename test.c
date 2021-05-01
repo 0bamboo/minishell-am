@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <readline/readline.h>
 // typedef struct err
 // {
 //     int er;
@@ -726,6 +728,15 @@
 
 int main()
 {
+    char  *tmp;
+
+    tmp = strdup("hi");
+    
+    while (tmp)
+    {
+        tmp = readline("~>");
+        printf("%s\n", tmp);
+    }
     // char *line;
     // int checker;
     // char *tmp;
@@ -762,9 +773,9 @@ int main()
     //     write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
     // }
     // checker = check_special_(prs->buffer);
-    char *temp;
+    // char *temp;
 
-    temp = getenv("hi");
+    // temp = getenv("hi");
     // free(temp);
     return(0);
 }

@@ -1,0 +1,179 @@
+#include "./builtins/minishell.h"
+
+int ft_putstr(char *str)
+{
+	if (str)
+    {
+	    write(1 ,str, ft_strlen(str));
+        return (ft_strlen(str));
+    }
+    return (0);
+}
+
+int		ft_putchars(int c)
+{
+	write(0, &c, 1);
+    return (0);
+}
+
+int addToline(t_envlist *envlist, char buff)
+{
+    char    *tmp;
+    int     i;
+    
+    i = 0;
+    while (envlist->line && envlist->line[i] != '\0')
+        i++;
+    tmp = malloc(i + 2);
+    i = 0;
+    while (envlist->line && envlist->line[i] != '\0')
+    {
+        tmp[i] = envlist->line[i];
+        i++;
+    }
+    if (envlist->line)
+        free(envlist->line);
+    tmp[i++] = buff;
+    tmp[i] = '\0';
+    envlist->line = tmp;
+    return (0);
+}
+
+int removeFromline(t_envlist *envlist)
+{
+    int     i;
+
+    i = 0;
+    while (envlist->line[i + 1])
+        i++;
+    envlist->line[i] = '\0';
+    return (0);
+}
+
+int addTohistory(t_envlist *envlist)
+{
+    char        **tmp;
+    int         i;
+    int         j;
+
+    i = 0;
+    while (envlist->history && envlist->history[i])
+        i++;
+    tmp = malloc((i + 2) * sizeof(char *));
+    if (!tmp)
+        return (1);
+    tmp[0] = envlist->line;
+    i = 1;
+    j = 0;
+    while (envlist->history && envlist->history[j])
+        tmp[i++] = envlist->history[j++];
+    tmp[i] = NULL;
+    free(envlist->history);
+    envlist->history = tmp;
+    return (0);
+}
+
+void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
+{
+    if ((buff == ARRW_UP && envlist->history && envlist->history[index[0]])
+        || (buff == ARRW_DOWN && envlist->history && index > 0))
+    {
+        while (curs[0] > 0)
+        {
+            tputs(cursor_left, 1, ft_putchars);
+            tputs(delete_character, 1, ft_putchars);
+            curs[0]--;
+        }
+        curs[0] = ft_putstr(envlist->history[index[0]]);
+        free(envlist->line);
+        envlist->line = ft_strdup(envlist->history[index[0]]);
+        if (buff == ARRW_UP && envlist->history[index[0] + 1])
+            index[0]++;
+        if (buff == ARRW_DOWN && index[0] > 0)
+            index[0]--;
+    }
+}
+
+int handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
+{
+
+    if (buff == ENTER)
+        return (1);
+    else if (buff == ARRW_UP || buff == ARRW_DOWN)
+        handle_arrawkeys(envlist, buff, curs, index);
+    else if (buff == BACK_SPACE)
+    {
+        if (curs[0] > 0)
+        {
+            tputs(cursor_left, 1, ft_putchars);
+            tputs(delete_character, 1, ft_putchars);
+            removeFromline(envlist);
+            curs[0]--;
+        }
+    }
+    else
+    {
+        curs[0]++;
+        addToline(envlist, buff);
+        write(1, &buff, 1);
+    }
+    return (0);
+}
+
+int readline(t_envlist *envlist)
+{
+    struct termios      p_term;
+    long                buff;
+    int                 curs;
+    int                 index;
+
+    buff = 0;
+    curs = 0;
+    index = 0;
+    tgetent(NULL, getenv("TERM"));
+    tcgetattr(0, &p_term);
+    p_term.c_lflag &= ~(ECHO | ICANON);
+    tcsetattr(0, TCSANOW, &p_term);
+    if (envlist->status)
+        ft_putstr("\033[31m~> \033[0mminishell-$");
+    else
+        ft_putstr("\033[32m~> \033[0mminishell-$");
+    while (read(0, &buff, sizeof(buff)))
+    {
+        if (handleKeys(envlist, buff, &curs, &index))
+            break;
+        buff = 0;
+    }
+    p_term.c_lflag |= (ECHO | ICANON);
+    tcsetattr(0, TCSANOW, &p_term);
+    return (0);
+}
+
+int main(void)
+{
+    t_envlist   envlist;
+
+    envlist.history = NULL;
+    envlist.status = 0;
+    envlist.line = NULL;
+    int i = 0;
+    while (!readline(&envlist))
+    {
+        printf("\n");
+        if (envlist.line && ft_strcmp(envlist.line, ""))
+        {
+            printf("%s\n", envlist.line);
+            addTohistory(&envlist);
+        }
+        envlist.line = NULL;
+    }
+
+    // i = 0;
+    // while (envlist.history[i])
+    // {
+    //     free(envlist.history[i++]);
+    // }
+    // free(envlist.history);
+
+    return (0);
+}

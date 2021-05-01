@@ -34,9 +34,11 @@ void	_fill_pipe_arg_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
 	_free_tab_(files);
 }
 
-void	_fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files)
+void	_fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head,
+char **args, char **files)
 {
 	t_cmd_list	*new;
+	//> file | ls  > file helo > fil| s > file; ls > fi
 
 	new = malloc(sizeof(t_cmd_list));
 	new->next = NULL;

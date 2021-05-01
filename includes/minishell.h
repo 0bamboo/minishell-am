@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/26 23:31:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:23:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct      s_mp
     char **files;
     char **args;
     char **array;
-    char *buffer;//useable
+    char *buff;//useable
     char *env;
     char *temp;//useable
     char *global;
@@ -86,7 +86,7 @@ void _copy_env_vars_(t_mp *prs);
 void    _copy_dollar_digits_(t_mp *prs);
 void _count_env_vars_(t_mp *prs);
 void _push_back_string_(char *buff, int index, char *fill, int size);
-int     _is_special_(char c);
+int     _isspec_(char c);
 void	_trim_tokens(t_sp *sp);
 void	_add_to_string_(t_sp *sp, int size);
 void	_sp_handle_single_quotes_(t_sp *sp);

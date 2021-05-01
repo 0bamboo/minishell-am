@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:54:49 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 23:58:00 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:32:22 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	_is_white_space(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\v' || c == '\f' || c == '\r' || c == '\n')
 		return (1);
-	return 0;
+	return (0);
 }
 
 int	_check_semi_colon(char *line, t_mp *prs)
@@ -44,9 +44,9 @@ int	_check_semi_colon(char *line, t_mp *prs)
 		else if (_is_white_space(line[prs->i]))
 			prs->i++;
 		else
-			break;
+			break ;
 	}
-	return(--prs->i);
+	return (--prs->i);
 }
 
 int	_check_pipe(char *line, t_mp *prs)
@@ -61,8 +61,8 @@ int	_check_pipe(char *line, t_mp *prs)
 	{
 		if (_is_white_space(line[prs->i]))
 			prs->i++;
-		else if (line[prs->i] == '|' || line[prs->i] == ';' ||
-			line[prs->i] == '>' || line[prs->i] == '<')
+		else if (line[prs->i] == '|' || line[prs->i] == ';'
+			|| line[prs->i] == '>' || line[prs->i] == '<')
 		{
 			prs->er = 1;
 			break ;
@@ -85,23 +85,24 @@ int	_check_redirection(char *line, t_mp *prs)
 			prs->credir += 1;
 			prs->i++;
 		}
-		else if (line[prs->i + 1] && prs->tmp == '>' &&
-			_is_white_space(line[prs->i]) && line[prs->i + 1] == '>')
+		else if (line[prs->i + 1] && prs->tmp == '>'
+			&& _is_white_space(line[prs->i]) && line[prs->i + 1] == '>')
 		{
 			prs->er = 1;
 			return (prs->i);
 		}
 		else if (_is_white_space(line[prs->i]))
 			prs->i++;
-		else if (line[prs->i] == ';' || line[prs->i] == '|' || (line[prs->i] == '<' && prs->tmp == '>') ||
-			(prs->tmp == '<' && (line[prs->i] == '>' || line[prs->i] == '<')) ||
-			prs->credir >= 3)
+		else if (line[prs->i] == ';' || line[prs->i] == '|'
+			|| (line[prs->i] == '<' && prs->tmp == '>')
+			|| (prs->tmp == '<' && (line[prs->i] == '>' || line[prs->i] == '<'))
+			|| prs->credir >= 3)
 		{
 			prs->er = 1;
 			return (prs->i);
 		}
 		else
-			break;
+			break ;
 	}
 	if (!line[prs->i])
 		prs->er = 1;
@@ -121,8 +122,8 @@ int	_check_double_quotes(char *line, t_mp *prs)
 		prs->i++;
 	}
 	if (line[prs->i] != prs->tmp)
-		prs->er = 1; 
-	return prs->i;
+		prs->er = 1;
+	return (prs->i);
 }
 
 int	_check_single_quotes(char *line, t_mp *prs)
@@ -132,7 +133,7 @@ int	_check_single_quotes(char *line, t_mp *prs)
 		prs->i++;
 	if (line[prs->i] != prs->tmp)
 		prs->er = 1;
-	return prs->i;
+	return (prs->i);
 }
 
 int	_handle_syntax_errors(char *line, t_mp *prs)
@@ -144,7 +145,7 @@ int	_handle_syntax_errors(char *line, t_mp *prs)
 		prs->tmp = line[prs->i];
 		if (line[prs->i] == ';')
 			prs->i = _check_semi_colon(line, prs);
-		else if (line[prs->i] == '|') 
+		else if (line[prs->i] == '|')
 			prs->i = _check_pipe(line, prs);
 		else if ((line[prs->i] == '>' || line[prs->i] == '<'))
 			prs->i = _check_redirection(line, prs);
@@ -159,7 +160,7 @@ int	_handle_syntax_errors(char *line, t_mp *prs)
 	return (0);
 }
 
-void	_raise_an_exception()
+void	_raise_an_exception(void)
 {
 	write(1, "mini$hell: Syntax error .\n", 26);
 }

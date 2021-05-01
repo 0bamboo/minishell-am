@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/22 14:33:18 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:38:14 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ void        _initialize_vars(t_mp *prs)
     prs->cmds = NULL;
     prs->er = 0;
     prs->i = 0;
-    prs->buffer = NULL;
-    prs->buffer = NULL;
+    prs->buff = NULL;
     prs->env = NULL;
     prs->temp = NULL;
     prs->global = NULL;

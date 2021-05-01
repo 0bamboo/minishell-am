@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/28 15:39:25 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/04/30 16:49:01 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	_handle_pipe_args_(t_mp *prs)
 	i = -1;
 	while (prs->pipe[++i])
 	{
+		printf("pipe tokens = |%s|\n", prs->pipe[i]);
 		_handle_normal_args_(prs, prs->pipe[i]);
 		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
 		if (i == 0)
@@ -94,6 +95,7 @@ void	_start_parsing(char *line, t_mp *prs)
         // echo $$0$?"hi agina \\\$0 $$9abdennacer \\$?$?$??? hi \" \\\" out"
         while (prs->cmds[++i])
         {
+			printf("tokens = |%s|\n", prs->cmds[i]);
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
             _copy_tokens_data_(prs, i);
             int j = -1;

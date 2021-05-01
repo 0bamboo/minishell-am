@@ -15,9 +15,9 @@
 void	_count_token_length_in_dq_(t_mp *prs)
 {
 	prs->j++;
-	while (prs->buffer[prs->j] && prs->buffer[prs->j] != '"')
+	while (prs->buff[prs->j] && prs->buff[prs->j] != '"')
 	{
-		if (prs->buffer[prs->j] == '\\')
+		if (prs->buff[prs->j] == '\\')
 		{
 			prs->j += 2;
 			continue ;
@@ -29,13 +29,13 @@ void	_count_token_length_in_dq_(t_mp *prs)
 void	_count_token_length_2_(t_mp *prs)
 {
 	prs->count++;
-	while (prs->buffer[prs->j] && prs->buffer[prs->j] != ' '
-		&& prs->buffer[prs->j] != '>' && prs->buffer[prs->j] != '<')
+	while (prs->buff[prs->j] && prs->buff[prs->j] != ' '
+		&& prs->buff[prs->j] != '>' && prs->buff[prs->j] != '<')
 	{
-		if (prs->buffer[prs->j] == '"')
+		if (prs->buff[prs->j] == '"')
 			_count_token_length_in_dq_(prs);
-		else if (prs->buffer[prs->j] == '\'')
-			while (prs->buffer[++prs->j] && prs->buffer[prs->j] != '\'')
+		else if (prs->buff[prs->j] == '\'')
+			while (prs->buff[++prs->j] && prs->buff[prs->j] != '\'')
 				;
 		prs->j++;
 	}
@@ -46,14 +46,14 @@ int	_count_token_length_(t_mp *prs)
 {
 	prs->j = -1;
 	prs->count = 0;
-	while (prs->buffer[++prs->j])
+	while (prs->buff[++prs->j])
 	{
-		if (prs->buffer[prs->j] == ' ')
+		if (prs->buff[prs->j] == ' ')
 			continue ;
-		else if (prs->buffer[prs->j] == '>' || prs->buffer[prs->j] == '<')
+		else if (prs->buff[prs->j] == '>' || prs->buff[prs->j] == '<')
 		{
 			prs->count++;
-			if ( prs->buffer[prs->j + 1] ==  '>')
+			if (prs->buff[prs->j + 1] == '>')
 				prs->j++;
 		}
 		else
@@ -103,7 +103,8 @@ int	_size_of_arg_(t_mp *prs, char *buffer, int i)
 			_size_of_arg_dq_(prs);
 		else if (prs->temp[prs->j] == '\'')
 			_size_of_arg_sq_(prs);
-		if (prs->temp[prs->j] == ' ' || prs->temp[prs->j] == '>' || prs->temp[prs->j] == '<')
+		if (prs->temp[prs->j] == ' ' || prs->temp[prs->j] == '>'
+			|| prs->temp[prs->j] == '<')
 			break ;
 		prs->j++;
 		prs->counter++;

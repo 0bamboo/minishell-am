@@ -56,12 +56,12 @@ void	_fix_the_order_(t_mp *prs)
 
 void	_copy_redirs_(t_mp *prs)
 {
-	if (prs->buffer[prs->i + 1] == '>')
+	if (prs->buff[prs->i + 1] == '>')
 	{
 		prs->array[prs->size++] = ft_strdup(">>");
 		prs->i += 2;
 	}
-	else if (prs->buffer[prs->i] == '<')
+	else if (prs->buff[prs->i] == '<')
 	{
 		prs->array[prs->size++] = ft_strdup("<");
 		prs->i++;
@@ -75,25 +75,24 @@ void	_copy_redirs_(t_mp *prs)
 
 void	_copy_args_with_dq_(t_mp *prs)
 {
-	prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
-	while (prs->buffer[prs->i] && prs->buffer[prs->i] != '"')
+	prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
+	while (prs->buff[prs->i] && prs->buff[prs->i] != '"')
 	{
-		if (prs->buffer[prs->i] == '\\')
+		if (prs->buff[prs->i] == '\\')
 		{
-			prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
-			prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
+			prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
+			prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
 			continue ;
 		}
-		prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
+		prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
 	}
-	prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
+	prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
 }
 
 void	_copy_args_with_sq_(t_mp *prs)
 {
-	prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
-	while (prs->buffer[prs->i] && prs->buffer[prs->i] != '\'')
-		prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
-	prs->array[prs->size][prs->j++] = prs->buffer[prs->i++];
+	prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
+	while (prs->buff[prs->i] && prs->buff[prs->i] != '\'')
+		prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
+	prs->array[prs->size][prs->j++] = prs->buff[prs->i++];
 }
-

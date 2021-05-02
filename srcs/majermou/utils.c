@@ -1,23 +1,6 @@
 #include "./builtins/minishell.h"
 
-int	isbuiltin(t_cmd_list *command)
-{
-	if (!ft_strncmp(command->args[0], "echo", 5))
-		return (0);
-	if (!ft_strncmp(command->args[0], "cd", 3))
-		return (0);
-	if (!ft_strncmp(command->args[0], "pwd", 4))
-		return (0);
-	if (!ft_strncmp(command->args[0], "export", 7))
-		return (0);
-	if (!ft_strncmp(command->args[0], "unset", 6))
-		return (0);
-	if (!ft_strncmp(command->args[0], "env", 4))
-		return (0);
-	if (!ft_strncmp(command->args[0], "exit", 5))
-		return (0);
-	return (1);
-}
+
 
 char	*get_home_path(char **args, char **envp)
 {

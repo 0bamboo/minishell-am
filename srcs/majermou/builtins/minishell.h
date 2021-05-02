@@ -35,6 +35,7 @@ typedef struct          s_cmd_list
 {
     char	            **args;
     int		            nbrpipe;
+    int                 redir;
     int                 iterator;
     struct s_cmd_list   *next;
 }                       t_cmd_list;

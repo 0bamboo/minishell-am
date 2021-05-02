@@ -46,6 +46,7 @@ int main(int argc, char **argv, char **envp)
 	envlist.history = NULL;
 	envlist.status = 0;
 	envlist.line = NULL;
+	envlist.envp = envp;
 	int i = 0;
 	while (!readline(&envlist))
 	{

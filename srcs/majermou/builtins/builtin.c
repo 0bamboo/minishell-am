@@ -30,13 +30,13 @@ int	check_option(char *str)
 int	builtin_echo(t_cmd_list *cmd)
 {
 	int		i;
-	int		newline;
+	int		line;
 
 	i = 1;
-	newline = 0;
+	line = 0;
 	while (cmd->args[i] && !check_option(cmd->args[i]))
 	{
-		newline = 1;
+		line = 1;
 		i++;
 	}
 	while (cmd->args[i])
@@ -46,7 +46,7 @@ int	builtin_echo(t_cmd_list *cmd)
 			printf(" ");
 		i++;
 	}
-	if (!newline)
+	if (!line)
 		printf("\n");
 	return (0);
 }

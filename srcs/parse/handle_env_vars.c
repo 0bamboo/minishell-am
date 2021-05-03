@@ -88,6 +88,6 @@ char	*_get_env_vars_(char *buffer, t_mp *prs)
 	while (prs->buff[prs->i])
 		_get_env_vars_2_(prs);
 	prs->global[prs->g] = '\0';
-	printf("after handling env : |%s|\n", prs->global);
+	// printf("after handling env : |%s|\n", prs->global);
 	return (prs->global);
 }

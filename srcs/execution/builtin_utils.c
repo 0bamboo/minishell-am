@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 void	cleanup(char **arr, int limit)
 {

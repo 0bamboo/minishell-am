@@ -18,6 +18,20 @@
 #include <string.h>
 // #include "../srcs/get_next_line.h"
 #include "../libft/libft.h"
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <term.h>
+#include <termios.h>
+#include <curses.h>
+
+# define ARRW_UP 4283163
+# define ARRW_DOWN 4348699
+# define BACK_SPACE 127
+# define ENTER 10
 #define BUFFER_SIZE 1
 
 
@@ -27,10 +41,21 @@ typedef struct			s_cmd_list
 	char				*command;
 	char				**args;
 	int					nbrpipe;
-	int					iter;
+	int					iterator;
     int                 redir;
 	struct  s_cmd_list	*next;
 }						t_cmd_list;
+
+typedef struct          s_envlist
+{
+    char	            **vars;
+    char                **envp;
+    char                *line;
+    char                **history;
+    int                 status;
+}                       t_envlist;
+
+int                     g_ret;
 
 typedef struct s_sp
 {
@@ -74,7 +99,7 @@ typedef struct      s_mp
     char tmp;
     // t_err   err;
     t_cmd_list      *head;
-    t_sp         *sp;
+    t_sp            *sp;
 }                   t_mp;
 
 int     _is_white_space(char c);
@@ -118,19 +143,80 @@ void _handle_normal_args_2_(t_mp *prs);
 void _handle_normal_args_(t_mp *prs, char *tmp);
 int     _if_pipe_(t_mp *prs, int index);
 void _fill_first_node_(t_mp *prs, char **args, char **files);
-void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files);
+void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files, int iter);
 void        _handle_pipe_args_(t_mp *prs);
 void        _copy_tokens_data_(t_mp *prs, int index);
 int		get_next_line(int fd, char **line);
 int		build_line(char **line, char **buff, char **buff_s, char step);
-void _start_parsing(char *line, t_mp *prs);
+void _start_parsing(char *line, t_mp *prs, t_envlist *env);
 char				**_split_tokens(t_sp *sp, char *s, char c);
 void        _trim_tokens(t_sp *sp);
 char *_get_env_vars_(char *buffer, t_mp *prs);
 int _handle_syntax_errors(char *line, t_mp *prs);
 void        _raise_an_exception();
-int     _char_in_tab_(char c, char tab[3]);
+int     _char_in_tab_(char c, char arr[3]);
 char *_handle_backslash_(t_mp *prs, char *token);
+
+// majermou
+
+size_t                  ft_strlen(const char *s);
+size_t                  ft_strlcpy(char *dst, const char *src, size_t size);
+int                     ft_strncmp(const char *s1, const char *s2, size_t n);
+char	                *ft_strjoin(char const *s1, char const *s2);
+int                     ft_strcmp(const char *s1, const char *s2);
+char                    **ft_split(char const *s, char c);
+
+void	        cleanup(char **arr, int limit);
+int             array_lenght(char **arr);
+unsigned int	random_num_generator(int range);
+int             str_copying(char **dst, char *src, int index);
+int             ft_isalpha(int c);
+int             ft_isalnum(int c);
+int             is_valid_id(char *id);
+int             is_equalkey(char *str);
+
+int			    search_var(t_envlist *envlist, char *var);
+int	            replace_var(t_envlist *envlist,int index,char *new_var);
+int	            addto_envlist(t_envlist *envlist, char *new_var);
+int	            rmfrom_envlist(t_envlist *envlist, char *rm_var);
+int	            env_varsdup(t_envlist *envlist, char **envp);
+int             builtin_unset(t_cmd_list *cmd, t_envlist *envlist);
+int             builtin_export(t_cmd_list *cmd, t_envlist *envlist);
+int             builtin_env(t_envlist *envlist);
+
+int             builtin_pwd(void);
+int             builtin_cd(t_envlist *envlist, t_cmd_list *cmd);
+char            **ft_split(char const *s, char c);
+int             is_valid_id0(char *id);
+int			    insert_var(t_envlist *envlist, char *var);
+
+char	        *ft_strdup(const char *s);
+int             print_envlist(t_envlist *envlist);
+void            printing(char **arr);
+void            sorting(char **arr);
+
+int	            check_homepath(t_envlist *envlist, t_cmd_list *cmd);
+int             builtin_exit(t_cmd_list *cmd, int status);
+int             builtin_echo(t_cmd_list *cmd);
+int             handle_redirection(t_cmd_list *command);
+int             is_redir(t_cmd_list *cmd);
+int             execute_cmd(t_cmd_list *cmd, t_envlist *envlist);
+int	            isbuiltin(t_cmd_list *command);
+int	            call_builtin(t_cmd_list *cmd, t_envlist *envlist);
+char            *get_home_path(char **args, char **envp);
+void            sig_handle(int sig);
+
+
+
+
+int     ft_putstrs(char *str);
+int     ft_putchars(int c);
+int     addToline(t_envlist *envlist, char buff);
+int     removeFromline(t_envlist *envlist);
+int     addTohistory(t_envlist *envlist);
+void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index);
+int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
+int     readline(t_envlist *envlist);
 
 
 

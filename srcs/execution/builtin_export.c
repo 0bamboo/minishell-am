@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../includes/minishell.h"
 
 int	is_valid_id0(char *id)
 {
@@ -95,8 +95,6 @@ int	builtin_export(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		i;
 	int		ret;
-	char	*tmp;
-	int		j;
 
 	i = 1;
 	ret = 0;

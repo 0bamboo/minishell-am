@@ -1,4 +1,4 @@
-#include "./minishell.h"
+#include "../../includes/minishell.h"
 
 void    sig_handle(int sig)
 {
@@ -23,21 +23,21 @@ int                 main(int argc, char **argv, char **envp)
     signal(SIGINT, sig_handle);
     signal(SIGQUIT, sig_handle);
     cmd->args = malloc(20 * sizeof(char*));
-    cmd->args[0] = strdup("wc");
-    cmd->args[1] = strdup("-l");
+    cmd->args[0] = strdup("echo");
+    cmd->args[1] = strdup("-la");
     cmd->args[2] = NULL;
     cmd->redir = -1;
-    cmd->nbrpipe = 0;
+    cmd->nbrpipe = 1;
     cmd->iterator = 0;
-    cmd->next = NULL;
-    // malloc(sizeof(t_cmd_list));
-    // cmd->next->args = malloc(20 * sizeof(char*));
-    // cmd->next->args[0] = strdup("wc");
-    // cmd->next->args[1] = strdup("-l");
-    // cmd->next->args[2] = NULL;
-    // cmd->next->nbrpipe = 1;
-    // cmd->next->iterator = 1;
-    // cmd->next->next = NULL;
+    cmd->next = malloc(sizeof(t_cmd_list));
+    cmd->next->args = malloc(20 * sizeof(char*));
+    cmd->next->args[0] = strdup("echo");
+    cmd->next->args[1] = strdup("Hi");
+    cmd->next->args[2] = NULL;
+    cmd->next->nbrpipe = 1;
+    cmd->next->redir = -1;
+    cmd->next->iterator = 1;
+    cmd->next->next = NULL;
     // malloc(sizeof(t_cmd_list));
     // cmd->next->next->args = malloc(20 * sizeof(char*));
     // cmd->next->next->args[0] = strdup("wc");

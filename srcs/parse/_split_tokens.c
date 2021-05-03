@@ -58,7 +58,6 @@ void	_split_(t_sp *sp, char delim)
 		if (sp->tmp[sp->idx] == delim)
 		{
 			sp->k = sp->idx + 1;
-			printf("idx = |%c|\n", sp->tmp[sp->k]);
 			break ;
 		}
 	}
@@ -71,6 +70,8 @@ char	**_split_tokens(t_sp *sp, char *line, char delim)
 		return (NULL);
 	sp->size = _count_tokens(delim, sp);
 	sp->str = (char **) malloc(sizeof(char *) * (sp->size + 1));
+	if (!sp->str)
+		return (NULL);
 	sp->i = 0;
 	sp->k = 0;
 	sp->idx = 0;

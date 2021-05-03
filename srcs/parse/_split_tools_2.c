@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:16 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:07:01 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/02 23:58:33 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,15 @@
 void	_trim_tokens(t_sp *sp)
 {
 	int		i;
-	char	*tmp;
+	// char	*tmp;
 
 	i = -1;
 	while (sp->str[++i])
 	{
-		tmp = ft_strtrim(sp->str[i], " ");
-		free(sp->str[i]);
-		sp->str[i] = tmp;
+		
+		sp->str[i] = ft_strtrim(sp->str[i], " \t\v\r\n");
+		// free(sp->str[i]);
+		// sp->str[i] = tmp;
 	}
 }
 

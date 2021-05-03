@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:49:01 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/03 02:52:49 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,23 +82,32 @@ void	_start_parsing(char *line, t_mp *prs)
 {
     // t_sp *sp;
     int i;
+	// char *tmp;
     // prs->head = malloc(sizeof(t_cmd_list));
 	// char *tmp;
     
 	line = ft_strtrim(line, " \t\v\n\r");
+	// line = tmp;
     if (_handle_syntax_errors(line, prs))
         _raise_an_exception();
     else
     {
 		prs->cmds = _split_tokens(prs->sp, line, ';');
-        i = -1;
+		printf("addresses = |%p| |%p|\n", prs->cmds, prs->sp->str);
+		// i = -1;
+		// while (prs->sp->str[++i])
+		// 	free(prs->sp->str[i]);
+		// free(prs->sp->str);
+		// prs->sp->str = NULL;
+		// printf("addresses = |%p| |%p|\n", prs->cmds, prs->sp->str);
+		i = -1;
         // echo $$0$?"hi agina \\\$0 $$9abdennacer \\$?$?$??? hi \" \\\" out"
         while (prs->cmds[++i])
         {
 			printf("tokens = |%s|\n", prs->cmds[i]);
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
             _copy_tokens_data_(prs, i);
-            int j = -1;
+            int j;
             while (prs->head)
             {
                 printf("---pipe list----> |%d| |%s|", prs->head->nbrpipe, prs->head->command);

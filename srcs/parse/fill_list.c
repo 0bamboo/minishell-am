@@ -104,6 +104,7 @@ void	_fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
 
 	curr = malloc(sizeof(t_cmd_list));
 	curr->nbrpipe = 0;
+	curr->redir = -1;
 	curr->next = NULL;
 	curr->command = NULL;
 	if (args[0])

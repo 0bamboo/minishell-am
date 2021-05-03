@@ -87,7 +87,7 @@ char **args, char **files)
 	j = -1;
 	if (files[0])
 		(*curr)->redir = i;
-	printf("redir = :%d:\n", (*curr)->redir);
+	// printf("redir = :%d:\n", (*curr)->redir);
 	while (files[++j])
 		(*curr)->args[i++] = ft_strdup(files[j]);
 	(*curr)->args[i] = NULL;
@@ -105,6 +105,7 @@ void	_fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
 	curr = malloc(sizeof(t_cmd_list));
 	curr->nbrpipe = 0;
 	curr->redir = -1;
+	curr->iterator = 0;
 	curr->next = NULL;
 	curr->command = NULL;
 	if (args[0])

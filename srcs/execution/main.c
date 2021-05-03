@@ -1,4 +1,4 @@
-#include "./builtins/minishell.h"
+#include "../../includes/minishell.h"
 
 void    sig_handle(int sig)
 {
@@ -20,26 +20,24 @@ int                 main(int argc, char **argv, char **envp)
     }
     rmfrom_envlist(&envlist, "OLDPWD");
     envlist.envp = envp;
-    // signal(SIGINT, sig_handle);
-    // signal(SIGQUIT, sig_handle);
+    signal(SIGINT, sig_handle);
+    signal(SIGQUIT, sig_handle);
     cmd->args = malloc(20 * sizeof(char*));
-    cmd->args[0] = strdup("wc");
-    cmd->args[1] = strdup("-l");
-    cmd->args[2] = strdup("<");
-    cmd->args[3] = strdup("file");
-    cmd->args[4] = NULL;
-    cmd->redir = 2;
+    cmd->args[0] = strdup("echo");
+    cmd->args[1] = strdup("-la");
+    cmd->args[2] = NULL;
+    cmd->redir = -1;
     cmd->nbrpipe = 1;
     cmd->iterator = 0;
-    cmd->next = NULL;
-    // malloc(sizeof(t_cmd_list));
-    // cmd->next->args = malloc(20 * sizeof(char*));
-    // cmd->next->args[0] = strdup("wc");
-    // cmd->next->args[1] = strdup("-l");
-    // cmd->next->args[2] = NULL;
-    // cmd->next->nbrpipe = 1;
-    // cmd->next->iterator = 1;
-    // cmd->next->next = NULL;
+    cmd->next = malloc(sizeof(t_cmd_list));
+    cmd->next->args = malloc(20 * sizeof(char*));
+    cmd->next->args[0] = strdup("echo");
+    cmd->next->args[1] = strdup("Hi");
+    cmd->next->args[2] = NULL;
+    cmd->next->nbrpipe = 1;
+    cmd->next->redir = -1;
+    cmd->next->iterator = 1;
+    cmd->next->next = NULL;
     // malloc(sizeof(t_cmd_list));
     // cmd->next->next->args = malloc(20 * sizeof(char*));
     // cmd->next->next->args[0] = strdup("wc");
@@ -61,5 +59,5 @@ int                 main(int argc, char **argv, char **envp)
     // cmd->next->next->next->iterator = 3;
     // cmd->next->next->next->next = NULL;
     
-    printf("\n\n\n%d\n", execute_cmd(cmd, &envlist));
+    return (execute_cmd(cmd, &envlist));
 }

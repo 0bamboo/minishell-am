@@ -12,9 +12,9 @@
 
 #include "../../includes/minishell.h"
 
-int	_char_in_tab_(char c, char tab[3])
+int	_char_in_tab_(char c, char arr[3])
 {
-	if (c == tab[0] || c == tab[1] || c == tab[2])
+	if (c == arr[0] || c == arr[1] || c == arr[2])
 		return (1);
 	return (0);
 }

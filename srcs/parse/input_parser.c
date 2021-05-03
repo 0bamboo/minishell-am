@@ -54,9 +54,9 @@ void	_handle_pipe_args_(t_mp *prs)
 	i = -1;
 	while (prs->pipe[++i])
 	{
-		printf("pipe tokens = |%s|\n", prs->pipe[i]);
+		// printf("pipe tokens = |%s|\n", prs->pipe[i]);
 		_handle_normal_args_(prs, prs->pipe[i]);
-		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
+		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files, i);
 		if (i == 0)
 			prs->head = curr;
 	}
@@ -78,7 +78,7 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 	}
 }
 
-void	_start_parsing(char *line, t_mp *prs)
+void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
     // t_sp *sp;
     int i;
@@ -93,7 +93,7 @@ void	_start_parsing(char *line, t_mp *prs)
     else
     {
 		prs->cmds = _split_tokens(prs->sp, line, ';');
-		printf("addresses = |%p| |%p|\n", prs->cmds, prs->sp->str);
+		// printf("addresses = |%p| |%p|\n", prs->cmds, prs->sp->str);
 		// i = -1;
 		// while (prs->sp->str[++i])
 		// 	free(prs->sp->str[i]);
@@ -104,20 +104,24 @@ void	_start_parsing(char *line, t_mp *prs)
         // echo $$0$?"hi agina \\\$0 $$9abdennacer \\$?$?$??? hi \" \\\" out"
         while (prs->cmds[++i])
         {
-			printf("tokens = |%s|\n", prs->cmds[i]);
+			// printf("tokens = |%s|\n", prs->cmds[i]);
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
             _copy_tokens_data_(prs, i);
-            int j;
-            while (prs->head)
-            {
-                printf("---pipe list----> |%d| |%s|", prs->head->nbrpipe, prs->head->command);
-                puts("");
-                j =-1;
-                while (prs->head->args[++j])
-                    printf("---------> pipe args = |%s|\n", prs->head->args[j]);
-                prs->head = prs->head->next;
-            }
-            printf("pipe counter == |%d|\n", prs->nbrpipe);
+			printf("--------------------- 1\n");
+			env->status = execute_cmd(prs->head, env);
+			prs->status = env->status;
+			printf("--------------------- 2\n");
+            // int j;
+            // while (prs->head)
+            // {
+            //     printf("---pipe list----> |%d| |%s|", prs->head->nbrpipe, prs->head->command);
+            //     puts("");
+            //     j =-1;
+            //     while (prs->head->args[++j])
+            //         printf("---------> pipe args = |%s|\n", prs->head->args[j]);
+            //     prs->head = prs->head->next;
+            // }
+            // printf("pipe counter == |%d|\n", prs->nbrpipe);
         }
     }
 }

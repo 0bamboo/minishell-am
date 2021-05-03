@@ -25,13 +25,18 @@ FILES = ./srcs/parse/fill_list_pipe.c ./srcs/parse/fill_tools.c ./srcs/parse/fil
 		./srcs/parse/handle_syntax_error.c ./srcs/parse/handle_env_vars.c ./srcs/parse/_split_tokens.c \
 		./srcs/parse/handle_backslash_dq.c ./srcs/parse/fill_tools_sec.c ./srcs/parse/_split_tools.c \
 		./srcs/parse/handle_env_vars_tools.c ./srcs/parse/size_env_vars.c ./srcs/parse/_split_tools_2.c \
-		./srcs/parse/error_tools.c
+		./srcs/parse/error_tools.c ./srcs/execution/builtin.c ./srcs/execution/builtin_cd.c ./srcs/execution/builtin_env.c \
+		./srcs/execution/builtin_export.c ./srcs/execution/builtin_unset.c ./srcs/execution/builtin_utils.c \
+		./srcs/execution/history.c ./srcs/execution/io_redir.c ./srcs/execution/pipe.c \
+		./srcs/execution/utils.c \
 
 HEADER = ./includes/minishell.h
 
 OBJECT = $(FILES:.c=.o)
 
 FLAGS = -Wextra -Werror -Wall
+
+HIS = -ltermcap
 
 all: $(NAME)
 
@@ -40,7 +45,7 @@ $(LIBFT_LIB):
 
 $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 			@ar -rcs $(MINISHELLLIB) $(OBJECT)
-			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) -o $(NAME)
+			@gcc  $(FLAGS) $(MAIN) $(MINISHELLLIB) $(LIBFT_LIB) $(HIS) -o $(NAME)
 			@echo "\033[36m███╗░░░███╗██╗███╗░░██╗██╗░██████╗██╗░░██╗███████╗██╗░░░░░██╗░░░░░\033[0m"
 			@echo "\033[36m████╗░████║██║████╗░██║██║██╔════╝██║░░██║██╔════╝██║░░░░░██║░░░░░\033[0m"
 			@echo "\033[36m██╔████╔██║██║██╔██╗██║██║╚█████╗░███████║█████╗░░██║░░░░░██║░░░░░\033[0m"

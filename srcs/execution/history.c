@@ -1,4 +1,4 @@
-#include "./builtins/minishell.h"
+#include "../../includes/minishell.h"
 
 int	addToline(t_envlist *envlist, char buff)
 {
@@ -105,9 +105,9 @@ int	readline(t_envlist *envlist)
 	p_term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
 	if (envlist->status)
-		ft_putstrs("\033[31m-> \033[0mminishell$");
+		ft_putstrs("\033[31m-> \033[0mminishell$>");
 	else
-		ft_putstrs("\033[32m-> \033[0mminishell$");
+		ft_putstrs("\033[32m-> \033[0mminishell$>");
 	while (read(0, &buff, sizeof(buff)))
 	{
 		if (handleKeys(envlist, buff, &curs, &index))

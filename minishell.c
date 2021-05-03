@@ -1,103 +1,105 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/12 18:08:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:38:14 by abdait-m         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "./includes/minishell.h"
 
-#include "includes/minishell.h"
-
-// void        add_to_history(char *line, t_mp *prs)
-// {
-//     printf("Im in History :\n");
-// }
-
-
-void _free_(t_mp *prs)
+int	ft_putstrs(char *str)
 {
-    if (prs->global)
-        free(prs->global);
-    if (prs->cmds)
-    {
-        int i = -1;
-        while (prs->cmds[++i])
-            free(prs->cmds[i]);
-        free(prs->cmds);    
-    }
-    if (prs->temp)
-        free(prs->temp);
-    if (prs->sp)
-        free(prs->sp);
-    if (prs)
-        free(prs);
-}
-void  minishell(t_mp *prs)
-{
-    char *line;
-    // t_cmd_list *head;
-    
-    line = NULL;
-    // int i;
-    // head = malloc(sizeof(p_list));
-    write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
-    while(get_next_line(0, &line) > 0)
-    {
-    // prs->sp = malloc(sizeof(t_sp));
-        // add_to_history(line, prs);
-        // head = malloc(sizeof(p_list));
-        // head = NULL;
-        if (line)
-        {
-            line[ft_strlen(line) - 1] = '\0';
-        }
-        if (!ft_strcmp(line, "exit"))
-        {
-            // free(line);
-            // _free_(prs);
-            // line = NULL;
-            // free(prs->sp);
-            // free(prs);
-            exit(0);
-        }
-        _start_parsing(line, prs);
-        // _free_(prs);
-        
-        // free(line);
-        // line = NULL;
-        write(1, "\033[0;35m mini$hell~~> \033[0;37m", 28);
-    }
+	if (str)
+	{
+		write(1, str, ft_strlen(str));
+		return (ft_strlen(str));
+	}
+	return (0);
 }
 
-void        _initialize_vars(t_mp *prs)
+int	ft_putchars(int c)
 {
-    prs->cmds = NULL;
+	write(0, &c, 1);
+	return (0);
+}
+
+void    sig_handle(int sig)
+{
+    if (sig == SIGINT)
+        printf("%d\n", sig);
+    else if (sig == SIGQUIT)
+        printf("Quit: 3\n");
+}
+
+int	addTohistory(t_envlist *envlist)
+{
+	char		**tmp;
+	int			i;
+	int			j;
+
+	i = 0;
+	while (envlist->history && envlist->history[i])
+		i++;
+	tmp = malloc((i + 2) * sizeof(char *));
+	if (!tmp)
+		return (1);
+	tmp[0] = envlist->line;
+	i = 1;
+	j = 0;
+	while (envlist->history && envlist->history[j])
+		tmp[i++] = envlist->history[j++];
+	tmp[i] = NULL;
+	free(envlist->history);
+	envlist->history = tmp;
+	return (0);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	t_envlist   envlist;
+	t_mp *prs;
+	int i = 0;
+	
+	(void)argv;
+	(void)argc;
+	prs = malloc(sizeof(t_mp));
+	prs->sp = malloc(sizeof(t_sp));
+	prs->cmds = NULL;
     prs->er = 0;
     prs->i = 0;
     prs->buff = NULL;
     prs->env = NULL;
     prs->temp = NULL;
     prs->global = NULL;
-    
-    
-}
+	envlist.history = NULL;
+	envlist.status = 0;
+	envlist.line = NULL;
+	envlist.envp = envp;
+	env_varsdup(&envlist,envp);
+	rmfrom_envlist(&envlist, "OLDPWD");
+	// signal(SIGINT, sig_handle);
+    // signal(SIGQUIT, sig_handle);
+	
+	while (!readline(&envlist))
+	{
+		printf("\n");
+		if (envlist.line && ft_strcmp(envlist.line, ""))
+		{
+        	//printf("%s\n", envlist.line);
+			addTohistory(&envlist);
+			_start_parsing(envlist.line, prs, &envlist);
+        }
+        envlist.line = NULL;
+    }
 
-int main()
-{
-    // You need to allocate all the structs that you will use in this program, 
-    // for handling some mermory errors......
-    t_mp *prs;
-    // t_sp sp;
 
-    // prs.sp = &sp;
-    prs = malloc(sizeof(t_mp));
-    prs->sp = malloc(sizeof(t_sp));
-    _initialize_vars(prs);
-    minishell(prs);
-    // free(prs);
-    return 0;
+	// Cleaning --->
+    i = 0;
+    while (envlist.history && envlist.history[i])
+    {
+        free(envlist.history[i++]);
+    }
+	if (envlist.history)
+    	free(envlist.history);
+	i = 0;
+	while (envlist.vars && envlist.vars[i])
+    {
+        free(envlist.vars[i++]);
+    }
+    free(envlist.vars);
+
+    return (0);
 }

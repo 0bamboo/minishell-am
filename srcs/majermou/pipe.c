@@ -1,4 +1,4 @@
-#include "./builtins/minishell.h"
+#include "./minishell.h"
 
 int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut_pid)
 {
@@ -35,6 +35,23 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 	return (0);
 }
 
+int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int *fds, int *shut_pid)
+{
+	if (!isbuiltin(cmd))
+	{
+		if (cmd->iterator && cmd->nbrpipe)
+			dup2(fds[cmd->iterator * 2 - 2], 0);
+		if (cmd->next && cmd->redir >= 0)
+			dup2(fds[cmd->iterator * 2 + 1], 1);
+		if (!handle_redirection(cmd))
+			return(call_builtin(cmd, envlist));
+		else
+			return (1);
+	}
+	else
+		return (fork_subprocess(cmd, envlist, fds, shut_pid));
+}
+
 int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 {
 	if (!param)
@@ -63,28 +80,6 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 	return (0);
 }
 
-int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int *fds, int *shut_pid)
-{
-	if (!isbuiltin(cmd))
-	{
-		if (cmd->iterator && cmd->nbrpipe)
-			dup2(fds[cmd->iterator * 2 - 2], 0);
-		if (cmd->next && cmd->redir >= 0)
-			dup2(fds[cmd->iterator * 2 + 1], 1);
-		if (!handle_redirection(cmd))
-		{
-			printf("%d\n", call_builtin(cmd, envlist));
-			return (0);
-		}
-		else
-			return (1);
-	}
-	else
-	{
-		return (fork_subprocess(cmd, envlist, fds, shut_pid));
-	}
-}
-
 int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		*shut_pid;
@@ -110,7 +105,7 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	allocation_free(&fds, &shut_pid, nbr_pipes, 1);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-        ret = status + 128;
+	// else if (WIFSIGNALED(status))
+    //     ret = status + 128;
 	return (ret);
 }

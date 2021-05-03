@@ -1,4 +1,4 @@
-#include "./builtins/minishell.h"
+#include "./minishell.h"
 
 int	ft_putstrs(char *str)
 {
@@ -14,6 +14,14 @@ int	ft_putchars(int c)
 {
 	write(0, &c, 1);
 	return (0);
+}
+
+void    sig_handle(int sig)
+{
+    if (sig == SIGINT)
+        printf("%d\n", sig);
+    else if (sig == SIGQUIT)
+        printf("Quit: 3\n");
 }
 
 int	addTohistory(t_envlist *envlist)
@@ -42,12 +50,17 @@ int	addTohistory(t_envlist *envlist)
 int main(int argc, char **argv, char **envp)
 {
 	t_envlist   envlist;
+	int i = 0;
 	
 	envlist.history = NULL;
 	envlist.status = 0;
 	envlist.line = NULL;
 	envlist.envp = envp;
-	int i = 0;
+	env_varsdup(&envlist,envp);
+	rmfrom_envlist(&envlist, "OLDPWD");
+	signal(SIGINT, sig_handle);
+    signal(SIGQUIT, sig_handle);
+	
 	while (!readline(&envlist))
 	{
 		printf("\n");
@@ -59,12 +72,14 @@ int main(int argc, char **argv, char **envp)
         envlist.line = NULL;
     }
 
-    // i = 0;
-    // while (envlist.history[i])
-    // {
-    //     free(envlist.history[i++]);
-    // }
-    // free(envlist.history);
+
+	// Cleaning --->
+    i = 0;
+    while (envlist.history && envlist.history[i])
+    {
+        free(envlist.history[i++]);
+    }
+    free(envlist.history);
 
     return (0);
 }

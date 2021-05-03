@@ -1,6 +1,4 @@
-#include "./builtins/minishell.h"
-
-
+#include "./minishell.h"
 
 char	*get_home_path(char **args, char **envp)
 {
@@ -8,24 +6,20 @@ char	*get_home_path(char **args, char **envp)
 	char			**arr;
 	char			*tmp;
 	char			*path;
-	int				i;
 
-	i = 0;
-	while (strncmp(envp[i], "PATH=", 5))
-		i++;
-	arr = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (arr[i])
+	while (strncmp(*envp, "PATH=", 5))
+		envp++;
+	arr = ft_split(*envp + 5, ':');
+	while (*arr)
 	{
-		path = ft_strjoin(arr[i++], "/");
+		path = ft_strjoin(*arr++, "/");
 		tmp = path;
-		path = ft_strjoin(path, args[0]);
+		path = ft_strjoin(path, *args);
 		free(tmp);
 		if (!stat(path, &buf))
 		{
-			i = 0;
-			while (arr[i])
-				free(arr[i++]);
+			while (*arr)
+				free(*arr++);
 			return (path);
 		}
 		free(path);

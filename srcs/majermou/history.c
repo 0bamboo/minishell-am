@@ -1,4 +1,4 @@
-#include "./builtins/minishell.h"
+#include "./minishell.h"
 
 int	addToline(t_envlist *envlist, char buff)
 {

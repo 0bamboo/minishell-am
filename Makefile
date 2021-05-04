@@ -6,7 +6,7 @@
 #    By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 18:36:15 by abdait-m          #+#    #+#              #
-#    Updated: 2021/05/01 14:44:22 by abdait-m         ###   ########.fr        #
+#    Updated: 2021/05/04 11:08:59 by abdait-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 
 clean:
 			@make clean -C $(LIBFT)
-			@rm -rf srcs/parse/*.o $(LIB)
+			@rm -rf srcs/parse/*.o srcs/execution/*.o $(LIB)
 			@echo "\n\033[32mCleaning is Done!\033[0m\n"
 
 fclean: clean

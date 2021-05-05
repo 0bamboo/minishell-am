@@ -15,14 +15,14 @@ void	cleanup(char **arr, int limit)
 unsigned int	random_num_generator(int range)
 {
 	void			*allocation;
-	unsigned int	random;
+	unsigned int	*random = NULL;
 
 	allocation = malloc(1);
 	if (!allocation)
 		return (range / 3);
-	random = (unsigned)allocation;
+	random = (unsigned int *)allocation;
 	free(allocation);
-	return (random % range);
+	return (*random % range);
 }
 
 void	sorting(char **arr)

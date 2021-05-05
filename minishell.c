@@ -51,7 +51,7 @@ int main(int argc, char **argv, char **envp)
 {
 	t_envlist   envlist;
 	t_mp *prs;
-	int i = 0;
+	// int i = 0;
 	
 	(void)argv;
 	(void)argc;
@@ -73,13 +73,13 @@ int main(int argc, char **argv, char **envp)
 	// signal(SIGINT, sig_handle);
     // signal(SIGQUIT, sig_handle);
 	
-	while (!readline(&envlist))
+	while (!ft_readline(&envlist))
 	{
 		printf("\n");
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
         	//printf("%s\n", envlist.line);
-			addTohistory(&envlist);
+			//addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
         }
         envlist.line = NULL;
@@ -87,19 +87,19 @@ int main(int argc, char **argv, char **envp)
 
 
 	// Cleaning --->
-    i = 0;
-    while (envlist.history && envlist.history[i])
-    {
-        free(envlist.history[i++]);
-    }
-	if (envlist.history)
-    	free(envlist.history);
-	i = 0;
-	while (envlist.vars && envlist.vars[i])
-    {
-        free(envlist.vars[i++]);
-    }
-    free(envlist.vars);
+    // i = 0;
+    // while (envlist.history && envlist.history[i])
+    // {
+    //     free(envlist.history[i++]);
+    // }
+	// if (envlist.history)
+    // 	free(envlist.history);
+	// i = 0;
+	// while (envlist.vars && envlist.vars[i])
+    // {
+    //     free(envlist.vars[i++]);
+    // }
+    // free(envlist.vars);
 
     return (0);
 }

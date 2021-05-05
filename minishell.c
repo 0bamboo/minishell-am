@@ -36,12 +36,15 @@ int	addTohistory(t_envlist *envlist)
 	tmp = malloc((i + 2) * sizeof(char *));
 	if (!tmp)
 		return (1);
-	tmp[0] = envlist->line;
+	tmp[0] = ft_strdup(envlist->line);
 	i = 1;
 	j = 0;
 	while (envlist->history && envlist->history[j])
-		tmp[i++] = envlist->history[j++];
+		tmp[i++] = ft_strdup(envlist->history[j++]);
 	tmp[i] = NULL;
+	i = 0;
+	while (envlist->history && envlist->history[i])
+		free(envlist->history[i++]);
 	free(envlist->history);
 	envlist->history = tmp;
 	return (0);
@@ -49,10 +52,17 @@ int	addTohistory(t_envlist *envlist)
 
 int main(int argc, char **argv, char **envp)
 {
+<<<<<<< HEAD
+	t_envlist	envlist;
+	t_mp		*prs;
+	int			i = 0;
+
+=======
 	t_envlist   envlist;
 	t_mp *prs;
 	// int i = 0;
 	
+>>>>>>> ffbad0457ff907869d8b78a186a434237c9a6fed
 	(void)argv;
 	(void)argc;
 	prs = malloc(sizeof(t_mp));
@@ -72,22 +82,32 @@ int main(int argc, char **argv, char **envp)
 	rmfrom_envlist(&envlist, "OLDPWD");
 	// signal(SIGINT, sig_handle);
     // signal(SIGQUIT, sig_handle);
+<<<<<<< HEAD
+
+	while (!readline(&envlist))
+=======
 	
 	while (!ft_readline(&envlist))
+>>>>>>> ffbad0457ff907869d8b78a186a434237c9a6fed
 	{
-		printf("\n");
+		ft_putstrs("\n");
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
         	//printf("%s\n", envlist.line);
 			//addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
+			//free(envlist.line);
         }
         envlist.line = NULL;
     }
 
 
 	// Cleaning --->
+<<<<<<< HEAD
+	 i = 0;
+=======
     // i = 0;
+>>>>>>> ffbad0457ff907869d8b78a186a434237c9a6fed
     // while (envlist.history && envlist.history[i])
     // {
     //     free(envlist.history[i++]);

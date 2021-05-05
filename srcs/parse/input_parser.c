@@ -106,10 +106,10 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			// printf("tokens = |%s|\n", prs->cmds[i]);
             prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
             _copy_tokens_data_(prs, i);
-			printf("--------------------- 1\n");
+			//printf("--------------------- 1\n");
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;
-			printf("--------------------- 2\n");
+			//printf("--------------------- 2\n");
             // int j;
             // while (prs->head)
             // {

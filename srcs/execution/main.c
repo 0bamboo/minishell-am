@@ -24,19 +24,19 @@ int                 main(int argc, char **argv, char **envp)
     signal(SIGQUIT, sig_handle);
     cmd->args = malloc(20 * sizeof(char*));
     cmd->args[0] = strdup("echo");
-    cmd->args[1] = strdup("-la");
+    cmd->args[1] = strdup("f0");
     cmd->args[2] = NULL;
-    cmd->redir = -1;
     cmd->nbrpipe = 1;
     cmd->iterator = 0;
+    cmd->redir = -1;
     cmd->next = malloc(sizeof(t_cmd_list));
     cmd->next->args = malloc(20 * sizeof(char*));
     cmd->next->args[0] = strdup("echo");
-    cmd->next->args[1] = strdup("Hi");
+    cmd->next->args[1] = strdup("bash");
     cmd->next->args[2] = NULL;
     cmd->next->nbrpipe = 1;
-    cmd->next->redir = -1;
     cmd->next->iterator = 1;
+    cmd->next->redir = -1;
     cmd->next->next = NULL;
     // malloc(sizeof(t_cmd_list));
     // cmd->next->next->args = malloc(20 * sizeof(char*));
@@ -48,7 +48,6 @@ int                 main(int argc, char **argv, char **envp)
     // cmd->next->next->nbrpipe = 2;
     // cmd->next->next->iterator = 2;
     // cmd->next->next->next = NULL;
-
     // cmd->next->next->next = (t_cmd_list*)malloc(sizeof(t_cmd_list));
     // cmd->next->next->next->args = malloc(4 * sizeof(char*));
     // cmd->next->next->next->args[0] = strdup("tr");

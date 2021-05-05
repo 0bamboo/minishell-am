@@ -90,7 +90,7 @@ int	handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
 	return (0);
 }
 
-int	readline(t_envlist *envlist)
+int	ft_readline(t_envlist *envlist)
 {
 	struct termios		p_term;
 	long				buff;

@@ -16,6 +16,12 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 				return (1);
 			}
 		}
+		else
+		{
+			shut_pid[0] = malloc(1 * sizeof(int));
+			if (!shut_pid[0])
+				return (1);
+		}
 	}
 	else
 	{
@@ -28,7 +34,7 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 	return (0);
 }
 
-int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut_pid)
+int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int **shut_pid)
 {
 	pid_t			pid;
 	char			*path;
@@ -44,13 +50,18 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 	{
 		path = get_home_path(command->args, envlist->envp);
 		if (command->iterator && command->nbrpipe)
-			dup2(fds[command->iterator * 2 - 2], 0);
+			if (dup2(fds[command->iterator * 2 - 2], 0) < 0)
+				perror("dup");
 		if (command->next && command->redir < 0)
-			dup2(fds[command->iterator * 2 + 1], 1);
+			if (dup2(fds[command->iterator * 2 + 1], 1) < 0)
+				perror("dup2");
 		if (handle_redirection(command))
 			exit (1);
-		if (execve(path, command->args, envlist->envp) < 0)
+		if (!isbuiltin(command))
+			call_builtin(command, envlist);
+		else if (execve(path, command->args, envlist->envp) < 0)
 			exit(127);
+		exit(0);
 	}
 	else
 	{
@@ -58,34 +69,35 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 			close(fds[command->iterator * 2 - 2]);
 		if (command->next)
 			close(fds[command->iterator * 2 + 1]);
-		if (command->nbrpipe)
-			shut_pid[i++] = pid;
+		shut_pid[0][i++] = pid;
 	}
-	return (0);
+	return (shut_pid[0][i - 1]);
 }
 
-int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int *fds, int *shut_pid)
+int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int *fds, int **shut_pid)
 {
 	
-	if (!isbuiltin(cmd))
-	{
-		if (cmd->iterator && cmd->nbrpipe)
-			dup2(fds[cmd->iterator * 2 - 2], 0);
-		if (cmd->next && cmd->redir == -1)
-			dup2(fds[cmd->iterator * 2 + 1], 1);
-		if (!handle_redirection(cmd))
-			return(call_builtin(cmd, envlist));
-		else
-			return (1);
-	}
-	else
-		return (fork_subprocess(cmd, envlist, fds, shut_pid));
+	// if (!isbuiltin(cmd))
+	// {
+	// 	if (cmd->iterator && cmd->nbrpipe)
+	// 		dup2(fds[cmd->iterator * 2 - 2], 0);
+	// 	if (cmd->next && cmd->redir == -1)
+	// 		if (dup2(fds[cmd->iterator * 2 + 1], 1) < 0)
+	// 			perror("Error dup");
+	// 	if (!handle_redirection(cmd))
+	// 		return(call_builtin(cmd, envlist));
+	// 	else
+	// 		return (1);
+	// }
+	// else
+	return (fork_subprocess(cmd, envlist, fds, shut_pid));
 }
 
 int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		*shut_pid;
 	int		*fds;
+	pid_t pid;
 	int		nbr_pipes;
 	int		ret = 0;
 	int		i;
@@ -100,7 +112,8 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	{
 		if (cmd->next)
 			pipe(fds + cmd->iterator * 2);
-		ret = implement_cmd(cmd, envlist, fds, shut_pid);
+		ret = implement_cmd(cmd, envlist, fds, &shut_pid);
+		pid = ret;
 		cmd = cmd->next;
 	}
 	if (nbr_pipes)
@@ -112,6 +125,14 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 			ret = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
     	    ret = status + 128;
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		// free(shut_pid);
+		if (WIFEXITED(status))
+			ret = WEXITSTATUS(status);
+		printf("ret = %d\n", ret);
 	}
 	return (ret);
 }

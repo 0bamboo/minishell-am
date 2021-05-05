@@ -21,6 +21,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -216,7 +217,7 @@ int     removeFromline(t_envlist *envlist);
 int     addTohistory(t_envlist *envlist);
 void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
-int     readline(t_envlist *envlist);
+int     ft_readline(t_envlist *envlist);
 
 
 

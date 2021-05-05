@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/05 14:38:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/03 02:52:49 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	_handle_pipe_args_(t_mp *prs)
 	i = -1;
 	while (prs->pipe[++i])
 	{
+		// printf("pipe tokens = |%s|\n", prs->pipe[i]);
 		_handle_normal_args_(prs, prs->pipe[i]);
 		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files, i);
 		if (i == 0)
@@ -104,7 +105,7 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
         while (prs->cmds[++i])
         {
 			// printf("tokens = |%s|\n", prs->cmds[i]);
-            prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
+            prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
             _copy_tokens_data_(prs, i);
 			//printf("--------------------- 1\n");
 			env->status = execute_cmd(prs->head, env);

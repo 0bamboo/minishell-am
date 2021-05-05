@@ -34,7 +34,7 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 	return (0);
 }
 
-int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int **shut_pid)
+int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut_pid)
 {
 	pid_t			pid;
 	char			*path;

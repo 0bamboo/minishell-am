@@ -16,6 +16,12 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 				return (1);
 			}
 		}
+		else
+		{
+			shut_pid[0] = malloc(1 * sizeof(int));
+			if (!shut_pid[0])
+				return (1);
+		}
 	}
 	else
 	{
@@ -49,7 +55,9 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 			dup2(fds[command->iterator * 2 + 1], 1);
 		if (handle_redirection(command))
 			exit (1);
-		if (execve(path, command->args, envlist->envp) < 0)
+		if (isbuiltin(command))
+			call_builtin(command, envlist);
+		else if (execve(path, command->args, envlist->envp) < 0)
 			exit(127);
 	}
 	else
@@ -58,28 +66,10 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 			close(fds[command->iterator * 2 - 2]);
 		if (command->next)
 			close(fds[command->iterator * 2 + 1]);
-		if (command->nbrpipe)
+		if (command->nbrpipe) 
 			shut_pid[i++] = pid;
 	}
-	return (0);
-}
-
-int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int *fds, int *shut_pid)
-{
-	
-	if (!isbuiltin(cmd))
-	{
-		if (cmd->iterator && cmd->nbrpipe)
-			dup2(fds[cmd->iterator * 2 - 2], 0);
-		if (cmd->next && cmd->redir == -1)
-			dup2(fds[cmd->iterator * 2 + 1], 1);
-		if (!handle_redirection(cmd))
-			return(call_builtin(cmd, envlist));
-		else
-			return (1);
-	}
-	else
-		return (fork_subprocess(cmd, envlist, fds, shut_pid));
+	return (pid);
 }
 
 int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
@@ -100,18 +90,26 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	{
 		if (cmd->next)
 			pipe(fds + cmd->iterator * 2);
-		ret = implement_cmd(cmd, envlist, fds, shut_pid);
+		ret = fork_subprocess(cmd, envlist, fds, shut_pid);
+		pid = ret;
 		cmd = cmd->next;
 	}
 	if (nbr_pipes)
 	{
 		while (i < nbr_pipes + 1)
 			waitpid(shut_pid[i++], &status, 0);
-		allocation_free(&fds, &shut_pid, nbr_pipes, 1);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
     	    ret = status + 128;
+		allocation_free(&fds, &shut_pid, nbr_pipes, 1);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		// free(shut_pid);
+		if (WIFEXITED(status))
+			ret = WEXITSTATUS(status);
 	}
 	return (ret);
 }

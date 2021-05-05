@@ -9,9 +9,9 @@ int	isbuiltin(t_cmd_list *command)
 		|| !ft_strncmp(command->args[0], "unset", 6)
 		|| !ft_strncmp(command->args[0], "env", 4)
 		|| !ft_strncmp(command->args[0], "exit", 5))
-		return (0);
-	else
 		return (1);
+	else
+		return (0);
 }
 
 int	call_builtin(t_cmd_list *cmd, t_envlist *envlist)
@@ -33,11 +33,11 @@ int	call_builtin(t_cmd_list *cmd, t_envlist *envlist)
 	return (0);
 }
 
-int	handle_input(char **rdr)
+int	handle_input(char **redir)
 {
 	int		input;
 
-	input = open(rdr[1], O_RDONLY, 0);
+	input = open(redir[1], O_RDONLY, 0);
 	if (input == -1)
 	{
 		printf("%s\n", strerror(errno));

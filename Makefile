@@ -61,7 +61,7 @@ $(NAME): $(OBJECT) $(HEADER) $(LIBFT_LIB) $(MAIN) $(FILES)
 
 clean:
 			@make clean -C $(LIBFT)
-			@rm -rf srcs/parse/*.o $(LIB)
+			@rm -rf srcs/parse/*.o srcs/execution/*.o $(LIB)
 			@echo "\n\033[32mCleaning is Done!\033[0m\n"
 
 fclean: clean

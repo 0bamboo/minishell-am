@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/01 14:43:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/05 14:38:27 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ void	_size_of_arg_sq_(t_mp *prs);
 int	_check_semi_colon(char *line, t_mp *prs);
 int	_check_pipe(char *line, t_mp *prs);
 int	_check_single_quotes(char *line, t_mp *prs);
-int _line_counter_(t_mp *prs);
+int _line_counter_(t_mp *prs, t_envlist *env);
 void _count_inside_sq_(t_mp *prs);
-void _count_inside_dq_(t_mp *prs);
+void _count_inside_dq_(t_mp *prs, t_envlist *env);
 void        _count_command_status(t_mp *prs);
 void _count_dollar_digits_(t_mp *prs);
-void _copy_env_vars_(t_mp *prs);
+void _copy_env_vars_(t_mp *prs, t_envlist *env);
 void    _copy_dollar_digits_(t_mp *prs);
-void _count_env_vars_(t_mp *prs);
+void _count_env_vars_(t_mp *prs, t_envlist *env);
 void _push_back_string_(char *buff, int index, char *fill, int size);
 int     _isspec_(char c);
 void	_trim_tokens(t_sp *sp);
@@ -151,7 +151,7 @@ int		build_line(char **line, char **buff, char **buff_s, char step);
 void _start_parsing(char *line, t_mp *prs, t_envlist *env);
 char				**_split_tokens(t_sp *sp, char *s, char c);
 void        _trim_tokens(t_sp *sp);
-char *_get_env_vars_(char *buffer, t_mp *prs);
+char *_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env);
 int _handle_syntax_errors(char *line, t_mp *prs);
 void        _raise_an_exception();
 int     _char_in_tab_(char c, char arr[3]);

@@ -34,7 +34,7 @@ int	allocation_free(int **fds, int **shut_pid, int nbr_pipes, int param)
 	return (0);
 }
 
-int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut_pid)
+int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int **shut_pid)
 {
 	pid_t			pid;
 	char			*path;
@@ -50,15 +50,18 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int *fds, int *shut
 	{
 		path = get_home_path(command->args, envlist->envp);
 		if (command->iterator && command->nbrpipe)
-			dup2(fds[command->iterator * 2 - 2], 0);
+			if (dup2(fds[command->iterator * 2 - 2], 0) < 0)
+				perror("dup");
 		if (command->next && command->redir < 0)
-			dup2(fds[command->iterator * 2 + 1], 1);
+			if (dup2(fds[command->iterator * 2 + 1], 1) < 0)
+				perror("dup2");
 		if (handle_redirection(command))
 			exit (1);
 		if (isbuiltin(command))
 			call_builtin(command, envlist);
 		else if (execve(path, command->args, envlist->envp) < 0)
 			exit(127);
+		exit(0);
 	}
 	else
 	{
@@ -76,6 +79,7 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		*shut_pid;
 	int		*fds;
+	pid_t pid;
 	int		nbr_pipes;
 	int		ret = 0;
 	int		i;

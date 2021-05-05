@@ -90,7 +90,7 @@ int	handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
 	return (0);
 }
 
-int	readline(t_envlist *envlist)
+int	ft_readline(t_envlist *envlist)
 {
 	struct termios		p_term;
 	long				buff;
@@ -105,9 +105,9 @@ int	readline(t_envlist *envlist)
 	p_term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
 	if (envlist->status)
-		ft_putstrs("\033[31m-> \033[0mminishell$>");
+		ft_putstrs("\033[31m-> \033[35mminishell$>\033[0m");
 	else
-		ft_putstrs("\033[32m-> \033[0mminishell$>");
+		ft_putstrs("\033[32m-> \033[35mminishell$>\033[0m");
 	while (read(0, &buff, sizeof(buff)))
 	{
 		if (handleKeys(envlist, buff, &curs, &index))

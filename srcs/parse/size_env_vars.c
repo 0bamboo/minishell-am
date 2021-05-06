@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:04 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:33:38 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/06 14:04:19 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	_count_command_status(t_mp *prs)
 	free(tmp);
 }
 
-void	_count_inside_dq_(t_mp *prs)
+void	_count_inside_dq_(t_mp *prs, t_envlist *env)
 {
 	prs->counter++;
 	prs->i++;
@@ -47,7 +47,7 @@ void	_count_inside_dq_(t_mp *prs)
 			prs->counter += 2;
 		}
 		else if (prs->buff[prs->i] == '$' && ft_isalpha(prs->buff[prs->i + 1]))
-			_count_env_vars_(prs);
+			_count_env_vars_(prs, env);
 		else if (prs->buff[prs->i] == '$' && prs->buff[prs->i + 1] == '?')
 			_count_command_status(prs);
 		else
@@ -73,7 +73,7 @@ void	_count_inside_sq_(t_mp *prs)
 	prs->counter++;
 }
 
-int	_line_counter_(t_mp *prs)
+int	_line_counter_(t_mp *prs, t_envlist *env)
 {
 	prs->i = 0;
 	prs->counter = 0;
@@ -86,9 +86,9 @@ int	_line_counter_(t_mp *prs)
 		else if (prs->buff[prs->i] == '$' && ft_isdigit(prs->buff[prs->i + 1]))
 			_count_dollar_digits_(prs);
 		else if (prs->buff[prs->i] == '$' && ft_isalpha(prs->buff[prs->i + 1]))
-			_count_env_vars_(prs);
+			_count_env_vars_(prs, env);
 		else if (prs->buff[prs->i] == '"')
-			_count_inside_dq_(prs);
+			_count_inside_dq_(prs, env);
 		else if (prs->buff[prs->i] == '\'')
 			_count_inside_sq_(prs);
 		else if (prs->buff[prs->i])
@@ -97,5 +97,6 @@ int	_line_counter_(t_mp *prs)
 			prs->i++;
 		}
 	}
+	printf("line counter = |%d|\n", prs->counter);
 	return (prs->counter);
 }

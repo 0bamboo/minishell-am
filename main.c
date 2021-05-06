@@ -1,7 +1,10 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 
 int	main(void)
 {
-	printf("hello, world");
+	char *str = malloc(sizeof(char) * 15);
+	str = "hi";
+	printf("hello, world %s\n", str);
+	return 0;
 }

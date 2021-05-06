@@ -1,10 +1,9 @@
 #include "../../includes/minishell.h"
 
-int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int ***fds)
+int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)
 {
 	pid_t			pid;
 	char			*path;
-	static int		i;
 
 	pid = fork();
 	if (pid < 0)
@@ -15,72 +14,82 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist, int ***fds)
 	else if (!pid)
 	{
 		path = get_home_path(command->args, envlist->envp);
-		if (command->iterator && command->nbrpipe)
-			if (dup2(fds[0][0][command->iterator * 2 - 2], 0) < 0)
+		if (command->iterator && command->nbrpipe && path)
+		{	
+			if (dup2(envlist->fds[command->iterator * 2 - 2], 0) < 0)
 				perror("dup");
-		if (command->next && command->redir < 0)
-			if (dup2(fds[0][0][command->iterator * 2 + 1], 1) < 0)
-				perror("dup2");
+		}
+		if (command->next && command->redir < 0 && path)
+		{
+			if (dup2(envlist->fds[command->iterator * 2 + 1], 1) < 0)
+				perror("dup2");	
+		}
 		if (handle_redirection(command))
 			exit (1);
 		if (isbuiltin(command))
 			call_builtin(command, envlist);
 		else if (execve(path, command->args, envlist->envp) < 0)
-			exit(127);
-		exit(0);
-	}
-	else
-	{
-		if (command->iterator && command->nbrpipe)
-			close(fds[0][0][command->iterator * 2 - 2]);
-		if (command->next)
-			close(fds[0][0][command->iterator * 2 + 1]);
-		if (command->nbrpipe) 
-			fds[0][1][i++] = pid;
-	}
-	return (0);
-}
-
-int	fdsAllocation(int ***fds, int nbr_pipe)
-{
-	fds[0] = malloc(2 * sizeof(int *));
-	if (nbr_pipe)
-	{
-		fds[0][0] = malloc(2 * nbr_pipe * sizeof(int));
-		if (!fds[0][0])
-			return (1);
-		fds[0][1] = malloc((nbr_pipe + 1) * sizeof(int));
-		if (!fds[0][1])
 		{
-			free(fds[0][0]);
-			return (1);
+			printf("minishell: %s: command not found\n", command->args[0]);
+			exit(127);
 		}
 	}
 	else
 	{
-		fds[0][1] = malloc(1 * sizeof(int));
-		if (!fds[0][1])
+		if (command->iterator && command->nbrpipe)
+			close(envlist->fds[command->iterator * 2 - 2]);
+		if (command->next)
+			close(envlist->fds[command->iterator * 2 + 1]);
+			envlist->pids[command->iterator] = pid;
+	}
+	return (pid);
+}
+
+int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int nbr_pipe)
+{
+	if (isbuiltin(cmd) && nbr_pipe == 0)
+	{
+		if (!handle_redirection(cmd))
+			return(call_builtin(cmd, envlist));
+		else
 			return (1);
 	}
-	return (0);
+	else
+		return (fork_subprocess(cmd, envlist));
+}
+
+void	save_fd(t_envlist *envlist)
+{
+	envlist->fd = malloc(sizeof(int) * 3);
+	envlist->fd[0] = dup(0);
+	envlist->fd[1] = dup(1);
+	envlist->fd[2] = dup(2);
+}
+
+void	restore_fd(t_envlist *envlist)
+{
+	dup2(envlist->fd[0], 0);
+	dup2(envlist->fd[1], 1);
+	dup2(envlist->fd[2], 2);
 }
 
 int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 {
-	int		**fds;
 	int		nbr_pipes;
 	int		ret;
-	int		i;
 	int		status;
-
+	t_cmd_list *tmp = cmd;
+	int		i;
+	
 	nbr_pipes = cmd->nbrpipe;
-	if (fdsAllocation(&fds, nbr_pipes))
-		return (1);
+	envlist->pids = malloc(sizeof(int) * (nbr_pipes + 1));
+	if (nbr_pipes)
+		envlist->fds = malloc(sizeof(int) * (nbr_pipes * 2));
 	while (cmd)
 	{
 		if (cmd->next)
-			pipe(fds[0] + cmd->iterator * 2);
-		ret = fork_subprocess(cmd, envlist, &fds);
+			pipe(envlist->fds + cmd->iterator * 2);
+		ret = implement_cmd(cmd, envlist, nbr_pipes);
 		cmd = cmd->next;
 	}
 	i = 0;
@@ -88,20 +97,21 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	if (nbr_pipes)
 	{
 		while (i < nbr_pipes + 1)
-			waitpid(fds[1][i++], &status, 0);
-		free(fds[0]);
-		free(fds[1]);
+			waitpid(envlist->pids[i++], &status, 0);
+		free(envlist->pids);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
     	    ret = status + 128;
+		printf("pipe = %d\n",ret);
 	}
-	else
+	else if (!isbuiltin(tmp))
 	{
-		waitpid(fds[1][0], &status, 0);
-		free(fds[1]);
+		waitpid(envlist->pids[0], &status, 0);
+		free(envlist->pids);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
+		printf("fc = %d\n",ret);
 	}
 	return (ret);
 }

@@ -109,7 +109,9 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			printf("line ==== |%lu|\n", strlen(prs->cmds[i]));
             _copy_tokens_data_(prs, i);
 			//printf("--------------------- 1\n");
+			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
+			restore_fd(env);
 			prs->status = env->status;
 			//printf("--------------------- 2\n");
             // int j;

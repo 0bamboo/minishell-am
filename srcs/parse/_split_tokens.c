@@ -36,6 +36,8 @@ void	_split_utils_(t_sp *sp, char delim)
 		sp->idx++;
 	size = _len_tokens(sp, delim);
 	sp->str[sp->i] = (char *) malloc(sizeof(char) * (size + 1));
+	if (!sp->str[sp->i])
+		return ;
 	sp->j = 0;
 }
 

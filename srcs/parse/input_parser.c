@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/03 02:52:49 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/06 14:05:11 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
         while (prs->cmds[++i])
         {
 			// printf("tokens = |%s|\n", prs->cmds[i]);
-            prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs);
+            prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
+			printf("line ==== |%lu|\n", strlen(prs->cmds[i]));
             _copy_tokens_data_(prs, i);
 			//printf("--------------------- 1\n");
 			env->status = execute_cmd(prs->head, env);

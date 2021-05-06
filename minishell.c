@@ -19,7 +19,7 @@ int	ft_putchars(int c)
 void    sig_handle(int sig)
 {
     if (sig == SIGINT)
-        printf("%d\n", sig);
+        printf("\n-> minishell$>");
     else if (sig == SIGQUIT)
         printf("Quit: 3\n");
 }
@@ -81,7 +81,7 @@ int main(int argc, char **argv, char **envp)
 		ft_putstrs("\n");
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
-        	//printf("%s\n", envlist.line);
+        	// printf("%s\n", envlist.line);
 			addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
 			//free(envlist.line);

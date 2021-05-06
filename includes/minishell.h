@@ -54,25 +54,26 @@ typedef struct          s_envlist
     char                *line;
     char                **history;
     int                 status;
-}                       t_envlist;
+	pid_t				*pids;
+	int					*fds;
+	int					*fd;
+}						t_envlist;
 
 int                     g_ret;
 
-typedef struct s_sp
+typedef struct	s_sp
 {
-    char **str;
-    char *tmp;
-    int start;
-    int end;
-    int size;
-    int i;
-    int j;
-    int k;
-    int idx;
-    int count;
+    char		**str;
+    char		*tmp;
+    int			start;
+    int			end;
+    int			size;
+    int			i;
+    int			j;
+    int			k;
+    int			idx;
+    int			count;
 }               t_sp;
-
-
 
 typedef struct      s_mp
 {
@@ -206,6 +207,8 @@ int	            isbuiltin(t_cmd_list *command);
 int	            call_builtin(t_cmd_list *cmd, t_envlist *envlist);
 char            *get_home_path(char **args, char **envp);
 void            sig_handle(int sig);
+void			restore_fd(t_envlist *envlist);
+void			save_fd(t_envlist *envlist);
 
 
 

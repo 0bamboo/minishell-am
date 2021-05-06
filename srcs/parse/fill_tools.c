@@ -29,7 +29,7 @@ void	_count_token_length_in_dq_(t_mp *prs)
 void	_count_token_length_2_(t_mp *prs)
 {
 	prs->count++;
-	while (prs->buff[prs->j] && prs->buff[prs->j] != ' '
+	while (prs->buff[prs->j] && _is_white_space(prs->buff[prs->j])
 		&& prs->buff[prs->j] != '>' && prs->buff[prs->j] != '<')
 	{
 		if (prs->buff[prs->j] == '"')
@@ -48,7 +48,7 @@ int	_count_token_length_(t_mp *prs)
 	prs->count = 0;
 	while (prs->buff[++prs->j])
 	{
-		if (prs->buff[prs->j] == ' ')
+		if (_is_white_space(prs->buff[prs->j]))
 			continue ;
 		else if (prs->buff[prs->j] == '>' || prs->buff[prs->j] == '<')
 		{

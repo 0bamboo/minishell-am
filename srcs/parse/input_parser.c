@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/06 14:05:11 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/06 17:36:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			//printf("--------------------- 1\n");
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
-			restore_fd(env);
 			prs->status = env->status;
+			restore_fd(env);
 			//printf("--------------------- 2\n");
             // int j;
             // while (prs->head)

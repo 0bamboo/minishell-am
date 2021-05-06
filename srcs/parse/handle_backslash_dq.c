@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:58:13 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/30 16:24:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/06 22:44:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ char	*_handle_backslash_(t_mp *prs, char *token)
 	prs->i = 0;
 	prs->j = 0;
 	prs->buff = (char *)malloc(sizeof(char) * (len + 1));
+	if (!prs->buff)
+		return (NULL);
 	while (prs->i < len)
 	{
 		if (token[prs->i] == '"')

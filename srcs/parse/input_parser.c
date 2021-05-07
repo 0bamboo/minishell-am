@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/07 00:32:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:41:22 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ void	_handle_pipe_args_(t_mp *prs)
 	while (prs->pipe[++i])
 	{
 		_handle_normal_args_(prs, prs->pipe[i]);
-		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files, i);
+		prs->iter = i;
+		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
 		if (i == 0)
 			prs->head = curr;
 	}

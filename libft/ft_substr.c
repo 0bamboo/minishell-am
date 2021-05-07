@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 14:51:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/07 16:30:06 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:35:27 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		if (!substr)
 			return (NULL);
 		tmp = (char *)s + start;
-		i = 0;
-		while (i < len && tmp[i])
-			substr[i] = tmp[i++];
+		i = -1;
+		while (++i < len && tmp[i])
+			substr[i] = tmp[i];
 		substr[i] = '\0';
 		return (substr);
 	}

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:10:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/18 04:42:34 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:23:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (s[++i])

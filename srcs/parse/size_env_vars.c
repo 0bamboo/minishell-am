@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:04 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/06 14:04:19 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 00:35:20 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,5 @@ int	_line_counter_(t_mp *prs, t_envlist *env)
 			prs->i++;
 		}
 	}
-	printf("line counter = |%d|\n", prs->counter);
 	return (prs->counter);
 }

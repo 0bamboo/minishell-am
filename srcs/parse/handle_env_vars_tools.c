@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/06 23:03:08 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 00:33:25 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,16 @@ void	_env_var_counter_(t_mp *prs, t_envlist *env)
 			break ;
 		}
 	}
-	printf("env vars =========== |%d|\n", prs->count);
 }
 
 void _env_var_copy_(t_mp *prs, t_envlist *env)
 {
 	int	size;
 	int	i;
+	int found;
 
 	prs->j = -1;
+	found = 0;
 	while (env->vars[++prs->j])
 	{
 		if (!ft_strncmp(prs->temp, env->vars[prs->j], prs->count))
@@ -59,14 +60,19 @@ void _env_var_copy_(t_mp *prs, t_envlist *env)
 			prs->env = malloc(sizeof(char) * (size + 1));
 			if (!prs->env)
 				return ;
+			found = 1;
 			break ;
 		}
 	}
 	i = 0;
-	while (env->vars[prs->j][prs->count] && i < size)
-		prs->env[i++] = env->vars[prs->j][prs->count++];
-	prs->env[i] = '\0';
-	printf("env vars =========== |%s|\n", prs->env);
+	if (found)
+	{
+		while (env->vars[prs->j][prs->count] && i < size)
+			prs->env[i++] = env->vars[prs->j][prs->count++];
+		prs->env[i] = '\0';
+		_push_back_string_(prs->global, prs->g, prs->env, size);
+		prs->g += size;
+	}
 }
 
 void	_count_env_vars_(t_mp *prs, t_envlist *env)
@@ -86,12 +92,7 @@ void	_count_env_vars_(t_mp *prs, t_envlist *env)
 		prs->temp[prs->j++] = prs->buff[prs->i++];
 	prs->temp[prs->j++] = '=';
 	prs->temp[prs->j] = '\0';
-	printf("prs->temp = |%s|\n", prs->temp);
-	// look for env vars :
 	_env_var_counter_(prs, env);
-	// prs->env = getcenv(prs->temp);
-	// if (prs->env)
-	// 	prs->counter += ft_strlen(prs->env);
 	free(prs->temp);
 	prs->temp = NULL;
 }

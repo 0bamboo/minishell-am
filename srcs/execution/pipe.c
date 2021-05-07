@@ -40,7 +40,7 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)
 			close(envlist->fds[command->iterator * 2 - 2]);
 		if (command->next)
 			close(envlist->fds[command->iterator * 2 + 1]);
-			envlist->pids[command->iterator] = pid;
+		envlist->pids[command->iterator] = pid;
 	}
 	return (pid);
 }

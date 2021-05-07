@@ -39,7 +39,7 @@ void	_handle_normal_args_2_(t_mp *prs)
 	while (prs->buff[prs->i])
 	{
 		if (prs->buff[prs->i] == '>' || prs->buff[prs->i] == '<'
-			|| _is_white_space(prs->buff[prs->i]))
+			|| prs->buff[prs->i] == ' ')
 			break ;
 		else if (prs->buff[prs->i] == '"')
 			_copy_args_with_dq_(prs);
@@ -64,7 +64,7 @@ void	_handle_normal_args_(t_mp *prs, char *tmp)
 	{
 		if (prs->buff[prs->i] == '>' || prs->buff[prs->i] == '<')
 			_copy_redirs_(prs);
-		else if (_is_white_space(prs->buff[prs->i]))
+		else if (prs->buff[prs->i] == ' ')
 		{
 			prs->i++;
 			continue ;

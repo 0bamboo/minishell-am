@@ -103,7 +103,6 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 			ret = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
     	    ret = status + 128;
-		printf("pipe = %d\n",ret);
 	}
 	else if (!isbuiltin(tmp))
 	{
@@ -111,7 +110,6 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 		free(envlist->pids);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
-		printf("fc = %d\n",ret);
 	}
 	return (ret);
 }

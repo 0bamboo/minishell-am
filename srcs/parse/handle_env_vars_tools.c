@@ -28,10 +28,10 @@ void	_push_back_string_(char *buff, int index, char *fill, int size)
 	}
 }
 
-void	_env_var_(t_mp *prs, t_envlist *env)
-{
+// void	_env_var_(t_mp *prs, t_envlist *env)
+// {
 	
-}
+// }
 
 void	_count_env_vars_(t_mp *prs, t_envlist *env)
 {

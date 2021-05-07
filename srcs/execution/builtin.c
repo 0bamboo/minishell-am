@@ -51,7 +51,7 @@ int	builtin_echo(t_cmd_list *cmd)
 	return (0);
 }
 
-int	get_val(char *str)
+int	get_val(t_cmd_list *cmd, t_envlist *envlist)
 {
 	long long	num;
 	int			i;
@@ -60,41 +60,47 @@ int	get_val(char *str)
 	num = 0;
 	i = 0;
 	sign = 1;
-	if (str[i] == '-')
+	if (cmd->args[1][i] == '-')
 	{
 		i++;
 		sign = -1;
 	}
-	while (str[i])
+	while (cmd->args[1][i])
 	{
-		if (str[i] < 48 || str[i] > 58)
+		if (cmd->args[1][i] < 48 || cmd->args[1][i] > 58)
 		{
-			printf("minishell: exit: %s: numeric argument required\n", str);
+			printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
+			cleaning(cmd, envlist);
 			exit(255);
 		}
-		num = num * 10 + (str[i++] - '0');
+		num = num * 10 + (cmd->args[1][i++] - '0');
 	}
 	num *= sign;
 	if ((num > 0 && sign < 0) || (num < 0 && sign > 0))
 	{
-		printf("minishell: exit: %s: numeric argument required\n", str);
+		printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
+		cleaning(cmd, envlist);
 		exit(255);
 	}
 	return (num % 256);
 }
 
-int	builtin_exit(t_cmd_list *cmd, int status)
+int	builtin_exit(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		ret;
 
 	printf("exit\n");
 	if (!cmd->args[1])
-		exit(status);
-	ret = get_val(cmd->args[1]);
+	{
+		cleaning(cmd, envlist);
+		exit(envlist->status);
+	}
+	ret = get_val(cmd, envlist);
 	if (cmd->args[2])
 	{
 		printf("minishell: exit: too many arguments\n");
 		return (1);
 	}
+	cleaning(cmd, envlist);
 	exit(ret);
 }

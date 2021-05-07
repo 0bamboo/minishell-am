@@ -104,11 +104,11 @@ int	ft_readline(t_envlist *envlist)
 	tcgetattr(0, &p_term);
 	p_term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
-	if (envlist->status)
+	if (envlist->status || g_ret)
 		ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
 	else
 		ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
-	while (read(0, &buff, sizeof(buff)))
+	while (!g_ret && read(0, &buff, sizeof(buff)))
 	{
 		if (handleKeys(envlist, buff, &curs, &index))
 			break ;

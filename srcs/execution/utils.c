@@ -1,10 +1,30 @@
 #include "../../includes/minishell.h"
 
+void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
+{
+	int		i;
 
-// void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
-// {
-
-// }
+	i = 0;
+	while (envlist->vars && envlist->vars[i])
+		free(envlist->vars[i++]);
+	if (envlist->vars)
+		free(envlist->vars);
+	i = 0;
+	while (envlist->history && envlist->history[i])
+		free(envlist->history[i++]);
+	if (envlist->history)
+		free(envlist->history);
+	i = 0;
+	while (cmd->args && cmd->args[i])
+		free(cmd->args[i++]);
+	if (cmd->args)
+		free(cmd->args);
+	while (cmd)
+	{
+		free(cmd);
+		cmd = cmd->next;
+	}
+}
 
 char	*get_home_path(char **args, char **envp)
 {

@@ -2,13 +2,14 @@
 
 int	isbuiltin(t_cmd_list *command)
 {
-	if (!ft_strncmp(command->args[0], "echo", 5)
+	if (command->args[0] && 
+		(!ft_strncmp(command->args[0], "echo", 5)
 		|| !ft_strncmp(command->args[0], "cd", 3)
 		|| !ft_strncmp(command->args[0], "pwd", 4)
 		|| !ft_strncmp(command->args[0], "export", 7)
 		|| !ft_strncmp(command->args[0], "unset", 6)
 		|| !ft_strncmp(command->args[0], "env", 4)
-		|| !ft_strncmp(command->args[0], "exit", 5))
+		|| !ft_strncmp(command->args[0], "exit", 5)))
 		return (1);
 	else
 		return (0);

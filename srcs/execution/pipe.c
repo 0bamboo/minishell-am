@@ -40,22 +40,26 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)
 			close(envlist->fds[command->iterator * 2 - 2]);
 		if (command->next)
 			close(envlist->fds[command->iterator * 2 + 1]);
-			envlist->pids[command->iterator] = pid;
+		envlist->pids[command->iterator] = pid;
 	}
 	return (pid);
 }
 
 int	implement_cmd(t_cmd_list *cmd, t_envlist *envlist, int nbr_pipe)
 {
-	if (isbuiltin(cmd) && nbr_pipe == 0)
+	if (cmd->args[0])
 	{
-		if (!handle_redirection(cmd))
-			return(call_builtin(cmd, envlist));
+		if (isbuiltin(cmd) && nbr_pipe == 0)
+		{
+			if (!handle_redirection(cmd))
+				return(call_builtin(cmd, envlist));
+			else
+				return (1);
+		}
 		else
-			return (1);
+			return (fork_subprocess(cmd, envlist));
 	}
-	else
-		return (fork_subprocess(cmd, envlist));
+	return (0);
 }
 
 void	save_fd(t_envlist *envlist)

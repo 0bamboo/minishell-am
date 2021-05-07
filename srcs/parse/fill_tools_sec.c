@@ -43,6 +43,8 @@ void	_fix_the_order_(t_mp *prs)
 	prs->i = 0;
 	prs->args = malloc(sizeof(char *) * (prs->len + 1));
 	prs->files = malloc(sizeof(char *) * (prs->len + 1));
+	if (!prs->args || !prs->files)
+		return ;
 	while (prs->array[prs->i])
 	{
 		if (prs->array[prs->i][0] == '>' || prs->array[prs->i][0] == '<')

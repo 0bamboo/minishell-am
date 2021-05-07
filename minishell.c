@@ -54,7 +54,7 @@ int main(int argc, char **argv, char **envp)
 {
 	t_envlist	envlist;
 	t_mp		*prs;
-	int			i = 0;
+	// int			i = 0;
 
 	(void)argv;
 	(void)argc;
@@ -91,7 +91,6 @@ int main(int argc, char **argv, char **envp)
 
 
 	// Cleaning --->
-	 i = 0;
     // while (envlist.history && envlist.history[i])
     // {
     //     free(envlist.history[i++]);

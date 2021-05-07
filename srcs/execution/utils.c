@@ -1,10 +1,10 @@
 #include "../../includes/minishell.h"
 
 
-void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
-{
-	
-}
+// void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
+// {
+
+// }
 
 char	*get_home_path(char **args, char **envp)
 {

@@ -16,12 +16,26 @@ int	ft_putchars(int c)
 	return (0);
 }
 
-void    sig_handle(int sig)
+void    signal_handler(int signal)
 {
-    if (sig == SIGINT)
-        printf("\n-> minishell$>");
-    else if (sig == SIGQUIT)
-        printf("Quit: 3\n");
+	if (signal == SIGINT)
+	{
+		ft_putstrs("\n");
+		//ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
+	}
+	else if (signal == SIGQUIT)
+	{
+		ft_putstrs("Quit: 3\n");
+		return ;
+	}
+    // if (signal == SIGINT)
+	// {
+	// 	g_ret = 1;
+	// }
+    // else if (signal == SIGQUIT)
+	// {
+    //     write(1, "Quit: 3\n", 8);
+	// }
 }
 
 int	addTohistory(t_envlist *envlist)
@@ -54,10 +68,10 @@ int main(int argc, char **argv, char **envp)
 {
 	t_envlist	envlist;
 	t_mp		*prs;
-	// int			i = 0;
 
 	(void)argv;
 	(void)argc;
+	g_ret = 0;
 	prs = malloc(sizeof(t_mp));
 	prs->sp = malloc(sizeof(t_sp));
 	prs->cmds = NULL;
@@ -73,36 +87,18 @@ int main(int argc, char **argv, char **envp)
 	envlist.envp = envp;
 	env_varsdup(&envlist,envp);
 	rmfrom_envlist(&envlist, "OLDPWD");
-	// signal(SIGINT, sig_handle);
-    // signal(SIGQUIT, sig_handle);
-
+	signal(SIGINT, signal_handler);
+    signal(SIGQUIT, signal_handler);
 	while (!ft_readline(&envlist))
 	{
 		ft_putstrs("\n");
-		if (envlist.line && ft_strcmp(envlist.line, ""))
+		if (!g_ret && envlist.line && ft_strcmp(envlist.line, ""))
 		{
-        	// printf("%s\n", envlist.line);
 			addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
 			//free(envlist.line);
         }
         envlist.line = NULL;
     }
-
-
-	// Cleaning --->
-    // while (envlist.history && envlist.history[i])
-    // {
-    //     free(envlist.history[i++]);
-    // }
-	// if (envlist.history)
-    // 	free(envlist.history);
-	// i = 0;
-	// while (envlist.vars && envlist.vars[i])
-    // {
-    //     free(envlist.vars[i++]);
-    // }
-    // free(envlist.vars);
-
     return (0);
 }

@@ -30,7 +30,7 @@ int	call_builtin(t_cmd_list *cmd, t_envlist *envlist)
 	if (!ft_strncmp(cmd->args[0], "env", 4))
 		return (builtin_env(envlist));
 	if (!ft_strncmp(cmd->args[0], "exit", 5))
-		return (builtin_exit(cmd, envlist->status));
+		return (builtin_exit(cmd, envlist));
 	return (0);
 }
 

@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "../srcs/get_next_line.h"
 #include "../libft/libft.h"
 #include <sys/param.h>
 #include <sys/types.h>
@@ -36,6 +35,7 @@
 #define BUFFER_SIZE 1
 
 
+int                     g_ret;
 
 typedef struct			s_cmd_list
 {
@@ -59,7 +59,7 @@ typedef struct          s_envlist
 	int					*fd;
 }						t_envlist;
 
-int                     g_ret;
+
 
 typedef struct	s_sp
 {
@@ -198,7 +198,7 @@ void            printing(char **arr);
 void            sorting(char **arr);
 
 int	            check_homepath(t_envlist *envlist, t_cmd_list *cmd);
-int             builtin_exit(t_cmd_list *cmd, int status);
+int	            builtin_exit(t_cmd_list *cmd, t_envlist *envlist);
 int             builtin_echo(t_cmd_list *cmd);
 int             handle_redirection(t_cmd_list *command);
 int             is_redir(t_cmd_list *cmd);
@@ -221,6 +221,8 @@ int     addTohistory(t_envlist *envlist);
 void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     ft_readline(t_envlist *envlist);
+
+void	cleaning(t_cmd_list *cmd, t_envlist *envlist);
 
 
 

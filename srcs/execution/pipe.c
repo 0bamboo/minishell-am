@@ -116,6 +116,8 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 		free(envlist->pids);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+    	    ret = status + 128;
 	}
 	clean_cmdList(cmd);
 	return (ret);

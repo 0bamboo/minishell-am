@@ -1,18 +1,20 @@
 #include "../../includes/minishell.h"
 
-int	ft_putstrs(char *str)
+int	removeFromline(t_envlist *envlist)
 {
-	if (str)
-	{
-		write(1, str, ft_strlen(str));
-		return (ft_strlen(str));
-	}
-	return (0);
-}
+	char	*tmp;
+	int		i;
 
-int	ft_putchars(int c)
-{
-	write(0, &c, 1);
+	i = 0;
+	tmp = envlist->line;
+	envlist->line = malloc(ft_strlen(envlist->line) * sizeof(char));
+	while (tmp[i + 1])
+	{
+		envlist->line[i] = tmp[i];
+		i++;
+	}
+	envlist->line[i] = '\0';
+	free(tmp);
 	return (0);
 }
 
@@ -58,7 +60,7 @@ void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
 		free(envlist->history);
 	}
 	// if (envlist->line)
-	// 	free(envlist->line);
+	// 	free(envlist->line); 
 	clean_cmdList(cmd);
 }
 

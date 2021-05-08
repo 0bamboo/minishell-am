@@ -228,6 +228,6 @@ int     ft_readline(t_envlist *envlist);
 void	cleaning(t_cmd_list *cmd, t_envlist *envlist);
 void	clean_cmdList(t_cmd_list *cmd);
 
-
+int	ft_isprint(int c);
 
 #endif

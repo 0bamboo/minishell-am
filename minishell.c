@@ -1,15 +1,15 @@
 #include "./includes/minishell.h"
 
-
-
 void    signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
-		g_ret = 1;
-		//ft_putstrs("\n\033[31m-> \033[35mminishell$> \033[0m");
+		if (g_ret != 2)
+			ft_putstrs("\n\033[31m-> \033[35mminishell$> \033[0m");
+		else
+			ft_putstrs("\n");
 	}
-	else if (signal == SIGQUIT)
+	if (signal == SIGQUIT)
 	{
 		if (g_ret == 2)
 			ft_putstrs("Quit: 3\n");
@@ -22,8 +22,7 @@ int main(int argc, char **argv, char **envp)
 	t_mp		*prs;
 	int			ret;
 
-	signal(SIGINT, signal_handler);
-    signal(SIGQUIT, signal_handler);
+
 	prs = malloc(sizeof(t_mp));
 	prs->sp = malloc(sizeof(t_sp));
 	prs->cmds = NULL;
@@ -40,11 +39,10 @@ int main(int argc, char **argv, char **envp)
 	env_varsdup(&envlist,envp);
 	rmfrom_envlist(&envlist, "OLDPWD");
 
-
-
+	signal(SIGINT, signal_handler);
+    signal(SIGQUIT, signal_handler);
 	while (1)
 	{
-		g_ret = 0;
 		ret = ft_readline(&envlist);
 		if (ret)
 			break;
@@ -53,11 +51,11 @@ int main(int argc, char **argv, char **envp)
 		{
 			addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
-			//free(envlist.line);
+			// free(envlist.line);
         }
+		g_ret = 0;
         envlist.line = NULL;
     }
-
 	cleaning(NULL, &envlist);
 	(void)argc;
 	(void)argv;

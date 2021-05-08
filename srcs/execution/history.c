@@ -25,27 +25,16 @@ int	addToline(t_envlist *envlist, char buff)
 	return (0);
 }
 
-int	removeFromline(t_envlist *envlist)
-{
-	int		i;
-
-	i = 0;
-	while (envlist->line[i + 1])
-		i++;
-	envlist->line[i] = '\0';
-	return (0);
-}
-
-void	handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
+void	handle_arrawkeys(t_envlist *envlist, long buff, int *lenght, int *index)
 {
 	if ((buff == ARROW_UP && envlist->history)
 		|| (buff == ARROW_DOWN && envlist->history))
 	{
-		while (curs[0] > 0)
+		while (lenght[0] > 0)
 		{
 			tputs(cursor_left, 1, ft_putchars);
 			tputs(delete_character, 1, ft_putchars);
-			curs[0]--;
+			lenght[0]--;
 		}
 		if (buff == ARROW_UP && envlist->history[index[0] + 1])
 			index[0]++;
@@ -53,7 +42,7 @@ void	handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
 			index[0]--;
 		if (index[0] != -1)
 		{
-			curs[0] = ft_putstrs(envlist->history[index[0]]);
+			*lenght = ft_putstrs(envlist->history[index[0]]);
 			free(envlist->line);
 			envlist->line = ft_strdup(envlist->history[index[0]]);
 		}
@@ -65,35 +54,39 @@ void	handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
 	}
 }
 
-int	handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
+void	handle_backspace(t_envlist *envlist, int *lenght)
 {
-	if (buff == ENTER)
-		return (1);
-	else if (buff == ARROW_UP || buff == ARROW_DOWN)
-		handle_arrawkeys(envlist, buff, curs, index);
-	else if (buff == BACK_SPACE)
+	if (*lenght > 0)
 	{
-		if (curs[0] > 0)
-		{
-			tputs(cursor_left, 1, ft_putchars);
-			tputs(delete_character, 1, ft_putchars);
-			removeFromline(envlist);
-			curs[0]--;
-		}
+		tputs(cursor_left, 1, ft_putchars);
+		tputs(delete_character, 1, ft_putchars);
+		removeFromline(envlist);
+		lenght[0]--;
 	}
-	else if (buff == CTRL_D)
+}
+
+int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
+{
+	while (read(0, &buff, sizeof(buff)))
 	{
-		if (!curs[0])
+		if (buff == ARROW_UP || buff == ARROW_DOWN)
+			handle_arrawkeys(envlist, buff, lenght, index);
+		else if (buff == BACK_SPACE)
+			handle_backspace(envlist, lenght);
+		else if (buff == CTRL_D && !lenght[0])
 		{
 			ft_putstrs("exit\n");
-			return (2);
+			return (1);
 		}
-	}
-	else
-	{
-		curs[0]++;
-		addToline(envlist, buff);
-		write(1, &buff, 1);
+		else if (ft_isprint(buff))
+		{
+			lenght[0]++;
+			addToline(envlist, buff);
+			write(1, &buff, 1);
+		}
+		else if (buff == ENTER)
+			return (0);
+		buff = 0;
 	}
 	return (0);
 }
@@ -102,11 +95,12 @@ int	ft_readline(t_envlist *envlist)
 {
 	struct termios		p_term;
 	long				buff;
-	int					curs;
+	int					lenght;
 	int					index;
+	int					ret;
 
 	buff = 0;
-	curs = 0;
+	lenght = 0;
 	index = -1;
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(0, &p_term);
@@ -116,13 +110,10 @@ int	ft_readline(t_envlist *envlist)
 		ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
 	else
 		ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
-	while (read(0, &buff, sizeof(buff)))
-	{
-		if (handleKeys(envlist, buff, &curs, &index))
-			break ;
-		buff = 0;
-	}
+	ret = handleKeys(envlist, buff, &lenght, &index);
 	p_term.c_lflag |= (ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
+	if (ret)
+		return (1);
 	return (0);
 }

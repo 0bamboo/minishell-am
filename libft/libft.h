@@ -43,5 +43,8 @@ char			*ft_strnstr(const char *str, const char *to_find, size_t len);
 char			*ft_strrchr(const char *s, int c);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
+int             ft_isprint(int c);
+int             ft_putchars(int c);
+int             ft_putstrs(char *str);
 
 #endif

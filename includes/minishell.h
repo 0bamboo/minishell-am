@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/07 16:41:08 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/08 14:09:01 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ typedef struct      s_mp
 }                   t_mp;
 
 int     _is_white_space(char c);
+void    _env_var_counter_(t_mp *prs, t_envlist *env);
+void    _env_var_copy_(t_mp *prs, t_envlist *env);
 void	_size_of_arg_dq_(t_mp *prs);
 void	_size_of_arg_sq_(t_mp *prs);
 int	_check_semi_colon(char *line, t_mp *prs);

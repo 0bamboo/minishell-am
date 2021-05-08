@@ -28,11 +28,13 @@
 #include <termios.h>
 #include <curses.h>
 
-# define ARRW_UP 4283163
-# define ARRW_DOWN 4348699
+# define ARROW_UP 4283163
+# define ARROW_DOWN 4348699
 # define BACK_SPACE 127
+#define CTRL_D 4
 # define ENTER 10
 #define BUFFER_SIZE 1
+
 
 
 int                     g_ret;
@@ -223,6 +225,7 @@ int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     ft_readline(t_envlist *envlist);
 
 void	cleaning(t_cmd_list *cmd, t_envlist *envlist);
+void	clean_cmdList(t_cmd_list *cmd);
 
 
 

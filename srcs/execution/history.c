@@ -38,8 +38,8 @@ int	removeFromline(t_envlist *envlist)
 
 void	handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
 {
-	if ((buff == ARRW_UP && envlist->history)
-		|| (buff == ARRW_DOWN && envlist->history))
+	if ((buff == ARROW_UP && envlist->history)
+		|| (buff == ARROW_DOWN && envlist->history))
 	{
 		while (curs[0] > 0)
 		{
@@ -47,9 +47,9 @@ void	handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index)
 			tputs(delete_character, 1, ft_putchars);
 			curs[0]--;
 		}
-		if (buff == ARRW_UP && envlist->history[index[0] + 1])
+		if (buff == ARROW_UP && envlist->history[index[0] + 1])
 			index[0]++;
-		if (buff == ARRW_DOWN && index[0] > -1)
+		if (buff == ARROW_DOWN && index[0] > -1)
 			index[0]--;
 		if (index[0] != -1)
 		{
@@ -69,7 +69,7 @@ int	handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
 {
 	if (buff == ENTER)
 		return (1);
-	else if (buff == ARRW_UP || buff == ARRW_DOWN)
+	else if (buff == ARROW_UP || buff == ARROW_DOWN)
 		handle_arrawkeys(envlist, buff, curs, index);
 	else if (buff == BACK_SPACE)
 	{
@@ -79,6 +79,14 @@ int	handleKeys(t_envlist *envlist, long buff, int *curs, int *index)
 			tputs(delete_character, 1, ft_putchars);
 			removeFromline(envlist);
 			curs[0]--;
+		}
+	}
+	else if (buff == CTRL_D)
+	{
+		if (!curs[0])
+		{
+			ft_putstrs("exit\n");
+			return (2);
 		}
 	}
 	else

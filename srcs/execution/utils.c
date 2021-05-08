@@ -1,10 +1,66 @@
 #include "../../includes/minishell.h"
 
+int	ft_putstrs(char *str)
+{
+	if (str)
+	{
+		write(1, str, ft_strlen(str));
+		return (ft_strlen(str));
+	}
+	return (0);
+}
 
-// void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
-// {
+int	ft_putchars(int c)
+{
+	write(0, &c, 1);
+	return (0);
+}
 
-// }
+void	clean_cmdList(t_cmd_list *cmd)
+{
+	int			i;
+	t_cmd_list	*tmp;
+
+	i = 0;
+	if (cmd)
+	{
+		if (cmd->args)
+		{
+			while (cmd->args && cmd->args[i])
+				free(cmd->args[i++]);
+			free(cmd->args);
+		}
+		while (cmd)
+		{
+			tmp = cmd;
+			cmd = cmd->next;
+			free(tmp);
+		}
+	}
+}
+
+void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
+{
+	int		i;
+
+	if (envlist->vars)
+	{
+		i = 0;
+		while (envlist->vars[i])
+			free(envlist->vars[i++]);
+		free(envlist->vars);
+	}
+	if (envlist->history)
+	{
+		i = 0;
+		while (envlist->history[i])
+			free(envlist->history[i++]);
+		free(envlist->history);
+	}
+	// if (envlist->line)
+	// 	free(envlist->line);
+	clean_cmdList(cmd);
+}
 
 char	*get_home_path(char **args, char **envp)
 {
@@ -31,4 +87,31 @@ char	*get_home_path(char **args, char **envp)
 		free(path);
 	}
 	return (NULL);
+}
+
+int	addTohistory(t_envlist *envlist)
+{
+	char		**tmp;
+	int			lenght;
+	int			i;
+	int			k;
+
+	lenght = 0;
+	tmp = envlist->history;
+	while (tmp && tmp[lenght])
+		lenght++;
+	envlist->history = malloc((lenght + 2) * sizeof(char *));
+	if (!envlist->history)
+		return (1);
+	envlist->history[0] = ft_strdup(envlist->line);
+	i = 1;
+	k = 0;
+	while (tmp && tmp[k])
+		envlist->history[i++] = ft_strdup(tmp[k++]);
+	envlist->history[i] = NULL;
+	k = 0;
+	while (tmp && tmp[k])
+		free(tmp[k++]);
+	free(tmp);
+	return (0);
 }

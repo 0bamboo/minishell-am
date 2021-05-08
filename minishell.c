@@ -1,63 +1,29 @@
 #include "./includes/minishell.h"
 
-int	ft_putstrs(char *str)
+
+
+void    signal_handler(int signal)
 {
-	if (str)
+	if (signal == SIGINT)
 	{
-		write(1, str, ft_strlen(str));
-		return (ft_strlen(str));
+		g_ret = 1;
+		//ft_putstrs("\n\033[31m-> \033[35mminishell$> \033[0m");
 	}
-	return (0);
-}
-
-int	ft_putchars(int c)
-{
-	write(0, &c, 1);
-	return (0);
-}
-
-void    sig_handle(int sig)
-{
-    if (sig == SIGINT)
-        printf("\n-> minishell$>");
-    else if (sig == SIGQUIT)
-        printf("Quit: 3\n");
-}
-
-int	addTohistory(t_envlist *envlist)
-{
-	char		**tmp;
-	int			i;
-	int			j;
-
-	i = 0;
-	while (envlist->history && envlist->history[i])
-		i++;
-	tmp = malloc((i + 2) * sizeof(char *));
-	if (!tmp)
-		return (1);
-	tmp[0] = ft_strdup(envlist->line);
-	i = 1;
-	j = 0;
-	while (envlist->history && envlist->history[j])
-		tmp[i++] = ft_strdup(envlist->history[j++]);
-	tmp[i] = NULL;
-	i = 0;
-	while (envlist->history && envlist->history[i])
-		free(envlist->history[i++]);
-	free(envlist->history);
-	envlist->history = tmp;
-	return (0);
+	else if (signal == SIGQUIT)
+	{
+		if (g_ret == 2)
+			ft_putstrs("Quit: 3\n");
+	}
 }
 
 int main(int argc, char **argv, char **envp)
 {
 	t_envlist	envlist;
 	t_mp		*prs;
-	// int			i = 0;
+	int			ret;
 
-	(void)argv;
-	(void)argc;
+	signal(SIGINT, signal_handler);
+    signal(SIGQUIT, signal_handler);
 	prs = malloc(sizeof(t_mp));
 	prs->sp = malloc(sizeof(t_sp));
 	prs->cmds = NULL;
@@ -73,15 +39,18 @@ int main(int argc, char **argv, char **envp)
 	envlist.envp = envp;
 	env_varsdup(&envlist,envp);
 	rmfrom_envlist(&envlist, "OLDPWD");
-	// signal(SIGINT, sig_handle);
-    // signal(SIGQUIT, sig_handle);
 
-	while (!ft_readline(&envlist))
+
+
+	while (1)
 	{
+		g_ret = 0;
+		ret = ft_readline(&envlist);
+		if (ret)
+			break;
 		ft_putstrs("\n");
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
-        	// printf("%s\n", envlist.line);
 			addTohistory(&envlist);
 			_start_parsing(envlist.line, prs, &envlist);
 			//free(envlist.line);
@@ -89,20 +58,8 @@ int main(int argc, char **argv, char **envp)
         envlist.line = NULL;
     }
 
-
-	// Cleaning --->
-    // while (envlist.history && envlist.history[i])
-    // {
-    //     free(envlist.history[i++]);
-    // }
-	// if (envlist.history)
-    // 	free(envlist.history);
-	// i = 0;
-	// while (envlist.vars && envlist.vars[i])
-    // {
-    //     free(envlist.vars[i++]);
-    // }
-    // free(envlist.vars);
-
+	cleaning(NULL, &envlist);
+	(void)argc;
+	(void)argv;
     return (0);
 }

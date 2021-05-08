@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 18:15:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/03 00:00:31 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:24:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static	int	ft_issp(char c, const char *set)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (set[++i])
@@ -25,7 +25,7 @@ static	int	ft_issp(char c, const char *set)
 
 static	int	ft_locate(char const *s1, char const *set, int *beg, int *end)
 {
-	int l;
+	int	l;
 
 	l = 0;
 	if (!*s1)
@@ -43,7 +43,7 @@ static	int	ft_locate(char const *s1, char const *set, int *beg, int *end)
 	return (0);
 }
 
-char		*ft_strtrim(char const *s1, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		k;
 	int		i;
@@ -55,7 +55,7 @@ char		*ft_strtrim(char const *s1, char const *set)
 	if (!set || !*set)
 		return (ft_strdup(s1));
 	if (ft_locate(s1, set, &i, &j))
-		return ((char*)s1);
+		return ((char *)s1);
 	res = (char *)malloc((j - i + 2) * sizeof(char));
 	if (!res)
 		return (NULL);

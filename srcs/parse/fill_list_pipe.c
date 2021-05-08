@@ -57,15 +57,17 @@ void	_fill_pipe_arg_(t_mp *prs, t_cmd_list **curr, char **args, char **files)
 }
 
 void	_fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head,
-char **args, char **files, int iter)
+char **args, char **files)
 {
 	t_cmd_list	*new;
 
 	new = malloc(sizeof(t_cmd_list));
+	if (!new)
+		return ;
 	new->next = NULL;
 	new->nbrpipe = prs->nbrpipe;
 	new->redir = -1;
-	new->iterator = iter;
+	new->iterator = prs->iter;
 	if (args[0])
 		new->command = ft_strdup(args[0]);
 	_fill_pipe_arg_(prs, &new, args, files);

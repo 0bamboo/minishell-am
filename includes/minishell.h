@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/06 13:46:59 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:41:08 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct      s_mp
     int size;
     int nbrpipe;
     int len;
+    int iter;
     char **pipe;
     char **cmds;
     char **files;
@@ -147,7 +148,7 @@ void _handle_normal_args_2_(t_mp *prs);
 void _handle_normal_args_(t_mp *prs, char *tmp);
 int     _if_pipe_(t_mp *prs, int index);
 void _fill_first_node_(t_mp *prs, char **args, char **files);
-void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files, int iter);
+void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files);
 void        _handle_pipe_args_(t_mp *prs);
 void        _copy_tokens_data_(t_mp *prs, int index);
 int		get_next_line(int fd, char **line);

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/24 18:52:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/04/16 23:02:53 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/07 16:19:53 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	ft_len_nbr(long n)
 	return (size);
 }
 
-char		*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	int		len;
 	char	*ptr;
@@ -42,7 +42,8 @@ char		*ft_itoa(int n)
 		return (ft_strdup("0"));
 	len = ft_len_nbr(a);
 	i = len - 1;
-	if (!(ptr = (char *)malloc(sizeof(char) * (len + 1))))
+	ptr = (char *)malloc(sizeof(char) * (len + 1));
+	if (!ptr)
 		return (NULL);
 	if (a < 0)
 	{

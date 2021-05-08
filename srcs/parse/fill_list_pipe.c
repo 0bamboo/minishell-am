@@ -12,6 +12,51 @@
 
 #include "../../includes/minishell.h"
 
+void	_count_env_vars_(t_mp *prs, t_envlist *env)
+{
+	prs->count = 0;
+	prs->j = ++prs->i;
+	while ((ft_isalpha(prs->buff[prs->j]) || ft_isdigit(prs->buff[prs->i]))
+		&& prs->buff[prs->j++])
+		prs->count++;
+	prs->count++;
+	prs->temp = (char *)malloc(sizeof(char) * (prs->count + 1));
+	if (!prs->temp)
+		return ;
+	prs->j = 0;
+	while ((ft_isalpha(prs->buff[prs->i]) || ft_isdigit(prs->buff[prs->i]))
+		&& prs->buff[prs->i])
+		prs->temp[prs->j++] = prs->buff[prs->i++];
+	prs->temp[prs->j++] = '=';
+	prs->temp[prs->j] = '\0';
+	_env_var_counter_(prs, env);
+	free(prs->temp);
+	prs->temp = NULL;
+}
+
+void	_copy_env_vars_(t_mp *prs, t_envlist *env)
+{
+	prs->count = 0;
+	prs->j = ++prs->i;
+	while ((ft_isalpha(prs->buff[prs->j]) || ft_isdigit(prs->buff[prs->i]))
+		&& prs->buff[prs->j++])
+		prs->count++;
+	prs->count++;
+	prs->temp = (char *)malloc(sizeof(char) * (prs->count + 1));
+	if (!prs->temp)
+		return ;
+	prs->j = 0;
+	while ((ft_isalpha(prs->buff[prs->i]) || ft_isdigit(prs->buff[prs->i]))
+		&& prs->buff[prs->i])
+		prs->temp[prs->j++] = prs->buff[prs->i++];
+	prs->temp[prs->j++] = '=';
+	prs->temp[prs->j] = '\0';
+	prs->j = -1;
+	_env_var_copy_(prs, env);
+	free(prs->temp);
+	prs->temp = NULL;
+}
+
 int	_size_of_arg_(t_mp *prs, char *buffer, int i)
 {
 	prs->counter = 0;

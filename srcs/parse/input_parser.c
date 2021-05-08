@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/07 16:41:22 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/08 15:12:26 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	_if_pipe_dq_(t_mp *prs, int index)
 		if (prs->cmds[index][prs->i] == '\\')
 		{
 			prs->i += 2;
-			continue;
+			continue ;
 		}
 		prs->i++;
 	}
@@ -35,7 +35,9 @@ int	_if_pipe_(t_mp *prs, int index)
 		if (prs->cmds[index][prs->i] == '"')
 			_if_pipe_dq_(prs, index);
 		else if (prs->cmds[index][prs->i] == '\'')
-			while (prs->cmds[index][++prs->i] && prs->cmds[index][prs->i] != '\'');
+			while (prs->cmds[index][++prs->i]
+				&& prs->cmds[index][prs->i] != '\'')
+				;
 		else if (prs->cmds[index][prs->i] == '|')
 			prs->nbrpipe++;
 	}
@@ -46,7 +48,7 @@ int	_if_pipe_(t_mp *prs, int index)
 
 void	_handle_pipe_args_(t_mp *prs)
 {
-	int	i;
+	int			i;
 	t_cmd_list	*curr;
 
 	curr = malloc(sizeof(t_cmd_list));
@@ -80,23 +82,23 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
-    int i;
-    
+	int	i;
+
 	line = ft_strtrim(line, " \t\v\n\r");
-    if (_handle_syntax_errors(line, prs))
-        _raise_an_exception();
-    else
-    {
+	if (_handle_syntax_errors(line, prs))
+		_raise_an_exception();
+	else
+	{
 		prs->cmds = _split_tokens(prs->sp, line, ';');
 		i = -1;
-        while (prs->cmds[++i])
-        {
-            prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
-            _copy_tokens_data_(prs, i);
+		while (prs->cmds[++i])
+		{
+			prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
+			_copy_tokens_data_(prs, i);
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;
 			restore_fd(env);
-        }
-    }
+		}
+	}
 }

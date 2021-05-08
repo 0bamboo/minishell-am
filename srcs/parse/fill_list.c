@@ -93,7 +93,6 @@ char **args, char **files)
 	j = -1;
 	if (files[0])
 		(*curr)->redir = i;
-	// printf("redir = :%d:\n", (*curr)->redir);
 	while (files[++j])
 		(*curr)->args[i++] = ft_strdup(files[j]);
 	(*curr)->args[i] = NULL;

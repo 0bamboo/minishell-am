@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/07 16:41:08 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/08 14:09:01 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@
 #include <termios.h>
 #include <curses.h>
 
-# define ARRW_UP 4283163
-# define ARRW_DOWN 4348699
+# define ARROW_UP 4283163
+# define ARROW_DOWN 4348699
 # define BACK_SPACE 127
+#define CTRL_D 4
 # define ENTER 10
 #define BUFFER_SIZE 1
+
 
 
 int                     g_ret;
@@ -106,6 +108,8 @@ typedef struct      s_mp
 }                   t_mp;
 
 int     _is_white_space(char c);
+void    _env_var_counter_(t_mp *prs, t_envlist *env);
+void    _env_var_copy_(t_mp *prs, t_envlist *env);
 void	_size_of_arg_dq_(t_mp *prs);
 void	_size_of_arg_sq_(t_mp *prs);
 int	_check_semi_colon(char *line, t_mp *prs);
@@ -224,7 +228,8 @@ int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     ft_readline(t_envlist *envlist);
 
 void	cleaning(t_cmd_list *cmd, t_envlist *envlist);
+void	clean_cmdList(t_cmd_list *cmd);
 
-
+int	ft_isprint(int c);
 
 #endif

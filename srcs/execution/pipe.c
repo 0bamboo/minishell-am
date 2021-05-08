@@ -85,6 +85,8 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	t_cmd_list *tmp = cmd;
 	int		i;
 	
+	if (!g_ret)
+		g_ret = 2;
 	nbr_pipes = cmd->nbrpipe;
 	envlist->pids = malloc(sizeof(int) * (nbr_pipes + 1));
 	if (nbr_pipes)
@@ -114,6 +116,9 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 		free(envlist->pids);
 		if (WIFEXITED(status))
 			ret = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+    	    ret = status + 128;
 	}
+	clean_cmdList(cmd);
 	return (ret);
 }

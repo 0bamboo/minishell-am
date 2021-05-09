@@ -13,7 +13,7 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)
 	}
 	else if (!pid)
 	{
-		path = get_home_path(command->args, envlist->envp);
+		path = get_home_path(command->args, envlist->vars);
 		if (command->iterator && command->nbrpipe && path)
 		{	
 			if (dup2(envlist->fds[command->iterator * 2 - 2], 0) < 0)
@@ -85,9 +85,10 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	t_cmd_list *tmp = cmd;
 	int		i;
 	
+	
+	nbr_pipes = cmd->nbrpipe;
 	if (!g_ret)
 		g_ret = 2;
-	nbr_pipes = cmd->nbrpipe;
 	envlist->pids = malloc(sizeof(int) * (nbr_pipes + 1));
 	if (nbr_pipes)
 		envlist->fds = malloc(sizeof(int) * (nbr_pipes * 2));

@@ -68,20 +68,12 @@ int	get_val(t_cmd_list *cmd, t_envlist *envlist)
 	while (cmd->args[1][i])
 	{
 		if (cmd->args[1][i] < 48 || cmd->args[1][i] > 58)
-		{
-			printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
-			cleaning(cmd, envlist);
-			exit(255);
-		}
+			handle_numeric(cmd, envlist);
 		num = num * 10 + (cmd->args[1][i++] - '0');
 	}
 	num *= sign;
 	if ((num > 0 && sign < 0) || (num < 0 && sign > 0))
-	{
-		printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
-		cleaning(cmd, envlist);
-		exit(255);
-	}
+		handle_numeric(cmd, envlist);
 	return (num % 256);
 }
 

@@ -166,6 +166,8 @@ char *_handle_backslash_(t_mp *prs, char *token);
 
 // majermou
 
+void	handle_numeric(t_cmd_list *cmd, t_envlist *envlist);
+
 size_t                  ft_strlen(const char *s);
 size_t                  ft_strlcpy(char *dst, const char *src, size_t size);
 int                     ft_strncmp(const char *s1, const char *s2, size_t n);

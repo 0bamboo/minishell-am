@@ -93,7 +93,11 @@ int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 			write(1, &buff, 1);
 		}
 		else if (buff == ENTER)
+		{
+			if (i)
+				ft_putstrs("\n");
 			return (0);
+		}
 		buff = 0;
 	}
 	return (0);
@@ -115,13 +119,10 @@ int	ft_readline(t_envlist *envlist)
 	tcgetattr(0, &p_term);
 	p_term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
-	if (envlist->status != 130)
-	{
-		if (envlist->status)
-			ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
-		else
-			ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
-	}
+	if (envlist->status)
+		ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
+	else
+		ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
 	ret = handleKeys(envlist, buff, &lenght, &index);
 	p_term.c_lflag |= (ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);

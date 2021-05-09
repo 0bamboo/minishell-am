@@ -4,8 +4,11 @@ void    signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
+		if (g_ret != 2)
+			ft_putstrs("\n\033[31m-> \033[35mminishell$> \033[0m");
+		else
+			ft_putstrs("\n");
 		g_ret = 1;
-		ft_putstrs("\n\033[31m-> \033[35mminishell$> \033[0m");
 	}
 	if (signal == SIGQUIT)
 	{

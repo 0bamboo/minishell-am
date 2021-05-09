@@ -12,70 +12,77 @@
 
 #include "libft.h"
 
-static int	ft_count_words(char const *s, char c)
+static const char	*help(char *p, const char *s, int i)
 {
-	int	count;
+	while (i-- > 0)
+		*p++ = *s++;
+	*p = '\0';
+	return (s);
+}
 
-	count = 0;
-	while (*s && *s == c)
-		s++;
-	while (*s)
+static int	build(char const *s, char c, char **q)
+{
+	int			i;
+	char		*p;
+	int			n;
+
+	n = 0;
+	while (*s != '\0')
 	{
-		if ((*s == c && *(s + 1) != c) || *(s + 1) == '\0')
-			count++;
-		s++;
+		if (*s != c)
+		{
+			n++;
+			i = 0;
+			while (s[i] != c && s[i] != '\0')
+				i++;
+			p = (char *)malloc((i + 1) * sizeof(char));
+			if (!p)
+				return (-n);
+			*q++ = p;
+			s = help(p, s, i);
+		}
+		if (*s != '\0')
+			s++;
 	}
-	return (count);
+	*q = 0;
+	return (n);
 }
 
-static int	ft_len_words(char const *s, char c)
+static void	clearall(char **q, char **q1, int i)
 {
-	int	k;
+	int	j;
 
-	k = 0;
-	while (s[k] && s[k] != c)
-		k++;
-	return (k);
-}
-
-static char	**ft_free(char **ptr, int size)
-{
-	int	i;
-
-	i = 0;
-	while (i++ < size)
-		free(ptr[i]);
-	free(ptr);
-	ptr = NULL;
-	return (NULL);
+	j = 0;
+	while (j++ < i)
+	{
+		free(*q);
+		(*q)++;
+	}
+	free(*q);
+	free(q);
+	free(q1);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char		**p;
-	int			size;
+	char		**q;
 	int			i;
-	int			j;
+	char		**q1;
 
 	if (!s)
 		return (NULL);
-	size = ft_count_words(s, c);
-	p = (char **)malloc(sizeof(char *) * (size + 1));
-	if (!p)
-		return (NULL);
-	i = 0;
-	while (i < size)
+	q = (char **)malloc((ft_strlen(s) + 1) * sizeof(char *));
+	if (!q)
+		return (q);
+	i = build(s, c, q);
+	q1 = (char **)malloc((i + 1) * sizeof(char *));
+	if (i < 0 || !q1)
 	{
-		while (*s && *s == c)
-			s++;
-		p[i] = (char *)malloc(sizeof(char) * (ft_len_words(s, c) + 1));
-		if (!p[i])
-			return (ft_free(p, size));
-		j = 0;
-		while (*s && *s != c)
-			p[i][j++] = *s++;
-		p[i++][j] = '\0';
+		i *= -1;
+		clearall(q, q1, i);
+		return (NULL);
 	}
-	p[i] = NULL;
-	return (p);
+	ft_memmove(q1, q, ((i + 1) * sizeof(char *)));
+	free(q);
+	return (q1);
 }

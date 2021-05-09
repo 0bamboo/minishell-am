@@ -17,6 +17,8 @@ void	_copy_command_status(t_mp *prs)
 	char	*tmp;
 
 	tmp = ft_itoa(prs->status);
+	if (g_ret == 1)
+		tmp = ft_itoa(1);
 	prs->count = ft_strlen(tmp);
 	_push_back_string_(prs->global, prs->g, tmp, prs->count);
 	prs->g += prs->count;

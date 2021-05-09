@@ -67,8 +67,16 @@ void	handle_backspace(t_envlist *envlist, int *lenght)
 
 int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 {
+	int		i = 0;
 	while (read(0, &buff, sizeof(buff)))
 	{
+		if (g_ret == 1 && !i)
+		{
+			free(envlist->line);
+			envlist->line = ft_strdup("");
+			*lenght = 0;
+			i = 1;
+		}
 		if (buff == ARROW_UP || buff == ARROW_DOWN)
 			handle_arrawkeys(envlist, buff, lenght, index);
 		else if (buff == BACK_SPACE)
@@ -102,18 +110,20 @@ int	ft_readline(t_envlist *envlist)
 	buff = 0;
 	lenght = 0;
 	index = -1;
+	ret = 0;
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(0, &p_term);
 	p_term.c_lflag &= ~(ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
-	if (envlist->status)
-		ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
-	else
-		ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
+	if (envlist->status != 130)
+	{
+		if (envlist->status)
+			ft_putstrs("\033[31m-> \033[35mminishell$> \033[0m");
+		else
+			ft_putstrs("\033[32m-> \033[35mminishell$> \033[0m");
+	}
 	ret = handleKeys(envlist, buff, &lenght, &index);
 	p_term.c_lflag |= (ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
-	if (ret)
-		return (1);
-	return (0);
+	return (ret);
 }

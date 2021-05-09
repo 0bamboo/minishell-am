@@ -111,7 +111,6 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;
 			restore_fd(env);
-			// puts("----------------");
 		}
 	}
 }

@@ -113,8 +113,6 @@ char **args, char **files)
 	new->nbrpipe = prs->nbrpipe;
 	new->redir = -1;
 	new->iterator = prs->iter;
-	if (args[0])
-		new->command = ft_strdup(args[0]);
 	_fill_pipe_arg_(prs, &new, args, files);
 	if ((*head) == NULL)
 		(*head) = new;

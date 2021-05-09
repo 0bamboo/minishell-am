@@ -1,0 +1,6 @@
+sp->str = prs->cmds
+prs->cmds[i] = prs->buffer = buffer = prs->global
+prs->pipe[i] = prs->buff
+prs->pipe
+prs->array done
+prs->env done.

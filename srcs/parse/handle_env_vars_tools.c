@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/08 14:12:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 14:43:23 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,16 @@ int	_isspec_(char c)
 
 void	_push_back_string_(char *buff, int index, char *fill, int size)
 {
-	while (*fill && size > 0)
+	int	i;
+
+	i = -1;
+	while (fill[++i] && size > 0)
 	{
-		buff[index++] = *fill++;
+		buff[index++] = fill[i];
 		size--;
 	}
+	free(fill);
+	fill = NULL;
 }
 
 void	_env_var_counter_(t_mp *prs, t_envlist *env)
@@ -74,9 +79,12 @@ void	_env_var_copy_(t_mp *prs, t_envlist *env)
 
 void	_copy_dollar_digits_(t_mp *prs)
 {
+	char	*tmp;
+
+	tmp = ft_strdup("bash");
 	if (prs->buff[++prs->i] == 48)
 	{
-		_push_back_string_(prs->global, prs->g, "bash", 4);
+		_push_back_string_(prs->global, prs->g, tmp, 4);
 		prs->g +=4;
 		prs->i++;
 	}

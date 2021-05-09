@@ -38,8 +38,8 @@ void	_fix_the_order_(t_mp *prs)
 {
 	int	arg;
 
-	prs->j = 0;
 	arg = 0;
+	prs->j = 0;
 	prs->i = 0;
 	prs->args = malloc(sizeof(char *) * (prs->len + 1));
 	prs->files = malloc(sizeof(char *) * (prs->len + 1));

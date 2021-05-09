@@ -20,8 +20,13 @@ void	_free_tab_(char **buffer)
 	if (buffer)
 	{
 		if (buffer[++i])
+		{
 			while (buffer[i])
-				free(buffer[i++]);
+			{
+				free(buffer[i]);
+				buffer[i++] = NULL;
+			}
+		}
 		free(buffer);
 		buffer = NULL;
 	}
@@ -74,6 +79,7 @@ void	_handle_normal_args_(t_mp *prs, char *tmp)
 	}
 	prs->array[prs->size] = NULL;
 	free(prs->buff);
+	prs->buff = NULL;
 	_fix_the_order_(prs);
 	_free_tab_(prs->array);
 }
@@ -114,9 +120,6 @@ void	_fill_list_for_normal_args_(t_mp *prs, char **args, char **files)
 	curr->redir = -1;
 	curr->iterator = 0;
 	curr->next = NULL;
-	curr->command = NULL;
-	if (args[0])
-		curr->command = ft_strdup(args[0]);
 	_fill_normal_args_(prs, &curr, args, files);
 	prs->head = curr;
 }

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/08 14:09:01 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 15:32:47 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int                     g_ret;
 
 typedef struct			s_cmd_list
 {
-	char				*command;
 	char				**args;
 	int					nbrpipe;
 	int					iterator;

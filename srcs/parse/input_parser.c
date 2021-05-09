@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 00:34:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 15:48:40 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	_handle_pipe_args_(t_mp *prs)
 		if (i == 0)
 			prs->head = curr;
 	}
+	free(prs->pipe);
+	prs->pipe = NULL;
 }
 
 void	_copy_tokens_data_(t_mp *prs, int index)
@@ -83,7 +85,6 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
 	int	i;
-	// t_cmd_list *cur;
 
 	line = ft_strtrim(line, " \t\v\n\r");
 	if (_handle_syntax_errors(line, prs))

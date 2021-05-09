@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 16:32:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 19:24:15 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	_handle_pipe_args_(t_mp *prs)
 	t_cmd_list	*curr;
 	char		*tmp;
 
-	curr = malloc(sizeof(t_cmd_list));
 	curr = NULL;
 	i = -1;
 	while (prs->pipe[++i])
@@ -60,6 +59,7 @@ void	_handle_pipe_args_(t_mp *prs)
 		tmp = prs->pipe[i];
 		_handle_normal_args_(prs, tmp);
 		prs->iter = i;
+		// curr = prs->head;
 		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
 		if (i == 0)
 			prs->head = curr;
@@ -71,7 +71,7 @@ void	_handle_pipe_args_(t_mp *prs)
 
 void	_copy_tokens_data_(t_mp *prs, int index)
 {
-	prs->head = malloc(sizeof(t_cmd_list));
+	// prs->head = malloc(sizeof(t_cmd_list));
 	prs->head = NULL;
 	if (_if_pipe_(prs, index))
 	{
@@ -83,6 +83,12 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 		_handle_normal_args_(prs, prs->cmds[index]);
 		_fill_list_for_normal_args_(prs, prs->args, prs->files);
 	}
+}
+
+void _free_all_(t_mp *prs, t_sp *sp)
+{
+	free(prs);
+	free(sp);
 }
 
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
@@ -98,6 +104,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 	else
 	{
 		prs->cmds = _split_tokens(prs->sp, line, ';');
+		free(line);
+		line = NULL;
 		i = -1;
 		while (prs->cmds[++i])
 		{
@@ -107,8 +115,17 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			free(tmp);
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
+			t_cmd_list *tmp_head = prs->head;
 			prs->status = env->status;
 			restore_fd(env);
+			free(env->fd);
+			env->fd = NULL;
+			clean_cmdList(tmp_head);
 		}
+		i = -1;
+		while (prs->cmds[++i])
+			free(prs->cmds[i]);
+		free(prs->cmds);
+		prs->cmds = NULL;
 	}
 }

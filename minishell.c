@@ -41,6 +41,7 @@ int main(int argc, char **argv, char **envp)
 
 	prs = malloc(sizeof(t_mp));
 	prs->sp = malloc(sizeof(t_sp));
+	envlist.prs = prs;
 	prs->cmds = NULL;
     prs->er = 0;
     prs->i = 0;

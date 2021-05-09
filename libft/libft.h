@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/20 18:45:53 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 16:01:00 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 16:15:23 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ size_t			ft_strlcat(char *dst, const char *src, size_t size);
 int				ft_isprint(int c);
 int				ft_putchars(int c);
 int				ft_putstrs(char *str);
-void            *ft_memcpy(void *dest, const void *src, size_t n);
-void            *ft_memmove(void *dest, const void *src, size_t len);
+void			*ft_memcpy(void *dest, const void *src, size_t n);
+void			*ft_memmove(void *dest, const void *src, size_t len);
 
 #endif

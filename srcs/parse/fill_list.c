@@ -78,8 +78,6 @@ void	_handle_normal_args_(t_mp *prs, char *tmp)
 			_handle_normal_args_2_(prs);
 	}
 	prs->array[prs->size] = NULL;
-	free(prs->buff);
-	prs->buff = NULL;
 	_fix_the_order_(prs);
 	_free_tab_(prs->array);
 }

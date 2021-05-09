@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 15:48:40 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 16:32:52 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,20 @@ void	_handle_pipe_args_(t_mp *prs)
 {
 	int			i;
 	t_cmd_list	*curr;
+	char		*tmp;
 
 	curr = malloc(sizeof(t_cmd_list));
 	curr = NULL;
 	i = -1;
 	while (prs->pipe[++i])
 	{
-		_handle_normal_args_(prs, prs->pipe[i]);
+		tmp = prs->pipe[i];
+		_handle_normal_args_(prs, tmp);
 		prs->iter = i;
 		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
 		if (i == 0)
 			prs->head = curr;
+		free(tmp);
 	}
 	free(prs->pipe);
 	prs->pipe = NULL;
@@ -84,9 +87,12 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
-	line = ft_strtrim(line, " \t\v\n\r");
+	tmp = line;
+	line = ft_strtrim(tmp, " \t\v\n\r");
+	free(tmp);
 	if (_handle_syntax_errors(line, prs))
 		_raise_an_exception();
 	else
@@ -95,8 +101,10 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 		i = -1;
 		while (prs->cmds[++i])
 		{
-			prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
+			tmp = prs->cmds[i];
+			prs->cmds[i] = _get_env_vars_(tmp, prs, env);
 			_copy_tokens_data_(prs, i);
+			free(tmp);
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;

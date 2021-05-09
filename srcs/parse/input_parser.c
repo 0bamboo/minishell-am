@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 00:03:07 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 00:34:21 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,23 +95,11 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 		while (prs->cmds[++i])
 		{
 			prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
-			// printf("cmd  == |%s|\n", prs->cmds[i]);
 			_copy_tokens_data_(prs, i);
 			save_fd(env);
-			// cur = prs->head;
-			// while (cur)
-			// {
-			// 	int j =-1;
-			// 	while (cur->args[++j])
-			// 		printf("|%s| ", cur->args[j]);
-			// 	puts("");
-			// 	cur = cur->next;
-			// }
-			// printf("prs->head = |%s|\n", prs->head->args[0]);
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;
 			restore_fd(env);
-			// puts("----------------");
 		}
 	}
 }

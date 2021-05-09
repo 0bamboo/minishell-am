@@ -1,0 +1,16 @@
+total 212
+drwxrwxr-x 6 ajermoune ajermoune   4096 May  9 18:38 .
+drwxr-xr-x 3 ajermoune ajermoune   4096 May  9 18:06 ..
+-rw-rw---- 1 ajermoune ajermoune      0 May  9 18:38 file
+drwxrwxr-x 8 ajermoune ajermoune   4096 May  9 18:07 .git
+-rw-rw-r-- 1 ajermoune ajermoune      9 May  8 22:36 .gitignore
+drwxrwxr-x 2 ajermoune ajermoune   4096 May  9 18:07 includes
+-rw-rw-r-- 1 ajermoune ajermoune    135 May  9 18:07 leaks
+drwxrwxr-x 2 ajermoune ajermoune   4096 May  9 18:38 libft
+-rw-rw-r-- 1 ajermoune ajermoune    138 May  8 22:36 main.c
+-rw-rw-r-- 1 ajermoune ajermoune   3851 May  8 22:55 Makefile
+-rwxrwxr-x 1 ajermoune ajermoune  62048 May  9 18:38 minishell
+-rw-rw-r-- 1 ajermoune ajermoune 101514 May  9 18:38 minishell.a
+-rw-rw-r-- 1 ajermoune ajermoune   1557 May  9 18:35 minishell.c
+-rw-rw-r-- 1 ajermoune ajermoune     15 May  8 22:36 README.md
+drwxrwxr-x 4 ajermoune ajermoune   4096 May  8 22:36 srcs

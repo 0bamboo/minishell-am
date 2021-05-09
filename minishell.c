@@ -50,6 +50,7 @@ int main(int argc, char **argv, char **envp)
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
 			addTohistory(&envlist);
+			// printf("line == |%s|\n", envlist.line);
 			_start_parsing(envlist.line, prs, &envlist);
 			// free(envlist.line);
         }

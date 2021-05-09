@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/08 14:01:30 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/08 23:18:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	counter = 0;
 	prs->buff = buffer;
 	counter = _line_counter_(prs, env);
-	printf("counter == |%d|\n", counter);
 	prs->global = (char *)malloc(sizeof(char *) * (counter + 1));
 	if (!prs->global)
 		return (NULL);
@@ -90,6 +89,5 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	while (prs->buff[prs->i])
 		_get_env_vars_2_(prs, env);
 	prs->global[prs->g] = '\0';
-	printf("env line === |%s|\n", prs->global);
 	return (prs->global);
 }

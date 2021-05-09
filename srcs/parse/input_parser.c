@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/08 15:12:26 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 00:03:07 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
 	int	i;
+	// t_cmd_list *cur;
 
 	line = ft_strtrim(line, " \t\v\n\r");
 	if (_handle_syntax_errors(line, prs))
@@ -94,11 +95,23 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 		while (prs->cmds[++i])
 		{
 			prs->cmds[i] = _get_env_vars_(prs->cmds[i], prs, env);
+			// printf("cmd  == |%s|\n", prs->cmds[i]);
 			_copy_tokens_data_(prs, i);
 			save_fd(env);
+			// cur = prs->head;
+			// while (cur)
+			// {
+			// 	int j =-1;
+			// 	while (cur->args[++j])
+			// 		printf("|%s| ", cur->args[j]);
+			// 	puts("");
+			// 	cur = cur->next;
+			// }
+			// printf("prs->head = |%s|\n", prs->head->args[0]);
 			env->status = execute_cmd(prs->head, env);
 			prs->status = env->status;
 			restore_fd(env);
+			// puts("----------------");
 		}
 	}
 }

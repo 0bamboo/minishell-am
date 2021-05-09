@@ -26,8 +26,6 @@ int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)
 		}
 		if (handle_redirection(command))
 			exit (1);
-		if (isbuiltin(command))
-			call_builtin(command, envlist);
 		else if (execve(path, command->args, envlist->envp) < 0)
 		{
 			printf("minishell: %s: command not found\n", command->args[0]);

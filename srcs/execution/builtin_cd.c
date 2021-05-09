@@ -17,9 +17,18 @@ char	*get_env_val(t_envlist *envlist, char *var)
 		return (NULL);
 }
 
-int	check_homepath(t_envlist *envlist, t_cmd_list *cmd)
+void	fix_stuff(t_cmd_list *cmd, char **home_path)
 {
 	char	*tmp;
+
+	tmp = ft_strjoin(*home_path, cmd->args[1] + 1);
+	free(cmd->args[1]);
+	cmd->args[1] = tmp;
+	free(*home_path);
+}
+
+int	check_homepath(t_envlist *envlist, t_cmd_list *cmd)
+{
 	char	*home_path;
 
 	if (!cmd->args[1] || !ft_strcmp(cmd->args[1], "~")
@@ -37,12 +46,7 @@ int	check_homepath(t_envlist *envlist, t_cmd_list *cmd)
 			cmd->args[1] = home_path;
 		}
 		if (!ft_strncmp(cmd->args[1], "~/", 2))
-		{
-			tmp = ft_strjoin(home_path, cmd->args[1] + 1);
-			free(cmd->args[1]);
-			cmd->args[1] = tmp;
-			free(home_path);
-		}
+			fix_stuff(cmd, &home_path);
 	}
 	return (0);
 }

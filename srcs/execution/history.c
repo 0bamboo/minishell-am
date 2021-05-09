@@ -67,8 +67,16 @@ void	handle_backspace(t_envlist *envlist, int *lenght)
 
 int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 {
+	int		i = 0;
 	while (read(0, &buff, sizeof(buff)))
 	{
+		if (g_ret == 1 && !i)
+		{
+			free(envlist->line);
+			envlist->line = ft_strdup("");
+			*lenght = 0;
+			i = 1;
+		}
 		if (buff == ARROW_UP || buff == ARROW_DOWN)
 			handle_arrawkeys(envlist, buff, lenght, index);
 		else if (buff == BACK_SPACE)
@@ -85,7 +93,11 @@ int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 			write(1, &buff, 1);
 		}
 		else if (buff == ENTER)
+		{
+			if (i)
+				ft_putstrs("\n");
 			return (0);
+		}
 		buff = 0;
 	}
 	return (0);
@@ -102,6 +114,7 @@ int	ft_readline(t_envlist *envlist)
 	buff = 0;
 	lenght = 0;
 	index = -1;
+	ret = 0;
 	tgetent(NULL, getenv("TERM"));
 	tcgetattr(0, &p_term);
 	p_term.c_lflag &= ~(ECHO | ICANON);
@@ -113,7 +126,5 @@ int	ft_readline(t_envlist *envlist)
 	ret = handleKeys(envlist, buff, &lenght, &index);
 	p_term.c_lflag |= (ECHO | ICANON);
 	tcsetattr(0, TCSANOW, &p_term);
-	if (ret)
-		return (1);
-	return (0);
+	return (ret);
 }

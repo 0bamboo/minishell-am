@@ -26,14 +26,14 @@ void	clean_cmdList(t_cmd_list *cmd)
 	i = 0;
 	if (cmd)
 	{
-		if (cmd->args)
-		{
-			while (cmd->args && cmd->args[i])
-				free(cmd->args[i++]);
-			free(cmd->args);
-		}
 		while (cmd)
 		{
+			if (cmd->args)
+			{
+				while (cmd->args && cmd->args[i])
+					free(cmd->args[i++]);
+				free(cmd->args);    
+			}
 			tmp = cmd;
 			cmd = cmd->next;
 			free(tmp);
@@ -45,6 +45,16 @@ void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
 {
 	int		i;
 
+	if (envlist->prs->cmds)
+	{
+		i = -1;
+		while (envlist->prs->cmds[++i])
+			free(envlist->prs->cmds[i]);
+		free(envlist->prs->cmds);
+		envlist->prs->cmds = NULL;
+	}
+	free(envlist->prs->sp);
+	free(envlist->prs);
 	if (envlist->vars)
 	{
 		i = 0;

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 15:32:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 18:32:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,6 @@ typedef struct			s_cmd_list
 	struct  s_cmd_list	*next;
 }						t_cmd_list;
 
-typedef struct          s_envlist
-{
-    char	            **vars;
-    char                **envp;
-    char                *line;
-    char                **history;
-    int                 status;
-	pid_t				*pids;
-	int					*fds;
-	int					*fd;
-}						t_envlist;
 
 
 
@@ -106,7 +95,20 @@ typedef struct      s_mp
     t_sp            *sp;
 }                   t_mp;
 
+typedef struct          s_envlist
+{
+    char	            **vars;
+    char                **envp;
+    char                *line;
+    char                **history;
+    int                 status;
+	pid_t				*pids;
+	int					*fds;
+	int					*fd;
+    t_mp                *prs;
+}						t_envlist;
 int     _is_white_space(char c);
+void _free_all_(t_mp *prs, t_sp *sp);
 void    _env_var_counter_(t_mp *prs, t_envlist *env);
 void    _env_var_copy_(t_mp *prs, t_envlist *env);
 void	_size_of_arg_dq_(t_mp *prs);

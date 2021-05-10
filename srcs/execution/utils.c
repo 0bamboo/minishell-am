@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:18:58 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:05:29 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*get_home_path(char **args, char **envp)
 	char			*path;
 
 	arr = NULL;
-	while (*envp && strncmp(*envp, "PATH=", 5))
+	while (*envp && ft_strncmp(*envp, "PATH=", 5))
 		envp++;
 	if (*envp)
 		arr = ft_split(*envp + 5, ':');

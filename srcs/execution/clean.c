@@ -6,11 +6,21 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:06:55 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:06:56 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:18:30 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	cleanfds(t_envlist *envlist)
+{
+	if (envlist->fds)
+		free(envlist->fds);
+	if (envlist->pids)
+		free(envlist->pids);
+	if (envlist->fd)
+		free(envlist->fd);
+}
 
 void	clean_cmdList(t_envlist *env)
 {
@@ -53,6 +63,7 @@ void	cleaning(t_envlist *envlist)
 	int		i;
 
 	freeing(envlist);
+	cleanfds(envlist);
 	if (envlist->vars)
 	{
 		i = 0;

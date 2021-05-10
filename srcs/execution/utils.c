@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:12:21 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:18:58 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	restore_fd(t_envlist *envlist)
 	dup2(envlist->fd[1], 1);
 	dup2(envlist->fd[2], 2);
 	free(envlist->fd);
+	envlist->fd = NULL;
 }
 
 int	removeFromline(t_envlist *envlist)

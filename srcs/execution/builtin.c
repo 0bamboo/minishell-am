@@ -84,7 +84,7 @@ int	builtin_exit(t_cmd_list *cmd, t_envlist *envlist)
 	printf("exit\n");
 	if (!cmd->args[1])
 	{
-		cleaning(cmd, envlist);
+		cleaning(envlist);
 		exit(envlist->status);
 	}
 	ret = get_val(cmd, envlist);
@@ -93,6 +93,6 @@ int	builtin_exit(t_cmd_list *cmd, t_envlist *envlist)
 		printf("minishell: exit: too many arguments\n");
 		return (1);
 	}
-	cleaning(cmd, envlist);
+	cleaning(envlist);
 	exit(ret);
 }

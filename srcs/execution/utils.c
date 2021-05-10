@@ -1,5 +1,21 @@
 #include "../../includes/minishell.h"
 
+void	save_fd(t_envlist *envlist)
+{
+	envlist->fd = malloc(sizeof(int) * 3);
+	envlist->fd[0] = dup(0);
+	envlist->fd[1] = dup(1);
+	envlist->fd[2] = dup(2);
+}
+
+void	restore_fd(t_envlist *envlist)
+{
+	dup2(envlist->fd[0], 0);
+	dup2(envlist->fd[1], 1);
+	dup2(envlist->fd[2], 2);
+	free(envlist->fd);
+}
+
 int	removeFromline(t_envlist *envlist)
 {
 	char	*tmp;
@@ -18,62 +34,6 @@ int	removeFromline(t_envlist *envlist)
 	return (0);
 }
 
-void	clean_cmdList(t_cmd_list *cmd)
-{
-	int			i;
-	t_cmd_list	*tmp;
-
-	i = 0;
-	if (cmd)
-	{
-		while (cmd)
-		{
-			if (cmd->args)
-			{
-				while (cmd->args && cmd->args[i])
-					free(cmd->args[i++]);
-				free(cmd->args);    
-			}
-			tmp = cmd;
-			cmd = cmd->next;
-			free(tmp);
-		}
-	}
-}
-
-void	cleaning(t_cmd_list *cmd, t_envlist *envlist)
-{
-	int		i;
-
-	if (envlist->prs->cmds)
-	{
-		i = -1;
-		while (envlist->prs->cmds[++i])
-			free(envlist->prs->cmds[i]);
-		free(envlist->prs->cmds);
-		envlist->prs->cmds = NULL;
-	}
-	free(envlist->prs->sp);
-	free(envlist->prs);
-	if (envlist->vars)
-	{
-		i = 0;
-		while (envlist->vars[i])
-			free(envlist->vars[i++]);
-		free(envlist->vars);
-	}
-	if (envlist->history)
-	{
-		i = 0;
-		while (envlist->history[i])
-			free(envlist->history[i++]);
-		free(envlist->history);
-	}
-	// if (envlist->line)
-	// 	free(envlist->line); 
-	clean_cmdList(cmd);
-}
-
 char	*get_home_path(char **args, char **envp)
 {
 	struct stat		buf;
@@ -81,9 +41,10 @@ char	*get_home_path(char **args, char **envp)
 	char			*tmp;
 	char			*path;
 
-	while (strncmp(*envp, "PATH=", 5))
+	while (*envp && strncmp(*envp, "PATH=", 5))
 		envp++;
-	arr = ft_split(*envp + 5, ':');
+	if (*envp)
+		arr = ft_split(*envp + 5, ':');
 	while (*arr)
 	{
 		path = ft_strjoin(*arr++, "/");

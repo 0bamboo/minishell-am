@@ -1,30 +1,5 @@
 #include "../../includes/minishell.h"
 
-int	addToline(t_envlist *envlist, char buff)
-{
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	while (envlist->line && envlist->line[i] != '\0')
-		i++;
-	tmp = malloc(i + 2);
-	if (!tmp)
-		return (1);
-	i = 0;
-	while (envlist->line && envlist->line[i] != '\0')
-	{
-		tmp[i] = envlist->line[i];
-		i++;
-	}
-	if (envlist->line)
-		free(envlist->line);
-	tmp[i++] = buff;
-	tmp[i] = '\0';
-	envlist->line = tmp;
-	return (0);
-}
-
 void	handle_arrawkeys(t_envlist *envlist, long buff, int *lenght, int *index)
 {
 	if ((buff == ARROW_UP && envlist->history)
@@ -54,47 +29,58 @@ void	handle_arrawkeys(t_envlist *envlist, long buff, int *lenght, int *index)
 	}
 }
 
-void	handle_backspace(t_envlist *envlist, int *lenght)
+void	handle_backspace(t_envlist *envlist, int *lenght, int param)
 {
-	if (*lenght > 0)
+	if (param && *lenght > 0)
 	{
 		tputs(cursor_left, 1, ft_putchars);
 		tputs(delete_character, 1, ft_putchars);
 		removeFromline(envlist);
 		lenght[0]--;
 	}
+	else if (!param)
+	{
+		free(envlist->line);
+		envlist->line = ft_strdup("");
+		*lenght = 0;
+	}
+}
+
+void	handle_char(t_envlist *envlist, long buff, int *lenght, int *index)
+{
+	if (buff == ARROW_UP || buff == ARROW_DOWN)
+		handle_arrawkeys(envlist, buff, lenght, index);
+	else if (buff == BACK_SPACE)
+		handle_backspace(envlist, lenght, 1);
+	else if (ft_isprint(buff))
+	{
+		lenght[0]++;
+		addToline(envlist, buff);
+		write(1, &buff, 1);
+	}
 }
 
 int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 {
-	int		i = 0;
+	int		bol;
+
+	bol = 0;
 	while (read(0, &buff, sizeof(buff)))
 	{
-		if (g_ret == 1 && !i)
+		if (g_ret == 1 && !bol)
 		{
-			free(envlist->line);
-			envlist->line = ft_strdup("");
-			*lenght = 0;
-			i = 1;
+			handle_backspace(envlist, lenght, 0);
+			bol = 1;
 		}
-		if (buff == ARROW_UP || buff == ARROW_DOWN)
-			handle_arrawkeys(envlist, buff, lenght, index);
-		else if (buff == BACK_SPACE)
-			handle_backspace(envlist, lenght);
-		else if (buff == CTRL_D && !lenght[0])
+		handle_char(envlist, buff, lenght, index);
+		if (buff == CTRL_D && !lenght[0])
 		{
 			ft_putstrs("exit\n");
 			return (1);
 		}
-		else if (ft_isprint(buff))
-		{
-			lenght[0]++;
-			addToline(envlist, buff);
-			write(1, &buff, 1);
-		}
 		else if (buff == ENTER)
 		{
-			if (i)
+			if (bol)
 				ft_putstrs("\n");
 			return (0);
 		}

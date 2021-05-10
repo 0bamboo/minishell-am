@@ -29,7 +29,7 @@ unsigned int	random_num_generator(int range)
 void	handle_numeric(t_cmd_list *cmd, t_envlist *envlist)
 {
 	printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
-	cleaning(cmd, envlist);
+	cleaning(envlist);
 	exit(255);
 }
 
@@ -55,4 +55,29 @@ void	sorting(char **arr)
 		}
 		i++;
 	}
+}
+
+int	addToline(t_envlist *envlist, char buff)
+{
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	while (envlist->line && envlist->line[i] != '\0')
+		i++;
+	tmp = malloc(i + 2);
+	if (!tmp)
+		return (1);
+	i = 0;
+	while (envlist->line && envlist->line[i] != '\0')
+	{
+		tmp[i] = envlist->line[i];
+		i++;
+	}
+	if (envlist->line)
+		free(envlist->line);
+	tmp[i++] = buff;
+	tmp[i] = '\0';
+	envlist->line = tmp;
+	return (0);
 }

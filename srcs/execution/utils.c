@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
+/*   Updated: 2021/05/10 13:18:58 by majermou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	save_fd(t_envlist *envlist)
@@ -14,6 +26,7 @@ void	restore_fd(t_envlist *envlist)
 	dup2(envlist->fd[1], 1);
 	dup2(envlist->fd[2], 2);
 	free(envlist->fd);
+	envlist->fd = NULL;
 }
 
 int	removeFromline(t_envlist *envlist)
@@ -41,6 +54,7 @@ char	*get_home_path(char **args, char **envp)
 	char			*tmp;
 	char			*path;
 
+	arr = NULL;
 	while (*envp && strncmp(*envp, "PATH=", 5))
 		envp++;
 	if (*envp)

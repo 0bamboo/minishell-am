@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 01:06:58 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:01:06 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,6 @@ void	_copy_tokens_data_(t_mp *prs, int index)
 	}
 }
 
-void _free_all_(t_mp *prs, t_sp *sp)
-{
-	free(prs);
-	free(sp);
-}
-
 void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 {
 	int		i;
@@ -116,10 +110,6 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			env->status = execute_cmd(prs->head, env);
 			restore_fd(env);
 		}
-		i = -1;
-		while (prs->cmds[++i])
-			free(prs->cmds[i]);
-		free(prs->cmds);
-		prs->cmds = NULL;
+		_free_tab_(prs->cmds);
 	}
 }

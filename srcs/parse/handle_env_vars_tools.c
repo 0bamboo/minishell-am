@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 23:22:48 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:00:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	_push_back_string_(char *buff, int index, char *fill, int size)
 	fill = NULL;
 }
 
-void	 _env_var_counter_(t_mp *prs, t_envlist *env)
+void	_env_var_counter_(t_mp *prs, t_envlist *env)
 {
 	int	size;
 

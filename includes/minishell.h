@@ -239,5 +239,8 @@ void	clean_cmdList(t_envlist *envlist);
 int	addToline(t_envlist *envlist, char buff);
 
 int	ft_isprint(int c);
+void	clean_cmdList(t_envlist *env);
+void	freeing(t_envlist *envlist);
+void	cleaning(t_envlist *envlist);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:10:31 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:28:23 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void    signal_handler(int signal)
 void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)
 {
 	env_varsdup(envlist,envp);
-	rmfrom_envlist(envlist, "OLDPWD");
+	shell_lvl(envlist);
 	envlist->status = 0;
 	envlist->history = NULL;
 	envlist->line = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 18:32:05 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:28:31 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,5 +242,6 @@ int	ft_isprint(int c);
 void	clean_cmdList(t_envlist *env);
 void	freeing(t_envlist *envlist);
 void	cleaning(t_envlist *envlist);
+void	shell_lvl(t_envlist *envlist);
 
 #endif

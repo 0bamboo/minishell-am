@@ -12,20 +12,30 @@
 
 #include "../../includes/minishell.h"
 
-void	_free_tab_(char **buffer)
+void	_free_tab_(t_mp *prs, char **buffer, int check)
 {
 	int	i;
 
 	i = -1;
-	if (buffer)
+	if (check)
 	{
-		while (buffer[++i])
+		if (buffer)
 		{
-			free(buffer[i]);
-			buffer[i] = NULL;
+			while (buffer[++i])
+				free(buffer[i]);
+			free(buffer);
+			buffer = NULL;
 		}
-		free(buffer);
-		buffer = NULL;
+	}
+	else
+	{
+		if (prs->cmds)
+		{
+			while (prs->cmds[++i])
+				free(prs->cmds[i]);
+			free(prs->cmds);
+			prs->cmds = NULL;
+		}
 	}
 }
 
@@ -76,7 +86,7 @@ void	_handle_normal_args_(t_mp *prs, char *tmp)
 	}
 	prs->array[prs->size] = NULL;
 	_fix_the_order_(prs);
-	_free_tab_(prs->array);
+	_free_tab_(prs, prs->array, 1);
 }
 
 void	_fill_normal_args_(t_mp *prs, t_cmd_list **curr,
@@ -100,8 +110,8 @@ char **args, char **files)
 	i = -1;
 	while ((*curr)->args[++i])
 		(*curr)->args[i] = _handle_backslash_(prs, (*curr)->args[i]);
-	_free_tab_(args);
-	_free_tab_(files);
+	_free_tab_(prs, args, 1);
+	_free_tab_(prs, files, 1);
 }
 
 void	_fill_list_for_normal_args_(t_mp *prs, char **args, char **files)

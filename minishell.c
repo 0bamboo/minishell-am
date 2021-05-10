@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 14:07:18 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:32:38 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,13 @@ void	signal_handler(int signal)
 		if (g_ret == 2)
 			ft_putstrs("Quit: 3\n");
 	}
+}
+
+void	_execute_(t_mp *prs, t_envlist *env)
+{
+	save_fd(env);
+	env->status = execute_cmd(prs->head, env);
+	restore_fd(env);
 }
 
 void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)

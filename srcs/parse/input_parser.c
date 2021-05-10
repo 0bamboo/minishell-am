@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 14:11:17 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:33:14 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			prs->cmds[i] = _get_env_vars_(tmp, prs, env);
 			_copy_tokens_data_(prs, i);
 			free(tmp);
-			save_fd(env);
-			env->status = execute_cmd(prs->head, env);
-			restore_fd(env);
+			_execute_(prs, env);
 		}
-		_free_tab_(prs->cmds);
+		_free_tab_(prs, NULL, 0);
 	}
 }

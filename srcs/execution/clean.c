@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:06:55 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:28:08 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:57:53 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 void	shell_lvl(t_envlist *envlist)
 {
 	char	*tmp;
+	char	*tmp1;
 	int		shl;
 
 	tmp = getenv("SHLVL");
 	shl = ft_atoi(tmp);
-	free(tmp);
 	shl++;
-	tmp = ft_strjoin("SHLVL=", ft_itoa(shl));
+	tmp1 = ft_itoa(shl);
+	tmp = ft_strjoin("SHLVL=", tmp1);
+	free(tmp1);
 	rmfrom_envlist(envlist, "SHLVL");
 	addto_envlist(envlist, tmp);
 	rmfrom_envlist(envlist, "OLDPWD");
 	free(tmp);
+	envlist->fd = NULL;
+	envlist->fds = NULL;
+	envlist->pids = NULL;
 }
 
 void	cleanfds(t_envlist *envlist)

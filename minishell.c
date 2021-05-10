@@ -6,13 +6,13 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:28:23 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:07:18 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void    signal_handler(int signal)
+void	signal_handler(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -31,7 +31,7 @@ void    signal_handler(int signal)
 
 void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)
 {
-	env_varsdup(envlist,envp);
+	env_varsdup(envlist, envp);
 	shell_lvl(envlist);
 	envlist->status = 0;
 	envlist->history = NULL;
@@ -46,17 +46,17 @@ void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)
 	prs->pipe = NULL;
 	prs->files = NULL;
 	prs->args = NULL;
-    prs->buff = NULL;
+	prs->buff = NULL;
 	prs->array = NULL;
-    prs->env = NULL;
-    prs->temp = NULL;
-    prs->global = NULL;
-    prs->er = 0;
+	prs->env = NULL;
+	prs->temp = NULL;
+	prs->global = NULL;
+	prs->er = 0;
 	signal(SIGINT, signal_handler);
-    signal(SIGQUIT, signal_handler);
+	signal(SIGQUIT, signal_handler);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_envlist	*envlist;
 	t_mp		*prs;
@@ -77,11 +77,11 @@ int main(int argc, char **argv, char **envp)
 		{
 			addTohistory(envlist);
 			_start_parsing(envlist->line, prs, envlist);
-        }
-        envlist->line = NULL;
-    }
+		}
+		envlist->line = NULL;
+	}
 	cleaning(envlist);
 	(void)argc;
 	(void)argv;
-    return (0);
+	return (0);
 }

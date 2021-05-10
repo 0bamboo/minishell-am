@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:18:58 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:48:37 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,14 @@ char	*get_home_path(char **args, char **envp)
 	char			*path;
 
 	arr = NULL;
-	while (*envp && strncmp(*envp, "PATH=", 5))
+	if (!ft_strncmp(*args, "/", 1) || !ft_strncmp(*args, "./", 2))
+		return (ft_strdup(*args));
+	while (ft_strncmp(*envp, "PATH=", 5));
 		envp++;
-	if (*envp)
-		arr = ft_split(*envp + 5, ':');
+	arr = ft_split(*envp + 5, ':');
 	while (*arr)
 	{
-		path = ft_strjoin(*arr++, "/");
+		path = ft_strjoin(*arr, "/");
 		tmp = path;
 		path = ft_strjoin(path, *args);
 		free(tmp);
@@ -72,6 +73,7 @@ char	*get_home_path(char **args, char **envp)
 			return (path);
 		}
 		free(path);
+		arr++;
 	}
 	return (NULL);
 }

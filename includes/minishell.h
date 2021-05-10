@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 14:50:07 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:06:13 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,8 @@ int						_size_of_arg_(t_mp *prs, char *buffer, int i);
 void					_fill_list_for_normal_args_(t_mp *prs, char **args,
 							char **files);
 void					_free_tab_(t_mp *prs, char **buffer, int check);
-void					_fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
+void					_fill_list_for_normal_args_(t_mp *prs, char **args,
+							char **files);
 void					_free_tab_(t_mp *prs, char **buffer, int check);
 void					_fill_list_for_normal_args_(t_mp *prs, char **args,
 							char **files);

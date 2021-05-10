@@ -6,10 +6,9 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 14:50:51 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:11:30 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "./includes/minishell.h"
 

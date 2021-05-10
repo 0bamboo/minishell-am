@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_cd.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/10 13:07:58 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 14:45:45 by majermou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/minishell.h"
 
 char	*get_env_val(t_envlist *envlist, char *var)
@@ -46,7 +34,10 @@ int	check_homepath(t_envlist *envlist, t_cmd_list *cmd)
 	if (!cmd->args[1] || !ft_strcmp(cmd->args[1], "~")
 		|| !ft_strncmp(cmd->args[1], "~/", 2))
 	{
-		home_path = get_env_val(envlist, "HOME");
+		if (!cmd->args[1])
+			home_path = get_env_val(envlist, "HOME");
+		else
+			home_path = getenv("HOME");
 		if (!home_path)
 		{
 			printf("minishell: cd: HOME not set\n");
@@ -77,6 +68,7 @@ int	get_path(t_envlist *envlist, t_cmd_list *cmd)
 			printf("minishell: cd: OLDPWD not set\n");
 			return (1);
 		}
+		printf("%s\n", tmp);
 		free(cmd->args[1]);
 		cmd->args[1] = tmp;
 	}

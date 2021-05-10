@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 23:55:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 01:36:00 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	_copy_command_status(t_mp *prs)
 
 	tmp = ft_itoa(prs->status);
 	if (g_ret == 1)
+	{
+		free(tmp);
 		tmp = ft_itoa(1);
+	}
 	prs->count = ft_strlen(tmp);
 	_push_back_string_(prs->global, prs->g, tmp, prs->count);
 	prs->g += prs->count;

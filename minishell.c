@@ -56,6 +56,7 @@ void	cleaning(t_envlist *envlist)
 		free(envlist->history);
 	}
 	clean_cmdList(envlist);
+	free(envlist);
 }
 
 void    signal_handler(int signal)
@@ -75,48 +76,58 @@ void    signal_handler(int signal)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)
 {
-	t_envlist	envlist;
-	t_mp		*prs;
-	int			ret;
-
-	prs = malloc(sizeof(t_mp));
+	env_varsdup(envlist,envp);
+	rmfrom_envlist(envlist, "OLDPWD");
+	envlist->status = 0;
+	envlist->history = NULL;
+	envlist->line = NULL;
+	envlist->envp = envp;
+	envlist->head = NULL;
+	envlist->prs = prs;
 	prs->sp = malloc(sizeof(t_sp));
-	envlist.prs = prs;
+	prs->sp->str = NULL;
+	prs->sp->tmp = NULL;
 	prs->cmds = NULL;
-    prs->er = 0;
-    prs->i = 0;
+	prs->pipe = NULL;
+	prs->files = NULL;
+	prs->args = NULL;
     prs->buff = NULL;
+	prs->array = NULL;
     prs->env = NULL;
     prs->temp = NULL;
     prs->global = NULL;
-	envlist.history = NULL;
-	envlist.status = 0;
-	envlist.line = NULL;
-	envlist.envp = envp;
-	envlist.head = NULL;
-	env_varsdup(&envlist,envp);
-	rmfrom_envlist(&envlist, "OLDPWD");
-
+    prs->er = 0;
 	signal(SIGINT, signal_handler);
     signal(SIGQUIT, signal_handler);
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	t_envlist	*envlist;
+	t_mp		*prs;
+	int			ret;
+
+	envlist = malloc(sizeof(t_envlist));
+	prs = malloc(sizeof(t_mp));
+	_init_vars_(envlist, prs, envp);
 	while (1)
 	{
 		g_ret = 0;
-		ret = ft_readline(&envlist);
+		ret = ft_readline(envlist);
 		if (ret == 1)
 			break ;
 		if (g_ret != 1)
 			ft_putstrs("\n");
-		if (envlist.line && ft_strcmp(envlist.line, ""))
+		if (envlist->line && ft_strcmp(envlist->line, ""))
 		{
-			addTohistory(&envlist);
-			_start_parsing(envlist.line, prs, &envlist);
+			addTohistory(envlist);
+			_start_parsing(envlist->line, prs, envlist);
         }
-        envlist.line = NULL;
+        envlist->line = NULL;
     }
-	cleaning(&envlist);
+	cleaning(envlist);
 	(void)argc;
 	(void)argv;
     return (0);

@@ -6,9 +6,10 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 14:12:35 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:36:01 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "./includes/minishell.h"
 
@@ -27,6 +28,13 @@ void	signal_handler(int signal)
 		if (g_ret == 2)
 			ft_putstrs("Quit: 3\n");
 	}
+}
+
+void	_execute_(t_mp *prs, t_envlist *env)
+{
+	save_fd(env);
+	env->status = execute_cmd(prs->head, env);
+	restore_fd(env);
 }
 
 void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)

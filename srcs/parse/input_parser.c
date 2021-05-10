@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 00:19:08 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 00:22:41 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	_handle_pipe_args_(t_mp *prs)
 		tmp = prs->pipe[i];
 		_handle_normal_args_(prs, tmp);
 		prs->iter = i;
-		// curr = prs->head;
 		_fill_list_for_pipe_args_(prs, &curr, prs->args, prs->files);
 		if (i == 0)
 			prs->head = curr;
@@ -71,7 +70,6 @@ void	_handle_pipe_args_(t_mp *prs)
 
 void	_copy_tokens_data_(t_mp *prs, int index)
 {
-	// prs->head = malloc(sizeof(t_cmd_list));
 	prs->head = NULL;
 	if (_if_pipe_(prs, index))
 	{

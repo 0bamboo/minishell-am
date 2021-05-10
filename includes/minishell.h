@@ -6,11 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/05/10 14:24:28 by majermou         ###   ########.fr       */
-=======
-/*   Updated: 2021/05/10 14:33:02 by abdait-m         ###   ########.fr       */
->>>>>>> e68aa33bc16aa51989b2f6aa6b682987045f6523
+/*   Updated: 2021/05/10 14:50:07 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,14 +135,13 @@ void					_len_tokens_sq_(t_sp *sp);
 int						_check_for_special_chars_(char *buff);
 int						_count_token_length_(t_mp *prs);
 int						_size_of_arg_(t_mp *prs, char *buffer, int i);
-<<<<<<< HEAD
-void					_free_tab_(char **buffer);
 void					_fill_list_for_normal_args_(t_mp *prs, char **args,
 							char **files);
-=======
 void					_free_tab_(t_mp *prs, char **buffer, int check);
 void					_fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
->>>>>>> e68aa33bc16aa51989b2f6aa6b682987045f6523
+void					_free_tab_(t_mp *prs, char **buffer, int check);
+void					_fill_list_for_normal_args_(t_mp *prs, char **args,
+							char **files);
 void					_copy_files_(t_mp *prs);
 void					_fix_the_order_(t_mp *prs);
 void					_copy_redirs_(t_mp *prs);

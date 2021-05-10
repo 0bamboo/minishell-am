@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/10 13:12:28 by majermou          #+#    #+#             */
+/*   Updated: 2021/05/10 13:16:00 by majermou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
@@ -71,19 +83,22 @@ int	wait_processes(t_envlist *envlist, int nbr_pipes, int is_builtin)
 
 	i = 0;
 	status = 0;
+	ret = 0;
 	if (nbr_pipes)
 	{
 		while (i < nbr_pipes + 1)
 			waitpid(envlist->pids[i++], &status, 0);
 		free(envlist->fds);
+		envlist->fds = NULL;
 	}
 	else if (!is_builtin)
 		waitpid(envlist->pids[0], &status, 0);
-	free(envlist->pids);
 	if (WIFEXITED(status))
 		ret = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		ret = status + 128;
+	free(envlist->pids);
+	envlist->pids = NULL;
 	return (ret);
 }
 

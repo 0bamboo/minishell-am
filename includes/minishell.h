@@ -6,9 +6,10 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 13:29:19 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:31:46 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 
@@ -225,5 +226,9 @@ void	clean_cmdList(t_envlist *envlist);
 int	addToline(t_envlist *envlist, char buff);
 
 int	ft_isprint(int c);
+void	clean_cmdList(t_envlist *env);
+void	freeing(t_envlist *envlist);
+void	cleaning(t_envlist *envlist);
+void	shell_lvl(t_envlist *envlist);
 
 #endif

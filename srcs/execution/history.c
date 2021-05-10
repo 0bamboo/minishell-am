@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   history.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/10 13:07:40 by majermou          #+#    #+#             */
+/*   Updated: 2021/05/10 13:22:39 by majermou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	handle_arrawkeys(t_envlist *envlist, long buff, int *lenght, int *index)

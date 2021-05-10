@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:10:06 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 14:07:18 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 14:12:35 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,18 @@ void	_init_vars_(t_envlist *envlist, t_mp *prs, char **envp)
 	signal(SIGQUIT, signal_handler);
 }
 
+void	executeCmd(t_envlist *envlist, t_mp *prs)
+{
+	if (g_ret != 1)
+		ft_putstrs("\n");
+	if (envlist->line && ft_strcmp(envlist->line, ""))
+	{
+		addTohistory(envlist);
+		_start_parsing(envlist->line, prs, envlist);
+	}
+	envlist->line = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_envlist	*envlist;
@@ -71,14 +83,7 @@ int	main(int argc, char **argv, char **envp)
 		ret = ft_readline(envlist);
 		if (ret == 1)
 			break ;
-		if (g_ret != 1)
-			ft_putstrs("\n");
-		if (envlist->line && ft_strcmp(envlist->line, ""))
-		{
-			addTohistory(envlist);
-			_start_parsing(envlist->line, prs, envlist);
-		}
-		envlist->line = NULL;
+		executeCmd(envlist, prs);
 	}
 	cleaning(envlist);
 	(void)argc;

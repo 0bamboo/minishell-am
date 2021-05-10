@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 14:43:16 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:06:13 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,11 @@ void					_len_tokens_sq_(t_sp *sp);
 int						_check_for_special_chars_(char *buff);
 int						_count_token_length_(t_mp *prs);
 int						_size_of_arg_(t_mp *prs, char *buffer, int i);
+void					_fill_list_for_normal_args_(t_mp *prs, char **args,
+							char **files);
+void					_free_tab_(t_mp *prs, char **buffer, int check);
+void					_fill_list_for_normal_args_(t_mp *prs, char **args,
+							char **files);
 void					_free_tab_(t_mp *prs, char **buffer, int check);
 void					_fill_list_for_normal_args_(t_mp *prs, char **args,
 							char **files);

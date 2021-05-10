@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:06:55 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:57:53 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 16:02:38 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,12 @@ void	clean_cmdList(t_envlist *env)
 		i = 0;
 		if (env->head->args)
 		{
-			while (env->head->args && env->head->args[i])
-				free(env->head->args[i++]);
-			free(env->head->args);
+			if (ft_strncmp(env->head->args[0], "cd", 2) || !env->head->args[1])
+			{
+				while (env->head->args && env->head->args[i])
+					free(env->head->args[i++]);
+				free(env->head->args);
+			}
 		}
 		tmp = env->head;
 		env->head = env->head->next;

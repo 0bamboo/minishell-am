@@ -6,169 +6,155 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/12 18:05:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/10 13:28:31 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/10 13:29:19 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL
-#define MINISHELL
+#ifndef MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../libft/libft.h"
-#include <sys/param.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <term.h>
-#include <termios.h>
-#include <curses.h>
+# define MINISHELL_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include "../libft/libft.h"
+# include <sys/param.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <term.h>
+# include <termios.h>
+# include <curses.h>
 
 # define ARROW_UP 4283163
 # define ARROW_DOWN 4348699
 # define BACK_SPACE 127
-#define CTRL_D 4
+# define CTRL_D 4
 # define ENTER 10
-#define BUFFER_SIZE 1
+# define BUFFER_SIZE 1
 
+int						g_ret;
 
-
-int                     g_ret;
-
-typedef struct			s_cmd_list
+typedef struct s_cmd_list
 {
 	char				**args;
 	int					nbrpipe;
 	int					iterator;
-    int                 redir;
-	struct  s_cmd_list	*next;
+	int					redir;
+	struct s_cmd_list	*next;
 }						t_cmd_list;
 
-
-
-
-typedef struct	s_sp
+typedef struct s_sp
 {
-    char		**str;
-    char		*tmp;
-    int			start;
-    int			end;
-    int			size;
-    int			i;
-    int			j;
-    int			k;
-    int			idx;
-    int			count;
-}               t_sp;
+	char				**str;
+	char				*tmp;
+	int					start;
+	int					end;
+	int					size;
+	int					i;
+	int					j;
+	int					k;
+	int					idx;
+	int					count;
+}						t_sp;
 
-typedef struct      s_mp
+typedef struct s_mp
 {
-    // char **sp_cmds;
-    int er;
-    int i;
-    int j;
-    int g;
-    int credir;
-    int count;
-    int counter;
-    int status;
-    int size;
-    int nbrpipe;
-    int len;
-    int iter;
-    char **pipe;
-    char **cmds;
-    char **files;
-    char **args;
-    char **array;
-    char *buff;//useable
-    char *env;
-    char *temp;//useable
-    char *global;
-    char tmp;
-    // t_err   err;
-    t_cmd_list      *head;
-    t_sp            *sp;
-}                   t_mp;
+	t_cmd_list			*head;
+	t_sp				*sp;
+	char				**pipe;
+	char				**cmds;
+	char				**files;
+	char				**args;
+	char				**array;
+	char				*buff;
+	char				*env;
+	char				*temp;
+	char				*global;
+	int					er;
+	int					i;
+	int					j;
+	int					g;
+	int					credir;
+	int					count;
+	int					counter;
+	int					status;
+	int					size;
+	int					nbrpipe;
+	int					len;
+	int					iter;
+	char				tmp;
+}						t_mp;
 
-typedef struct          s_envlist
+typedef struct s_envlist
 {
-    t_cmd_list          *head;
-    char	            **vars;
-    char                **envp;
-    char                *line;
-    char                **history;
-    int                 status;
+	t_cmd_list			*head;
+	char				**vars;
+	char				**envp;
+	char				*line;
+	char				**history;
+	int					status;
 	pid_t				*pids;
 	int					*fds;
 	int					*fd;
-    t_mp                *prs;
+	t_mp				*prs;
 }						t_envlist;
 
-
-int     _is_white_space(char c);
-void _free_all_(t_mp *prs, t_sp *sp);
-void    _env_var_counter_(t_mp *prs, t_envlist *env);
-void    _env_var_copy_(t_mp *prs, t_envlist *env);
-void	_size_of_arg_dq_(t_mp *prs);
-void	_size_of_arg_sq_(t_mp *prs);
-int	_check_semi_colon(char *line, t_mp *prs);
-int	_check_pipe(char *line, t_mp *prs);
-int	_check_single_quotes(char *line, t_mp *prs);
-int _line_counter_(t_mp *prs, t_envlist *env);
-void _count_inside_sq_(t_mp *prs);
-void _count_inside_dq_(t_mp *prs, t_envlist *env);
-void        _count_command_status(t_mp *prs);
-void _count_dollar_digits_(t_mp *prs);
-void _copy_env_vars_(t_mp *prs, t_envlist *env);
-void    _copy_dollar_digits_(t_mp *prs);
-void _count_env_vars_(t_mp *prs, t_envlist *env);
-void _push_back_string_(char *buff, int index, char *fill, int size);
-int     _isspec_(char c);
-void	_trim_tokens(t_sp *sp);
-void	_add_to_string_(t_sp *sp, int size);
-void	_sp_handle_single_quotes_(t_sp *sp);
-void _count_tokens_dq_(t_sp *sp);
-int			_count_tokens(char delim, t_sp *sp);
-int			_len_tokens(t_sp *sp, char delim);
-void _len_tokens_dq_(t_sp *sp);
-void _len_tokens_sq_(t_sp *sp);
-size_t	len_if(char *s, int nl);
-char	*ft_dup_free(char *src, char **to_free);
-int		build_line(char **line, char **buff, char **buff_s, char step);
-int     _check_for_special_chars_(char *buff);
-int _count_token_length_(t_mp *prs);
-int     _size_of_arg_(t_mp *prs, char *buffer, int i);
-void _free_tab_(char **buffer);
-void _fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
-void _copy_files_(t_mp *prs);
-void        _fix_the_order_(t_mp *prs);
-void    _copy_redirs_(t_mp *prs);
-void _copy_args_with_dq_(t_mp *prs);
-void _copy_args_with_sq_(t_mp *prs);
-void _handle_normal_args_2_(t_mp *prs);
-void _handle_normal_args_(t_mp *prs, char *tmp);
-int     _if_pipe_(t_mp *prs, int index);
-void _fill_first_node_(t_mp *prs, char **args, char **files);
-void    _fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files);
-void        _handle_pipe_args_(t_mp *prs);
-void        _copy_tokens_data_(t_mp *prs, int index);
-int		get_next_line(int fd, char **line);
-int		build_line(char **line, char **buff, char **buff_s, char step);
-void _start_parsing(char *line, t_mp *prs, t_envlist *env);
-char				**_split_tokens(t_sp *sp, char *s, char c);
-void        _trim_tokens(t_sp *sp);
-char *_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env);
-int _handle_syntax_errors(char *line, t_mp *prs);
-void        _raise_an_exception();
-int     _char_in_tab_(char c, char arr[3]);
-char *_handle_backslash_(t_mp *prs, char *token);
-
-// majermou
+int						_is_white_space(char c);
+void					_free_all_(t_mp *prs, t_sp *sp);
+void					_env_var_counter_(t_mp *prs, t_envlist *env);
+void					_env_var_copy_(t_mp *prs, t_envlist *env);
+void					_size_of_arg_dq_(t_mp *prs);
+void					_size_of_arg_sq_(t_mp *prs);
+int						_check_semi_colon(char *line, t_mp *prs);
+int						_check_pipe(char *line, t_mp *prs);
+int						_check_single_quotes(char *line, t_mp *prs);
+int						_line_counter_(t_mp *prs, t_envlist *env);
+void					_count_inside_sq_(t_mp *prs);
+void					_count_inside_dq_(t_mp *prs, t_envlist *env);
+void					_count_command_status(t_mp *prs);
+void					_count_dollar_digits_(t_mp *prs);
+void					_copy_env_vars_(t_mp *prs, t_envlist *env);
+void					_copy_dollar_digits_(t_mp *prs);
+void					_count_env_vars_(t_mp *prs, t_envlist *env);
+void					_push_back_string_(char *buff, int index, char *fill, int size);
+int						_isspec_(char c);
+void					_trim_tokens(t_sp *sp);
+void					_add_to_string_(t_sp *sp, int size);
+void					_sp_handle_single_quotes_(t_sp *sp);
+void					_count_tokens_dq_(t_sp *sp);
+int						_count_tokens(char delim, t_sp *sp);
+int						_len_tokens(t_sp *sp, char delim);
+void					_len_tokens_dq_(t_sp *sp);
+void					_len_tokens_sq_(t_sp *sp);
+int						_check_for_special_chars_(char *buff);
+int						_count_token_length_(t_mp *prs);
+int						_size_of_arg_(t_mp *prs, char *buffer, int i);
+void					_free_tab_(char **buffer);
+void					_fill_list_for_normal_args_(t_mp *prs, char **args, char **files);
+void					_copy_files_(t_mp *prs);
+void					_fix_the_order_(t_mp *prs);
+void					_copy_redirs_(t_mp *prs);
+void					_copy_args_with_dq_(t_mp *prs);
+void					_copy_args_with_sq_(t_mp *prs);
+void					_handle_normal_args_2_(t_mp *prs);
+void					_handle_normal_args_(t_mp *prs, char *tmp);
+int						_if_pipe_(t_mp *prs, int index);
+void					_fill_first_node_(t_mp *prs, char **args, char **files);
+void					_fill_list_for_pipe_args_(t_mp *prs, t_cmd_list **head, char **args, char **files);
+void					_handle_pipe_args_(t_mp *prs);
+void					_copy_tokens_data_(t_mp *prs, int index);
+void					_start_parsing(char *line, t_mp *prs, t_envlist *env);
+char					**_split_tokens(t_sp *sp, char *s, char c);
+void					_trim_tokens(t_sp *sp);
+char					*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env);
+int						_handle_syntax_errors(char *line, t_mp *prs);
+void					_raise_an_exception();
+int						_char_in_tab_(char c, char arr[3]);
+char					*_handle_backslash_(t_mp *prs, char *token);
 
 void	handle_numeric(t_cmd_list *cmd, t_envlist *envlist);
 

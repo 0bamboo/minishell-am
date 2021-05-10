@@ -12,8 +12,11 @@ void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
 	if (handle_redirection(cmd))
 		exit (1);
 	if (isbuiltin(cmd))
+	{
+		free(path);
 		exit(call_builtin(cmd, envlist));
-	else if (execve(path, cmd->args, envlist->envp) < 0)
+	}
+	if (execve(path, cmd->args, envlist->envp) < 0)
 	{
 		printf("minishell: %s: command not found\n", cmd->args[0]);
 		exit(127);
@@ -90,6 +93,7 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 	int		is_builtin;
 	int		ret;
 
+	envlist->head = cmd;
 	nbr_pipes = cmd->nbrpipe;
 	is_builtin = isbuiltin(cmd);
 	if (!g_ret)
@@ -105,6 +109,6 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 		cmd = cmd->next;
 	}
 	ret = wait_processes(envlist, nbr_pipes, is_builtin);
-	clean_cmdList(cmd);
+	clean_cmdList(envlist);
 	return (ret);
 }

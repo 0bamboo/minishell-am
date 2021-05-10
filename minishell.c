@@ -1,19 +1,61 @@
 #include "./includes/minishell.h"
 
-void	save_fd(t_envlist *envlist)
+void	clean_cmdList(t_envlist *env)
 {
-	envlist->fd = malloc(sizeof(int) * 3);
-	envlist->fd[0] = dup(0);
-	envlist->fd[1] = dup(1);
-	envlist->fd[2] = dup(2);
+	int			i;
+	t_cmd_list	*tmp;
+
+	while (env->head)
+	{
+		i = 0;
+		if (env->head->args)
+		{
+			while (env->head->args && env->head->args[i])
+				free(env->head->args[i++]);
+			free(env->head->args);
+		}
+		tmp = env->head;
+		env->head = env->head->next;
+		free(tmp);
+	}
 }
 
-void	restore_fd(t_envlist *envlist)
+void	freeing(t_envlist *envlist)
 {
-	dup2(envlist->fd[0], 0);
-	dup2(envlist->fd[1], 1);
-	dup2(envlist->fd[2], 2);
-	free(envlist->fd);
+	int		i;
+
+	if (envlist->prs->cmds)
+	{
+		i = -1;
+		while (envlist->prs->cmds[++i])
+			free(envlist->prs->cmds[i]);
+		free(envlist->prs->cmds);
+		envlist->prs->cmds = NULL;
+	}
+	free(envlist->prs->sp);
+	free(envlist->prs);
+}
+
+void	cleaning(t_envlist *envlist)
+{
+	int		i;
+
+	freeing(envlist);
+	if (envlist->vars)
+	{
+		i = 0;
+		while (envlist->vars[i])
+			free(envlist->vars[i++]);
+		free(envlist->vars);
+	}
+	if (envlist->history)
+	{
+		i = 0;
+		while (envlist->history[i])
+			free(envlist->history[i++]);
+		free(envlist->history);
+	}
+	clean_cmdList(envlist);
 }
 
 void    signal_handler(int signal)
@@ -53,6 +95,7 @@ int main(int argc, char **argv, char **envp)
 	envlist.status = 0;
 	envlist.line = NULL;
 	envlist.envp = envp;
+	envlist.head = NULL;
 	env_varsdup(&envlist,envp);
 	rmfrom_envlist(&envlist, "OLDPWD");
 
@@ -69,13 +112,11 @@ int main(int argc, char **argv, char **envp)
 		if (envlist.line && ft_strcmp(envlist.line, ""))
 		{
 			addTohistory(&envlist);
-			// printf("line == |%s|\n", envlist.line);
 			_start_parsing(envlist.line, prs, &envlist);
-			// free(envlist.line);
         }
         envlist.line = NULL;
     }
-	cleaning(NULL, &envlist);
+	cleaning(&envlist);
 	(void)argc;
 	(void)argv;
     return (0);

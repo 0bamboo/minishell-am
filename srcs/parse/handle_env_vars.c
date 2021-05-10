@@ -83,7 +83,6 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	prs->g = 0;
 	prs->buff = buffer;
 	counter = _line_counter_(prs, env);
-	printf("counter == |%d|\n", counter);
 	prs->global = (char *)malloc(counter + 1);
 	if (!prs->global)
 		return (NULL);
@@ -91,6 +90,5 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	while (prs->buff[prs->i])
 		_get_env_vars_2_(prs, env);
 	prs->global[prs->g] = '\0';
-	printf("global == |%s|\n", prs->global);
 	return (prs->global);
 }

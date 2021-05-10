@@ -29,7 +29,7 @@ void	handle_arrawkeys(t_envlist *envlist, long buff, int *lenght, int *index)
 	}
 }
 
-void	handle_backspace(t_envlist *envlist, int *lenght, int *bol, int param)
+void	handle_backspace(t_envlist *envlist, int *lenght, int param)
 {
 	if (param && *lenght > 0)
 	{
@@ -43,16 +43,15 @@ void	handle_backspace(t_envlist *envlist, int *lenght, int *bol, int param)
 		free(envlist->line);
 		envlist->line = ft_strdup("");
 		*lenght = 0;
-		*bol = 1;
 	}
 }
 
-int	handle_singlechar(t_envlist *envlist, long buff, int *lenght, int *index)
+void	handle_char(t_envlist *envlist, long buff, int *lenght, int *index)
 {
 	if (buff == ARROW_UP || buff == ARROW_DOWN)
 		handle_arrawkeys(envlist, buff, lenght, index);
 	else if (buff == BACK_SPACE)
-		handle_backspace(envlist, lenght, &bol, 1);
+		handle_backspace(envlist, lenght, 1);
 	else if (ft_isprint(buff))
 	{
 		lenght[0]++;
@@ -69,8 +68,11 @@ int	handleKeys(t_envlist *envlist, long buff, int *lenght, int *index)
 	while (read(0, &buff, sizeof(buff)))
 	{
 		if (g_ret == 1 && !bol)
-			handle_backspace(envlist, lenght, &bol, 0);
-		handle_singlechar(envlist, buff, lenght, index);
+		{
+			handle_backspace(envlist, lenght, 0);
+			bol = 1;
+		}
+		handle_char(envlist, buff, lenght, index);
 		if (buff == CTRL_D && !lenght[0])
 		{
 			ft_putstrs("exit\n");

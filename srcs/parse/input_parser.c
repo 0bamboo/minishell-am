@@ -115,12 +115,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			free(tmp);
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
-			t_cmd_list *tmp_head = prs->head;
 			prs->status = env->status;
 			restore_fd(env);
-			free(env->fd);
-			env->fd = NULL;
-			clean_cmdList(tmp_head);
 		}
 		i = -1;
 		while (prs->cmds[++i])

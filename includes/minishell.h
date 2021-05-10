@@ -97,6 +97,7 @@ typedef struct      s_mp
 
 typedef struct          s_envlist
 {
+    t_cmd_list          *head;
     char	            **vars;
     char                **envp;
     char                *line;
@@ -107,6 +108,8 @@ typedef struct          s_envlist
 	int					*fd;
     t_mp                *prs;
 }						t_envlist;
+
+
 int     _is_white_space(char c);
 void _free_all_(t_mp *prs, t_sp *sp);
 void    _env_var_counter_(t_mp *prs, t_envlist *env);
@@ -230,8 +233,10 @@ void    handle_arrawkeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     handleKeys(t_envlist *envlist, long buff, int *curs, int *index);
 int     ft_readline(t_envlist *envlist);
 
-void	cleaning(t_cmd_list *cmd, t_envlist *envlist);
-void	clean_cmdList(t_cmd_list *cmd);
+void	cleaning(t_envlist *envlist);
+void	clean_cmdList(t_envlist *envlist);
+
+int	addToline(t_envlist *envlist, char buff);
 
 int	ft_isprint(int c);
 

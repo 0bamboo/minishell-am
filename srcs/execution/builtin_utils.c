@@ -29,7 +29,7 @@ unsigned int	random_num_generator(int range)
 void	handle_numeric(t_cmd_list *cmd, t_envlist *envlist)
 {
 	printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);
-	cleaning(cmd, envlist);
+	cleaning(envlist);
 	exit(255);
 }
 

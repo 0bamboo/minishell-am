@@ -19,13 +19,10 @@ void	_free_tab_(char **buffer)
 	i = -1;
 	if (buffer)
 	{
-		if (buffer[++i])
+		while (buffer[++i])
 		{
-			while (buffer[i])
-			{
-				free(buffer[i]);
-				buffer[i++] = NULL;
-			}
+			free(buffer[i]);
+			buffer[i] = NULL;
 		}
 		free(buffer);
 		buffer = NULL;

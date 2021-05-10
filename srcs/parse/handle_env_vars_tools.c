@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/25 14:01:12 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 14:43:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 23:22:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	_push_back_string_(char *buff, int index, char *fill, int size)
 	fill = NULL;
 }
 
-void	_env_var_counter_(t_mp *prs, t_envlist *env)
+void	 _env_var_counter_(t_mp *prs, t_envlist *env)
 {
 	int	size;
 
@@ -81,9 +81,9 @@ void	_copy_dollar_digits_(t_mp *prs)
 {
 	char	*tmp;
 
-	tmp = ft_strdup("bash");
 	if (prs->buff[++prs->i] == 48)
 	{
+		tmp = ft_strdup("bash");
 		_push_back_string_(prs->global, prs->g, tmp, 4);
 		prs->g +=4;
 		prs->i++;

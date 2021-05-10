@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 19:24:15 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/10 00:19:08 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 		free(line);
 		line = NULL;
 		i = -1;
+		prs->status = 0;
 		while (prs->cmds[++i])
 		{
 			tmp = prs->cmds[i];
@@ -115,12 +116,8 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 			free(tmp);
 			save_fd(env);
 			env->status = execute_cmd(prs->head, env);
-			t_cmd_list *tmp_head = prs->head;
 			prs->status = env->status;
 			restore_fd(env);
-			free(env->fd);
-			env->fd = NULL;
-			clean_cmdList(tmp_head);
 		}
 		i = -1;
 		while (prs->cmds[++i])

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 11:48:20 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/09 18:44:46 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/09 23:55:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	_copy_command_status(t_mp *prs)
 	_push_back_string_(prs->global, prs->g, tmp, prs->count);
 	prs->g += prs->count;
 	prs->i += 2;
-	free(tmp);
 }
 
 void	_copy_inside_dq_(t_mp *prs, t_envlist *env)
@@ -83,7 +82,6 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	prs->g = 0;
 	prs->buff = buffer;
 	counter = _line_counter_(prs, env);
-	printf("counter == |%d|\n", counter);
 	prs->global = (char *)malloc(counter + 1);
 	if (!prs->global)
 		return (NULL);
@@ -91,6 +89,5 @@ char	*_get_env_vars_(char *buffer, t_mp *prs, t_envlist *env)
 	while (prs->buff[prs->i])
 		_get_env_vars_2_(prs, env);
 	prs->global[prs->g] = '\0';
-	printf("global == |%s|\n", prs->global);
 	return (prs->global);
 }

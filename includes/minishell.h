@@ -202,7 +202,7 @@ void					sorting(char **arr);
 int						check_homepath(t_envlist *envlist, t_cmd_list *cmd);
 int						builtin_exit(t_cmd_list *cmd, t_envlist *envlist);
 int						builtin_echo(t_cmd_list *cmd);
-int						handle_redirection(t_cmd_list *command, t_envlist *envlist);
+int						handle_redirection(t_cmd_list *command);
 int						is_redir(t_cmd_list *cmd);
 int						execute_cmd(t_cmd_list *cmd, t_envlist *envlist);
 int						isbuiltin(t_cmd_list *command);

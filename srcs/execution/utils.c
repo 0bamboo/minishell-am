@@ -53,28 +53,32 @@ char	*get_home_path(char **args, char **envp)
 	char			**arr;
 	char			*tmp;
 	char			*path;
+	int				j;
 
 	arr = NULL;
 	if (!ft_strncmp(*args, "/", 1) || !ft_strncmp(*args, "./", 2))
 		return (ft_strdup(*args));
-	while (ft_strncmp(*envp, "PATH=", 5));
+	while (ft_strncmp(*envp, "PATH=", 5))
 		envp++;
 	arr = ft_split(*envp + 5, ':');
-	while (*arr)
+	j = 0;
+	while (arr[j])
 	{
-		path = ft_strjoin(*arr, "/");
+		path = ft_strjoin(arr[j], "/");
 		tmp = path;
 		path = ft_strjoin(path, *args);
 		free(tmp);
 		if (!stat(path, &buf))
 		{
-			while (*arr)
-				free(*arr++);
+			while (arr[j])
+				free(arr[j++]);
+			free(arr);
 			return (path);
 		}
 		free(path);
-		arr++;
+		free(arr[j++]);
 	}
+	free(arr);
 	return (NULL);
 }
 

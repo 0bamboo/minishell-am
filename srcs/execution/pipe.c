@@ -21,12 +21,12 @@ void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
 		dup2(envlist->fds[cmd->iterator * 2 - 2], 0);
 	if (cmd->next && cmd->redir < 0 && path)
 		dup2(envlist->fds[cmd->iterator * 2 + 1], 1);
-	if (handle_redirection(cmd))
+	if (handle_redirection(cmd, envlist))
 		exit (1);
 	if (isbuiltin(cmd))
 	{
 		free(path);
-		exit(call_builtin(cmd, envlist));
+		exit(call_builtin(cmd));
 	}
 	if (execve(path, cmd->args, envlist->envp) < 0)
 	{
@@ -123,7 +123,8 @@ int	execute_cmd(t_cmd_list *cmd, t_envlist *envlist)
 		ret = implement_cmd(cmd, envlist, nbr_pipes);
 		cmd = cmd->next;
 	}
-	ret = wait_processes(envlist, nbr_pipes, is_builtin);
+	if (nbr_pipes || !is_builtin)
+		ret = wait_processes(envlist, nbr_pipes, is_builtin);
 	clean_cmdList(envlist);
 	return (ret);
 }

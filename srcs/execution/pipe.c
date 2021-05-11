@@ -21,12 +21,12 @@ void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
 		dup2(envlist->fds[cmd->iterator * 2 - 2], 0);
 	if (cmd->next && cmd->redir < 0 && path)
 		dup2(envlist->fds[cmd->iterator * 2 + 1], 1);
-	if (handle_redirection(cmd, envlist))
+	if (handle_redirection(cmd))
 		exit (1);
 	if (isbuiltin(cmd))
 	{
 		free(path);
-		exit(call_builtin(cmd));
+		exit(call_builtin(cmd, envlist));
 	}
 	if (execve(path, cmd->args, envlist->envp) < 0)
 	{

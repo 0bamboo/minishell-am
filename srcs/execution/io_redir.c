@@ -68,6 +68,7 @@ void	handle_output(char **rdr)
 	{
 		output = open(rdr[1], O_WRONLY | O_TRUNC
 				| O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		printf("\b");
 		dup2(output, 1);
 		close(output);
 	}
@@ -75,6 +76,7 @@ void	handle_output(char **rdr)
 	{
 		output = open(rdr[1], O_WRONLY | O_APPEND
 				| O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+		printf("\b");
 		dup2(output, 1);
 		close(output);
 	}

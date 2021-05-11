@@ -28,6 +28,7 @@
 # include <term.h>
 # include <termios.h>
 # include <curses.h>
+# include <dirent.h>
 
 # define ARROW_UP 4283163
 # define ARROW_DOWN 4348699

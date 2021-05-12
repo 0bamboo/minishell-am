@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:28 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/12 01:17:02 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/12 03:00:01 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,9 @@ void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
 
 	path = get_home_path(cmd->args, envlist->vars);
 	if (cmd->iterator && cmd->nbrpipe)
-	{
 		dup2(envlist->fds[cmd->iterator * 2 - 2], 0);
-		close(envlist->fds[cmd->iterator * 2 - 2]);
-	}
 	if (cmd->next && cmd->redir)
-	{
 		dup2(envlist->fds[cmd->iterator * 2 + 1], 1);
-		close(envlist->fds[cmd->iterator * 2 + 1]);
-	}
 	if (handle_redirection(cmd))
 		exit (1);
 	if (isbuiltin(cmd))
@@ -34,11 +28,17 @@ void	exec_childProcess(t_cmd_list *cmd, t_envlist *envlist)
 		free(path);
 		exit(call_builtin(cmd, envlist));
 	}
-	if (execve(path, cmd->args, envlist->envp) < 0)
+	if (cmd->args[0])
 	{
-		printf("minishell: %s: command not found\n", cmd->args[0]);
-		exit(127);
+		if (execve(path, cmd->args, envlist->envp) < 0)
+		{
+			restore_fd(envlist);
+			printf("minishell: %s: command not found\n", cmd->args[0]);
+			exit(127);
+		}
 	}
+	else
+		exit(0);
 }
 
 int	fork_subprocess(t_cmd_list *command, t_envlist *envlist)

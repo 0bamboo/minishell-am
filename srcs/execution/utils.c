@@ -6,28 +6,11 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 18:39:54 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/12 02:16:21 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	save_fd(t_envlist *envlist)
-{
-	envlist->fd = malloc(sizeof(int) * 3);
-	envlist->fd[0] = dup(0);
-	envlist->fd[1] = dup(1);
-	envlist->fd[2] = dup(2);
-}
-
-void	restore_fd(t_envlist *envlist)
-{
-	dup2(envlist->fd[0], 0);
-	dup2(envlist->fd[1], 1);
-	dup2(envlist->fd[2], 2);
-	free(envlist->fd);
-	envlist->fd = NULL;
-}
 
 int	removeFromline(t_envlist *envlist)
 {
@@ -47,34 +30,78 @@ int	removeFromline(t_envlist *envlist)
 	return (0);
 }
 
-char	*get_home_path(char **args, char **envp)
+int	check_speCase(char **args, struct stat buf, char **path)
 {
-	struct stat		buf;
-	char			**arr;
-	char			*tmp;
-	char			*path;
-
-	arr = NULL;
-	if (!ft_strncmp(*args, "/", 1) || !ft_strncmp(*args, "./", 2))
-		return (ft_strdup(*args));
-	while (ft_strncmp(*envp, "PATH=", 5))
-		envp++;
-	arr = ft_split(*envp + 5, ':');
-	while (*arr)
+	*path = NULL;
+	if (!ft_strncmp(*args, "~", 2))
 	{
-		path = ft_strjoin(*arr, "/");
+		free(*args);
+		*args = getenv("HOME");
+	}
+	if (!stat(*args, &buf))
+	{
+		if (opendir(*args))
+		{
+			printf("minishell: %s: is a directory\n", *args);
+			exit(126);
+		}
+		*path = ft_strdup(*args);
+		return (1);
+	}
+	else
+	{
+		printf("minishell: %s: No such file or directory\n", *args);
+		exit(127);
+	}
+	return (0);
+}
+
+char	*checking(char **args, char **arr, struct stat buf)
+{
+	char	*path;
+	char	*tmp;
+	int		j;
+
+	j = 0;
+	while (arr[j])
+	{
+		path = ft_strjoin(arr[j], "/");
 		tmp = path;
 		path = ft_strjoin(path, *args);
 		free(tmp);
 		if (!stat(path, &buf))
 		{
-			while (*arr)
-				free(*arr++);
+			while (arr[j])
+				free(arr[j++]);
+			free(arr);
 			return (path);
 		}
 		free(path);
-		arr++;
+		free(arr[j++]);
 	}
+	return (NULL);
+}
+
+char	*get_home_path(char **args, char **envp)
+{
+	struct stat		buf;
+	char			**arr;
+	char			*path;
+
+	arr = NULL;
+	if (!ft_strncmp(*args, "/", 1) || !ft_strncmp(*args, "./", 2)
+		|| !ft_strncmp(*args, "~", 1))
+		if (check_speCase(args, buf, &path))
+			return (path);
+	while (*envp && ft_strncmp(*envp, "PATH=", 5))
+		envp++;
+	if (!*envp)
+		check_speCase(args, buf, &path);
+	arr = ft_split(*envp + 5, ':');
+	path = checking(args, arr, buf);
+	if (path)
+		return (path);
+	free(arr);
 	return (NULL);
 }
 

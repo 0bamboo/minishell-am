@@ -27,7 +27,8 @@ FILES = ./srcs/parse/fill_list_pipe.c ./srcs/parse/fill_tools.c ./srcs/parse/fil
 		./srcs/parse/_split_tools_2.c ./srcs/parse/error_tools.c ./srcs/execution/builtin.c \
 		./srcs/execution/builtin_cd.c ./srcs/execution/builtin_env.c ./srcs/execution/builtin_export.c \
 		./srcs/execution/builtin_unset.c ./srcs/execution/builtin_utils.c ./srcs/execution/history.c \
-		./srcs/execution/io_redir.c ./srcs/execution/pipe.c ./srcs/execution/utils.c ./srcs/execution/clean.c
+		./srcs/execution/io_redir.c ./srcs/execution/pipe.c ./srcs/execution/utils.c ./srcs/execution/clean.c \
+		./srcs/execution/fd.c \
 
 HEADER = ./includes/minishell.h
 

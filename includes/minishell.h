@@ -28,6 +28,7 @@
 # include <term.h>
 # include <termios.h>
 # include <curses.h>
+# include <dirent.h>
 
 # define ARROW_UP 4283163
 # define ARROW_DOWN 4348699
@@ -175,7 +176,6 @@ int						ft_strcmp(const char *s1, const char *s2);
 char					**ft_split(char const *s, char c);
 void					cleanup(char **arr, int limit);
 int						array_lenght(char **arr);
-unsigned int			random_num_generator(int range);
 int						str_copying(char **dst, char *src, int index);
 int						ft_isalpha(int c);
 int						ft_isalnum(int c);

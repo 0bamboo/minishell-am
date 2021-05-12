@@ -54,22 +54,17 @@ int	addto_envlist(t_envlist *envlist, char *new_var)
 	char		**ret;
 	int			i;
 	int			j;
-	int			random;
 
 	ret = (char **)malloc((array_lenght(envlist->vars) + 2) * sizeof(char *));
 	if (!ret)
 		return (1);
 	i = 0;
 	j = 0;
-	random = random_num_generator(array_lenght(envlist->vars));
-	while (i < random)
+	while (envlist->vars[i])
 		if (str_copying(ret, envlist->vars[i++], j++))
 			return (1);
 	if (str_copying(ret, new_var, j++))
 		return (1);
-	while (envlist->vars[i])
-		if (str_copying(ret, envlist->vars[i++], j++))
-			return (1);
 	ret[j] = NULL;
 	cleanup(envlist->vars, array_lenght(envlist->vars));
 	free(envlist->vars);

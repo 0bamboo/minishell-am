@@ -24,20 +24,6 @@ void	cleanup(char **arr, int limit)
 	}
 }
 
-unsigned int	random_num_generator(int range)
-{
-	void			*allocation;
-	unsigned int	*random;
-
-	random = NULL;
-	allocation = malloc(1);
-	if (!allocation)
-		return (range / 3);
-	random = (unsigned int *)allocation;
-	free(allocation);
-	return (*random % range);
-}
-
 void	handle_numeric(t_cmd_list *cmd, t_envlist *envlist)
 {
 	printf("minishell: exit: %s: numeric argument required\n", cmd->args[1]);

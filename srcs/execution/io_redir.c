@@ -49,7 +49,7 @@ int	handle_input(char **redir)
 {
 	int		input;
 
-	input = open(redir[1], O_RDONLY, 0);
+	input = open(redir[1], O_RDONLY);
 	if (input == -1)
 	{
 		printf("%s\n", strerror(errno));
@@ -93,7 +93,9 @@ int	handle_redirection(t_cmd_list *cmd)
 		}
 		else
 			handle_output(cmd->args + cmd->redir);
+		free(cmd->args[cmd->redir]);
 		cmd->args[cmd->redir++] = NULL;
+		free(cmd->args[cmd->redir]);
 		cmd->args[cmd->redir++] = NULL;
 	}
 	return (0);

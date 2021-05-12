@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*   By: majermou <majermou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:07:40 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:22:39 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/12 01:17:37 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	handle_backspace(t_envlist *envlist, int *lenght, int param)
 	else if (!param)
 	{
 		free(envlist->line);
-		envlist->line = ft_strdup("");
+		envlist->line = NULL;
 		*lenght = 0;
 	}
 }

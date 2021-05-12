@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:08:01 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:08:02 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/12 13:39:11 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	builtin_echo(t_cmd_list *cmd)
 	}
 	while (cmd->args[i])
 	{
-		printf("%s", cmd->args[i]);
+		ft_putstrs(cmd->args[i]);
 		if (cmd->args[i + 1])
 			printf(" ");
 		i++;

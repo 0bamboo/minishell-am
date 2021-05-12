@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majermou <majermou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 18:38:31 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/05/12 01:05:07 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/12 02:30:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,19 @@ void	_start_parsing(char *line, t_mp *prs, t_envlist *env)
 		i = -1;
 		while (prs->cmds[++i])
 		{
+			t_cmd_list *head;
 			tmp = prs->cmds[i];
 			prs->status = env->status;
 			prs->cmds[i] = _get_env_vars_(tmp, prs, env);
 			_copy_tokens_data_(prs, i);
+			head = prs->head;
+			while (head)
+			{
+				int i = -1;
+				while (head->args[++i])
+					printf("args = |%s|\n", head->args[i]);
+				head = head->next;
+			}
 			free(tmp);
 			_execute_(prs, env);
 		}

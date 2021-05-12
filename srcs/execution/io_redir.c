@@ -6,7 +6,7 @@
 /*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:07:35 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/10 13:07:36 by majermou         ###   ########.fr       */
+/*   Updated: 2021/05/12 12:13:37 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	handle_output(char **rdr)
 	{
 		output = open(rdr[1], O_WRONLY | O_TRUNC
 				| O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-		printf("\b");
+		printf("");
 		dup2(output, 1);
 		close(output);
 	}
@@ -76,7 +76,7 @@ void	handle_output(char **rdr)
 	{
 		output = open(rdr[1], O_WRONLY | O_APPEND
 				| O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-		printf("\b");
+		printf("");
 		dup2(output, 1);
 		close(output);
 	}

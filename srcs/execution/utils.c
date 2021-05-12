@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: majermou <majermou@students.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/10 13:12:19 by majermou          #+#    #+#             */
-/*   Updated: 2021/05/12 02:16:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/05/12 12:13:14 by majermou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ int	removeFromline(t_envlist *envlist)
 	return (0);
 }
 
-int	check_speCase(char **args, struct stat buf, char **path)
+int	check_speCase(char **args, char **path)
 {
+	struct stat		buf;
+
 	*path = NULL;
 	if (!ft_strncmp(*args, "~", 2))
 	{
@@ -56,11 +58,12 @@ int	check_speCase(char **args, struct stat buf, char **path)
 	return (0);
 }
 
-char	*checking(char **args, char **arr, struct stat buf)
+char	*checking(char **args, char **arr)
 {
-	char	*path;
-	char	*tmp;
-	int		j;
+	struct stat	buf;
+	char		*path;
+	char		*tmp;
+	int			j;
 
 	j = 0;
 	while (arr[j])
@@ -84,21 +87,20 @@ char	*checking(char **args, char **arr, struct stat buf)
 
 char	*get_home_path(char **args, char **envp)
 {
-	struct stat		buf;
 	char			**arr;
 	char			*path;
 
 	arr = NULL;
 	if (!ft_strncmp(*args, "/", 1) || !ft_strncmp(*args, "./", 2)
 		|| !ft_strncmp(*args, "~", 1))
-		if (check_speCase(args, buf, &path))
+		if (check_speCase(args, &path))
 			return (path);
 	while (*envp && ft_strncmp(*envp, "PATH=", 5))
 		envp++;
 	if (!*envp)
-		check_speCase(args, buf, &path);
+		check_speCase(args, &path);
 	arr = ft_split(*envp + 5, ':');
-	path = checking(args, arr, buf);
+	path = checking(args, arr);
 	if (path)
 		return (path);
 	free(arr);

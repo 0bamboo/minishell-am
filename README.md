@@ -6,7 +6,7 @@
 
 ## Subject
 
-[minishell_subject](https://github.com/nowl01/minishell-am/tree/master/subject/en.subject.pdf)
+[minishell_subject](https://github.com/nowl01/minishell-am/blob/master/subject/en.subject.pdf)
 
 ## How to use?
 

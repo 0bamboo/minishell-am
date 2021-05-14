@@ -1,6 +1,6 @@
 # minishell42
 
-![Image of minishell](https://github.com/nowl01/minishell-am/tree/master/.tools/minishell.png)
+![Image of minishell](https://github.com/nowl01/minishell-am/blob/master/.tools/minishell.png)
 ## Authors :
 
  - Abdennacer ama &nbsp;&nbsp;@nowl01 &nbsp;	:   42login => `abdait-m`

@@ -2,7 +2,7 @@
 ## Authors :
 
  - Abdennacer ama &nbsp;&nbsp;@nowl01 &nbsp;	:   42login => `abdait-m`
- - Mohammed ajermoune &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@sltyassin&nbsp;&nbsp;: 	42login => `majermou`
+ - Mohammed ajermoune &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@majermou&nbsp;&nbsp;: 	42login => `majermou`
 
 ## Subject
 

@@ -4,11 +4,11 @@
 ## Authors :
 
  - Abdennacer ama &nbsp;&nbsp;@nowl01 &nbsp;	:   42login => `abdait-m`
- - Mohammed ajermoune &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@sltyassin&nbsp;&nbsp;: 	42login => `majermou`
+ - Mohammed ajermoune &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@majermou&nbsp;&nbsp;: 	42login => `majermou`
 
 ## Subject
 
-[minishell_subject](https://github.com/nowl01/minishell-am/tree/master/subject/en.subject.pdf)
+[minishell_subject](https://github.com/nowl01/minishell-am/blob/master/subject/en.subject.pdf)
 
 ## How to use?
 
